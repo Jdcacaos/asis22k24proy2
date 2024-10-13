@@ -42,11 +42,11 @@ namespace Capa_Controlador_Navegador
             return dtTabla;
         }
 
-    
 
 
-    // Modifica el índice proporcionado a través de la lógica interna
-    public string ModIndice(string sIndice1)
+
+        // Modifica el índice proporcionado a través de la lógica interna
+        public string ModIndice(string sIndice1)
 
         {
             string sIndice = sn.ModIndice(sIndice1);
@@ -210,5 +210,16 @@ namespace Capa_Controlador_Navegador
             dt.Fill(table);
             return table;
         }
+
+        public Dictionary<string, string> ObtenerDatosExtra(string tabla, string primaryKeyValue, string tablaprincipal)
+        {
+            // Llamar a la capa Modelo para obtener los datos de la tabla relacionada
+            return sn.ObtenerDatosTablaRelacionada(tabla, primaryKeyValue, tablaprincipal);
+        }
+
+
+
+
+
     }
 }
