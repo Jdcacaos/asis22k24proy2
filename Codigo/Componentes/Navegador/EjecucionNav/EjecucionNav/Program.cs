@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EjecucionNav
+namespace ejecucionNav
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace EjecucionNav
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Capa_Vista_Seguridad.MDI_Seguridad("admin"));
+            Application.Run(new Form1());
         }
     }
 }

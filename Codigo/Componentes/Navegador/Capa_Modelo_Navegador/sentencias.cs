@@ -654,7 +654,7 @@ namespace Capa_Modelo_Navegador
             return sLlave;
         }
 
-        // Método para obtener la llave de un campo en reverso (no está claro para qué se usa)
+        // Método para obtener la llave de un campo en reverso 
         public string LlaveCampoReverso(string sTabla, string sCampo, string sValor)
         {
             string sLlave = "";
@@ -784,54 +784,54 @@ namespace Capa_Modelo_Navegador
 
             return sClaveForanea;
         }
-      
-            // Asumiendo que tienes una clase para la conexión
 
-            // Método para obtener las relaciones de claves foráneas desde la base de datos
-            public (string tablaRelacionada, string campoClave, string campoDisplay) ObtenerRelacionesForaneas(string sTablaOrigen, string sCampo)
+        // Asumiendo que tienes una clase para la conexión
+
+        // Método para obtener las relaciones de claves foráneas desde la base de datos
+        public (string tablaRelacionada, string campoClave, string campoDisplay) ObtenerRelacionesForaneas(string sTablaOrigen, string sCampo)
+        {
+            string tablaRelacionada = null;
+            string campoClave = null;
+
+            try
             {
-                string tablaRelacionada = null;
-                string campoClave = null;
-
-                try
-                {
-                    string sQuery = $@"
+                string sQuery = $@"
                 SELECT REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME 
                 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
                 WHERE TABLE_SCHEMA = DATABASE()
                 AND TABLE_NAME = '{sTablaOrigen}' 
                 AND COLUMN_NAME = '{sCampo}';";
 
-                    OdbcCommand command = new OdbcCommand(sQuery, cn.ProbarConexion());
-                    OdbcDataReader reader = command.ExecuteReader();
+                OdbcCommand command = new OdbcCommand(sQuery, cn.ProbarConexion());
+                OdbcDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    {
-                        tablaRelacionada = reader.GetString(0);  // Obtiene la tabla relacionada
-                        campoClave = reader.GetString(1);        // Obtiene la clave relacionada (ID)
-
-                        Console.WriteLine($"Clave foránea de {sTablaOrigen} que referencia a {tablaRelacionada}: {campoClave}");
-
-                        // El campo display ahora es siempre el campo clave (ID)
-                        string campoDisplay = campoClave;
-
-                        return (tablaRelacionada, campoClave, campoDisplay);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"No se encontró clave foránea en {sTablaOrigen} para el campo {sCampo}");
-                    }
-
-                    reader.Close();
-                }
-                catch (Exception ex)
+                if (reader.Read())
                 {
-                    Console.WriteLine("Error al obtener clave foránea: " + ex.Message);
+                    tablaRelacionada = reader.GetString(0);  // Obtiene la tabla relacionada
+                    campoClave = reader.GetString(1);        // Obtiene la clave relacionada (ID)
+
+                    Console.WriteLine($"Clave foránea de {sTablaOrigen} que referencia a {tablaRelacionada}: {campoClave}");
+
+                    // El campo display ahora es siempre el campo clave (ID)
+                    string campoDisplay = campoClave;
+
+                    return (tablaRelacionada, campoClave, campoDisplay);
+                }
+                else
+                {
+                    Console.WriteLine($"No se encontró clave foránea en {sTablaOrigen} para el campo {sCampo}");
                 }
 
-                return (tablaRelacionada, campoClave, campoClave); // Ambos campoClave y campoDisplay serán el ID
+                reader.Close();
             }
-        
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener clave foránea: " + ex.Message);
+            }
+
+            return (tablaRelacionada, campoClave, campoClave); // Ambos campoClave y campoDisplay serán el ID
+        }
+
 
         public OdbcDataAdapter llenarTblAyuda(string tabla)
         {
@@ -841,5 +841,61 @@ namespace Capa_Modelo_Navegador
         }
 
         //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS ***************************** 
+
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ ***************************** 
+        public Dictionary<string, string> ObtenerDatosTablaRelacionada(string tabla, string primaryKeyValue, string tablaPrincipal)
+        {
+            Dictionary<string, string> datosExtra = new Dictionary<string, string>();
+
+            // Detectar la tabla relacionada y su clave foránea
+            string claveForanea = ObtenerClaveForanea(tabla, tablaPrincipal); // tablaPrincipal es la tabla maestra
+
+            if (string.IsNullOrEmpty(claveForanea))
+            {
+                Console.WriteLine($"No se encontró clave foránea para la tabla {tabla} con la tabla principal {tablaPrincipal}");
+                return datosExtra;
+            }
+
+            // Mostrar información sobre la clave foránea y la consulta SQL que se va a ejecutar
+            Console.WriteLine($"Clave foránea detectada: {claveForanea} para la tabla {tabla}, Clave primaria: {primaryKeyValue}");
+
+            // Generar la consulta SQL
+            string consultaSQL = $"SELECT * FROM {tabla} WHERE {claveForanea} = ?";
+            Console.WriteLine($"Consulta SQL generada: {consultaSQL}");
+
+            // Crear la consulta SQL utilizando la clave foránea detectada
+            using (var connection = cn.ProbarConexion())
+            {
+                using (OdbcCommand command = new OdbcCommand(consultaSQL, connection))
+                {
+                    // No usar el nombre del parámetro en ODBC, solo el valor en el orden correcto
+                    command.Parameters.AddWithValue("", primaryKeyValue);
+                    Console.WriteLine($"Valor de primaryKeyValue: {primaryKeyValue}");
+
+                    using (OdbcDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Console.WriteLine("Datos obtenidos del lector de la base de datos:");
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string nombreCampo = reader.GetName(i);
+                                string valorCampo = reader[i].ToString();
+                                datosExtra[nombreCampo] = valorCampo;
+                                Console.WriteLine($"{nombreCampo}: {valorCampo}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No se encontraron registros en la tabla {tabla} para {claveForanea} = {primaryKeyValue}");
+                        }
+                    }
+                }
+            }
+
+            return datosExtra;
+        }
+
+
     }
 }
