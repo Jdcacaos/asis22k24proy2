@@ -36,7 +36,7 @@ namespace Capa_Vista_Navegador
         int iPosicionY = 30; // Posición Y inicial para componentes
         int iActivar = 0; // Variable para reconocer la función del botón de guardar (1. Ingresar, 2. Modificar, 3. Eliminar)
         int globalPosX = 600; // Posición inicial en X para la segunda columna
-        int globalPosY = 160; // Posición inicial en Y
+        int globalPosY = 220; // Posición inicial en Y
         int globalColumna = 0; // Contador de columnas global
         int globalFila = 0; // Contador de filas global
         string[] arrAliasCampos = new string[40]; // Alias para los campos
@@ -565,10 +565,10 @@ namespace Capa_Vista_Navegador
 
             // Variables para gestionar la posición
             int columnaActual = 0; // Contador de columna
-            int maxFilasPorColumna = 5; // Número máximo de filas antes de cambiar de columna
+            int maxFilasPorColumna = 6; // Número máximo de filas antes de cambiar de columna
             int posX = 50; // Posición inicial en X
-            int posY = 150; // Posición inicial en Y
-            int desplazamientoY = 50; // Espacio vertical entre controles
+            int posY = 220; // Posición inicial en Y
+            int desplazamientoY = 55; // Espacio vertical entre controles
 
             while (iIndex < iFin)
             {
@@ -1120,8 +1120,14 @@ namespace Capa_Vista_Navegador
                     if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                     {
                         string nombreCampo = componente.Name.Replace("extra_", "");
+
+                        // Depuración para ver si estamos encontrando el campo
+                        Console.WriteLine($"Buscando campo: {nombreCampo}");
+
                         if (alias.Contains(nombreCampo))
                         {
+                            Console.WriteLine($"Campo encontrado: {nombreCampo}, valor: {componente.Text}");
+
                             // Añadir la condición al WHERE con un AND si ya hay otras condiciones
                             if (claveAsignada)
                             {
@@ -1145,7 +1151,7 @@ namespace Capa_Vista_Navegador
             sQuery += sWhereQuery + ";";
 
             // Imprimir la consulta en la consola para depuración.
-            Console.Write(sQuery);
+            Console.WriteLine($"Consulta generada para tabla adicional {sNombreTabla}: {sQuery}");
 
             // Retornar la consulta construida.
             return sQuery;
