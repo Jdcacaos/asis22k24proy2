@@ -36,6 +36,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,8 +46,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CierreContable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CierreContable.Designer.cs">
+      <DependentUpon>CierreContable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="PartidaCierre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PartidaCierre.Designer.cs">
+      <DependentUpon>PartidaCierre.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CierreContable.resx">
+      <DependentUpon>CierreContable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PartidaCierre.resx">
+      <DependentUpon>PartidaCierre.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
