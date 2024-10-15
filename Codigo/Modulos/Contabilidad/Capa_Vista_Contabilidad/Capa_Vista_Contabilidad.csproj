@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtivosFijos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AtivosFijos.Designer.cs">
+      <DependentUpon>AtivosFijos.cs</DependentUpon>
+    </Compile>
     <Compile Include="CierreContable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Incluyendo ambos recursos -->
+    <EmbeddedResource Include="AtivosFijos.resx">
+      <DependentUpon>AtivosFijos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CierreContable.resx">
       <DependentUpon>CierreContable.cs</DependentUpon>
     </EmbeddedResource>
