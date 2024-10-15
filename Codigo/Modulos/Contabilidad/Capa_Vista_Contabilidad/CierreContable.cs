@@ -17,11 +17,12 @@ namespace Capa_Vista_Contabilidad
             InitializeComponent();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)
         {
-            PartidaCierre partidaCierreForm = new PartidaCierre();
-            partidaCierreForm.StartPosition = FormStartPosition.CenterScreen;
-            partidaCierreForm.ShowDialog();
+            PartidaCierre partida = new PartidaCierre();
+            partida.MdiParent = this.MdiParent;
+            partida.StartPosition = FormStartPosition.CenterScreen;
+            partida.Show();
         }
     }
 }

@@ -54,30 +54,30 @@
     </Compile>
     <Compile Include="Class1.cs" />
     <!-- Incluyendo ambos formularios -->
-    <Compile Include="PartidaCierre.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PartidaCierre.Designer.cs">
-      <DependentUpon>PartidaCierre.cs</DependentUpon>
-    </Compile>
     <Compile Include="EstadosFinancieros.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EstadosFinancieros.Designer.cs">
       <DependentUpon>EstadosFinancieros.cs</DependentUpon>
     </Compile>
+    <Compile Include="PartidaCierre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PartidaCierre.Designer.cs">
+      <DependentUpon>PartidaCierre.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Incluyendo ambos recursos -->
     <EmbeddedResource Include="CierreContable.resx">
       <DependentUpon>CierreContable.cs</DependentUpon>
     </EmbeddedResource>
-    <!-- Incluyendo ambos recursos -->
-    <EmbeddedResource Include="PartidaCierre.resx">
-      <DependentUpon>PartidaCierre.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="EstadosFinancieros.resx">
       <DependentUpon>EstadosFinancieros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PartidaCierre.resx">
+      <DependentUpon>PartidaCierre.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
