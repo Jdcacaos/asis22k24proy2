@@ -1,5 +1,5 @@
 ﻿
-namespace ejecucionNav
+namespace WindowsFormsApp1
 {
     partial class Form1
     {
@@ -33,15 +33,16 @@ namespace ejecucionNav
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(999, 508);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1069, 519);
             this.Name = "Form1";
+            this.Text = "Form1";
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private Capa_Vista_Navegador.Navegador navegador1;
     }
 }
 
