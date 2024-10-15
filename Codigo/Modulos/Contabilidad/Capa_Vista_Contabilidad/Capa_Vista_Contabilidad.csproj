@@ -34,6 +34,9 @@
     <Reference Include="Capa_Controlador_Contabilidad">
       <HintPath>..\Capa_Controlador_Contabilidad\bin\Debug\Capa_Controlador_Contabilidad.dll</HintPath>
     </Reference>
+    <Reference Include="Capa_Vista_Navegador">
+      <HintPath>..\..\..\Componentes\Navegador\Capa_Vista_Navegador\bin\Debug\Capa_Vista_Navegador.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -58,7 +61,12 @@
     <Compile Include="CierreContable.Designer.cs">
       <DependentUpon>CierreContable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Cuentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cuentas.Designer.cs">
+      <DependentUpon>Cuentas.cs</DependentUpon>
+    </Compile>
     <!-- Incluyendo ambos formularios -->
     <Compile Include="EstadosFinancieros.cs">
       <SubType>Form</SubType>
@@ -72,7 +80,19 @@
     <Compile Include="PartidaCierre.Designer.cs">
       <DependentUpon>PartidaCierre.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presupuesto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presupuesto.Designer.cs">
+      <DependentUpon>Presupuesto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TipoPoliza.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TipoPoliza.Designer.cs">
+      <DependentUpon>TipoPoliza.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <!-- Incluyendo ambos recursos -->
@@ -82,11 +102,20 @@
     <EmbeddedResource Include="CierreContable.resx">
       <DependentUpon>CierreContable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Cuentas.resx">
+      <DependentUpon>Cuentas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EstadosFinancieros.resx">
       <DependentUpon>EstadosFinancieros.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PartidaCierre.resx">
       <DependentUpon>PartidaCierre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presupuesto.resx">
+      <DependentUpon>Presupuesto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TipoPoliza.resx">
+      <DependentUpon>TipoPoliza.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
