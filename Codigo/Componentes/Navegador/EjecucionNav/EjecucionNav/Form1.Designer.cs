@@ -29,28 +29,12 @@ namespace ejecucionNav
         /// </summary>
         private void InitializeComponent()
         {
-            this.navegador1 = new Capa_Vista_Navegador.Navegador();
             this.SuspendLayout();
-            // 
-            // navegador1
-            // 
-            this.navegador1.BackColor = System.Drawing.Color.White;
-            this.navegador1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.navegador1.Location = new System.Drawing.Point(0, 0);
-            this.navegador1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.navegador1.Name = "navegador1";
-            this.navegador1.Size = new System.Drawing.Size(1449, 1055);
-            this.navegador1.TabIndex = 0;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1449, 1055);
-            this.Controls.Add(this.navegador1);
+            this.ClientSize = new System.Drawing.Size(999, 508);
             this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
