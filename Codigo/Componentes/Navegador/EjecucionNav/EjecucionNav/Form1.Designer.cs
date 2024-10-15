@@ -74,6 +74,13 @@ namespace ejecucionNav
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+
+            this.SuspendLayout();
+            // 
+            // Form1
+            // 
+            this.ClientSize = new System.Drawing.Size(999, 508);
+            this.Name = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
 
