@@ -69,6 +69,13 @@ namespace Capa_Vista_Navegador
         string sIndiceAyuda; // Índice de la ayuda
         string sEstadoAyuda = ""; // Estado de la ayuda
         string sTablaAdicional = "";
+        // Variables globales
+        string tablaOrigenGlobal;
+        string campoOrigenGlobal;
+        string tablaDestinoGlobal;
+        string campoDestinoGlobal;
+        string operacionGlobal;
+
 
         Font fFuenteLabels = new Font("Century Gothic", 13.0f, FontStyle.Regular, GraphicsUnit.Pixel); // Fuente para labels
         ToolTip tpAyuda = new ToolTip(); // ToolTip para mostrar ayudas en la interfaz
@@ -327,7 +334,19 @@ namespace Capa_Vista_Navegador
         {
             this.sIdAplicacion = sIdAplicacion; // Asigna el ID de la aplicación
         }
+        public void AsignarOperacion(string tablaOrigen, string campoOrigen, string tablaDestino, string campoDestino, string operacion)
+        {
+            tablaOrigenGlobal = tablaOrigen;
+            campoOrigenGlobal = campoOrigen;
+            tablaDestinoGlobal = tablaDestino;
+            campoDestinoGlobal = campoDestino;
+            operacionGlobal = operacion;
 
+            Console.WriteLine("Parámetros recibidos:");
+            Console.WriteLine($"Tabla Origen: {tablaOrigenGlobal}, Campo Origen: {campoOrigenGlobal}");
+            Console.WriteLine($"Tabla Destino: {tablaDestinoGlobal}, Campo Destino: {campoDestinoGlobal}");
+            Console.WriteLine($"Operación: {operacionGlobal}");
+        }
 
         private int NumeroAlias()
         {
@@ -541,7 +560,99 @@ namespace Capa_Vista_Navegador
                 }
             }
         }
+        public void RealizarOperacionCampo()
+        {
+            try
+            {
+                // Obtener la clave primaria de la tabla origen y destino
+                string clavePrimariaOrigen = logic.ObtenerClavePrimaria(tablaOrigenGlobal);
+                string valorClavePrimariaOrigen = logic.UltimoID(tablaOrigenGlobal);  // Puedes ajustar esto según el contexto
+                string clavePrimariaDestino = logic.ObtenerClavePrimaria(tablaDestinoGlobal);
+                string valorClavePrimariaDestino = logic.UltimoID(tablaDestinoGlobal);  // Mismo ajuste aquí
 
+                // Obtener el valor del campo origen (por ejemplo, el número de productos comprados)
+                string valorOrigen = logic.ObtenerValorCampo(tablaOrigenGlobal, campoOrigenGlobal, clavePrimariaOrigen, valorClavePrimariaOrigen);
+
+                // Obtener el valor del campo destino (por ejemplo, las existencias actuales del producto en el inventario)
+                string valorDestino = logic.ObtenerValorCampo(tablaDestinoGlobal, campoDestinoGlobal, clavePrimariaDestino, valorClavePrimariaDestino);
+
+                // Obtener los tipos de datos de los campos origen y destino
+                string tipoCampoOrigen = logic.ObtenerTipoCampo(tablaOrigenGlobal, campoOrigenGlobal);
+                string tipoCampoDestino = logic.ObtenerTipoCampo(tablaDestinoGlobal, campoDestinoGlobal);
+
+                // Verificar que ambos campos sean del mismo tipo y de un tipo válido
+                if (!(tipoCampoOrigen.Contains("int") || tipoCampoOrigen.Contains("decimal")) || !(tipoCampoDestino.Contains("int") || tipoCampoDestino.Contains("decimal")))
+                {
+                    Console.WriteLine("Error: Los tipos de los campos no coinciden o no son numéricos.");
+                    return;
+                }
+
+                // Convertir los valores a enteros o decimales para realizar la operación
+                int resultadoOperacion = 0;
+                if (tipoCampoOrigen.Contains("int"))
+                {
+                    int valorNumOrigen = int.Parse(valorOrigen);
+                    int valorNumDestino = string.IsNullOrEmpty(valorDestino) ? 0 : int.Parse(valorDestino);  // Si valorDestino está vacío, usar 0
+
+                    // Realizar la operación según el tipo
+                    switch (operacionGlobal)
+                    {
+                        case "copiar":
+                            resultadoOperacion = valorNumOrigen;
+                            break;
+                        case "sumar":
+                            resultadoOperacion = valorNumDestino + valorNumOrigen;
+                            break;
+                        case "restar":
+                            resultadoOperacion = valorNumDestino - valorNumOrigen;
+                            break;
+                        default:
+                            Console.WriteLine("Operación no reconocida.");
+                            return;
+                    }
+                }
+                else if (tipoCampoOrigen.Contains("decimal"))
+                {
+                    decimal valorDecOrigen = decimal.Parse(valorOrigen);
+                    decimal valorDecDestino = string.IsNullOrEmpty(valorDestino) ? 0 : decimal.Parse(valorDestino);
+
+                    switch (operacionGlobal)
+                    {
+                        case "copiar":
+                            resultadoOperacion = (int)valorDecOrigen;
+                            break;
+                        case "sumar":
+                            resultadoOperacion = (int)(valorDecDestino + valorDecOrigen);
+                            break;
+                        case "restar":
+                            resultadoOperacion = (int)(valorDecDestino - valorDecOrigen);
+                            break;
+                        default:
+                            Console.WriteLine("Operación no reconocida.");
+                            return;
+                    }
+                }
+
+                // Actualizar el valor en la tabla destino, usando la clave primaria
+                logic.ActualizarCampo(tablaDestinoGlobal, campoDestinoGlobal, resultadoOperacion.ToString(), clavePrimariaDestino, valorClavePrimariaDestino);
+                Console.WriteLine($"Operación '{operacionGlobal}' realizada exitosamente entre {campoOrigenGlobal} y {campoDestinoGlobal}.");
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"Error de formato: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al realizar la operación: {ex.Message}");
+            }
+        }
+
+
+        // Función para verificar si un valor es numérico
+        private bool EsNumero(string valor)
+        {
+            return int.TryParse(valor, out _);
+        }
 
         void LimpiarListaItems()
         {
@@ -565,7 +676,7 @@ namespace Capa_Vista_Navegador
 
             // Variables para gestionar la posición
             int columnaActual = 0; // Contador de columna
-            int maxFilasPorColumna = 6; // Número máximo de filas antes de cambiar de columna
+            int maxFilasPorColumna = 5; // Número máximo de filas antes de cambiar de columna
             int posX = 50; // Posición inicial en X
             int posY = 220; // Posición inicial en Y
             int desplazamientoY = 55; // Espacio vertical entre controles
@@ -687,7 +798,9 @@ namespace Capa_Vista_Navegador
                 iIndex++;
             }
         }
+        //******************************************** CODIGO HECHO POR JORGE AVILA***************************** 
 
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
         void CrearComponentesExtra(string tabla)
         {
             string[] sCampos = logic.Campos(tabla);
@@ -714,7 +827,7 @@ namespace Capa_Vista_Navegador
 
             // Crear un Label para indicar los campos adicionales
             Label lbl = new Label();
-            lbl.Text = "Campos Adicionales para: " + sTablaPrincipal;
+            lbl.Text = "Campos Adicionales para: " + tabla;
             lbl.Location = new Point(globalPosX + 50, posY);
             lbl.Font = new Font(fFuenteLabels.FontFamily, fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
             lbl.ForeColor = cColorFuente;
@@ -728,8 +841,8 @@ namespace Capa_Vista_Navegador
             // Iterar sobre todos los campos de la tabla
             for (int i = 0; i < sCampos.Length; i++)
             {
-                // Verificar si el campo es autoincremental o clave foránea
-                if (sLlaves[i] == "PRI" || sLlaves[i] == "MUL")
+                // Verificar si el campo es autoincremental o clave primaria
+                if (sLlaves[i] == "PRI")
                 {
                     continue;
                 }
@@ -772,11 +885,36 @@ namespace Capa_Vista_Navegador
                 switch (sTipos[i])
                 {
                     case "int":
-                        CrearTextBoxNumerico(nombreComponente, controlPosition);
+                        if (sLlaves[iIndex] != "MUL")
+                        {
+                            CrearTextBoxNumerico(nombreComponente, controlPosition);
+                        }
+                        else
+                        {
+                            string tablaRelacionada = logic.DetectarTablaRelacionada(tabla, sCampos[i]);
+                            string campoClave = logic.DetectarClaveRelacionada(tabla, sCampos[i]);
+
+                            dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
+
+                            CrearComboBox(nombreComponente, controlPosition);
+                        }
                         break;
                     case "varchar":
                     case "text":
-                        CrearTextBoxVarchar(nombreComponente, controlPosition);
+                        if (sLlaves[iIndex] != "MUL")
+                        {
+                            CrearTextBoxVarchar(nombreComponente, controlPosition);
+                        }
+                        else
+                        {
+                            // Clave foránea, crear ComboBox
+                            string tablaRelacionada = logic.DetectarTablaRelacionada(tabla, sCampos[i]);
+                            string campoClave = logic.DetectarClaveRelacionada(tabla, sCampos[i]);
+
+                            dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
+
+                            CrearComboBox(nombreComponente, controlPosition);
+                        }
                         break;
                     case "date":
                     case "datetime":
@@ -809,7 +947,7 @@ namespace Capa_Vista_Navegador
             globalFila = 0;
         }
 
-        //******************************************** CODIGO HECHO POR JORGE AVILA***************************** 
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
 
         //******************************************** CODIGO HECHO POR DIEGO MARROQUIN*****************************
 
@@ -1934,24 +2072,48 @@ namespace Capa_Vista_Navegador
                 // Refrescar la DataGridView y actualizar los controles
                 ActualizarDataGridView();
 
+                // Verificar que hay una fila seleccionada antes de proceder
+                if (Dgv_Informacion.CurrentRow == null)
+                {
+                    MessageBox.Show("No hay registros seleccionados para refrescar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 // Iterar sobre los controles y actualizar sus valores con los datos del DataGridView
                 int iIndex = 0;
                 int iNumCombo = 0;
+
                 foreach (Control componente in Controls)
                 {
+                    // Asegurarse de que iIndex no exceda el número de columnas disponibles en Dgv_Informacion
+                    if (iIndex >= Dgv_Informacion.Columns.Count)
+                    {
+                        break;
+                    }
+
                     if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                     {
                         if (componente is ComboBox)
                         {
-                            if (arrModoCampoCombo[iNumCombo] == 1) // Cambiado numCombo a iNumCombo
+                            // Validar que iNumCombo no exceda los límites de los arrays
+                            if (iNumCombo < arrModoCampoCombo.Length && iNumCombo < arrTablaCombo.Length && iNumCombo < arrCampoCombo.Length)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
                             }
                             else
                             {
-                                componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                // Si los arrays no están sincronizados, muestra un mensaje de error
+                                Console.WriteLine("Error: El número de ComboBoxes supera el tamaño de los arrays.");
                             }
-                            iNumCombo++; 
+
+                            iNumCombo++;
                         }
                         else
                         {
@@ -1960,20 +2122,24 @@ namespace Capa_Vista_Navegador
 
                         iIndex++;
                     }
-                    if (componente is Button)
+                    else if (componente is Button)
                     {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); 
-                        if (sVarEstado == "0")
+                        // Asegurarse de que iIndex no exceda el número de columnas disponibles en Dgv_Informacion
+                        if (iIndex < Dgv_Informacion.Columns.Count)
                         {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
 
@@ -2540,6 +2706,13 @@ namespace Capa_Vista_Navegador
                             Console.WriteLine("Ejecutando las consultas generadas para las tablas adicionales...");
                             logic.InsertarDatosEnMultiplesTablas(lstQueries);
                             Console.WriteLine("Todas las consultas ejecutadas exitosamente.");
+
+                            // **Aquí llamamos a la función para realizar la operación entre campos**
+                            if (operacionGlobal != "")
+                            {
+                                RealizarOperacionCampo();
+                            }
+
                             MessageBox.Show("El registro ha sido guardado correctamente.", "Guardado Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)

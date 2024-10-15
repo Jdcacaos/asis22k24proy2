@@ -896,6 +896,90 @@ namespace Capa_Modelo_Navegador
             return datosExtra;
         }
 
+        public string ObtenerValorCampo(string tabla, string campo, string clavePrimaria, string valorClavePrimaria)
+        {
+            string valor = "";
+            try
+            {
+                // Ajustamos la consulta para que busque en base a la clave primaria específica
+                string query = $"SELECT {campo} FROM {tabla} WHERE {clavePrimaria} = {valorClavePrimaria} AND estado = 1 LIMIT 1;";
+                OdbcCommand command = new OdbcCommand(query, cn.ProbarConexion());
+                OdbcDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    valor = reader[campo].ToString();  // Se obtiene el valor del campo
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener el valor del campo: " + ex.Message);
+            }
+            return valor;
+        }
+
+
+        public void ActualizarCampo(string tabla, string campo, string nuevoValor, string clavePrimaria, string valorClavePrimaria)
+        {
+            try
+            {
+                // Construir la consulta UPDATE usando la clave primaria para identificar el registro correcto
+                string query = $"UPDATE {tabla} SET {campo} = {nuevoValor} WHERE {clavePrimaria} = {valorClavePrimaria} AND estado = 1;";
+
+                // Ejecutar la consulta
+                using (OdbcCommand command = new OdbcCommand(query, cn.ProbarConexion()))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                Console.WriteLine("Campo actualizado exitosamente.");
+                Console.WriteLine(" Query generado: " + query);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al actualizar el campo: " + ex.Message);
+            }
+        }
+
+
+
+
+        // Capa Modelo: sentencias
+        public string ObtenerTipoCampo(string tabla, string campo)
+        {
+            string tipoCampo = "";
+            OdbcConnection conn = null;
+
+            try
+            {
+                conn = cn.ProbarConexion();
+                string sQuery = $"DESCRIBE {tabla} {campo};"; // Comando SQL para obtener la descripción del campo
+                OdbcCommand command = new OdbcCommand(sQuery, conn);
+                OdbcDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    tipoCampo = reader.GetString(1); // Tipo de dato está en la segunda columna (índice 1)
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el tipo de campo {campo} en la tabla {tabla}: {ex.Message}");
+            }
+            finally
+            {
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+            return tipoCampo; // Retorna el tipo de dato (ejemplo: int, varchar, etc.)
+        }
+
 
     }
 }

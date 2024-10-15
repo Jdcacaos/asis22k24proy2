@@ -217,6 +217,24 @@ namespace Capa_Controlador_Navegador
             return sn.ObtenerDatosTablaRelacionada(tabla, primaryKeyValue, tablaprincipal);
         }
 
+        public string ObtenerValorCampo(string tabla, string campo, string clavePrimaria, string valorClavePrimaria)
+        {
+            return sn.ObtenerValorCampo(tabla, campo, clavePrimaria, valorClavePrimaria);  // Llamamos al método de la capa lógica
+        }
+
+
+        public void ActualizarCampo(string tabla, string campo, string nuevoValor, string clavePrimaria, string valorClavePrimaria)
+        {
+            // Llama al modelo para ejecutar la actualización con la clave primaria
+            sn.ActualizarCampo(tabla, campo, nuevoValor, clavePrimaria, valorClavePrimaria);
+        }
+
+
+
+        public string ObtenerTipoCampo(string tabla, string campo)
+        {
+            return sn.ObtenerTipoCampo(tabla, campo); // Llamada a la función en la capa Modelo
+        }
 
 
 
