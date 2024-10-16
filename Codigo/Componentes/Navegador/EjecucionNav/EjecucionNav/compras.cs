@@ -29,7 +29,7 @@ namespace ejecucionNav
             navegador1.AsignarForaneas("vehiculos", "nombre_vehiculo", "Fk_vehiculo", "Pk_vehiculo");
 
             navegador1.AsignarOperacion( "detalle_venta_vehiculos", "cantidad_vendida", "inventario_vehiculos", "cantidad_existencia", "restar");
-
+            
             List<string> tablas = new List<string> { "venta" };
             navegador1.AsignarTablas(tablas);
 

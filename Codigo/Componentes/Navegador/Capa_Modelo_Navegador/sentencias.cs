@@ -11,7 +11,8 @@ namespace Capa_Modelo_Navegador
     public class sentencias
     {
         conexion cn = new conexion();
-
+        private OdbcTransaction transaction;
+        private OdbcConnection connection;
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ ***************************** 
         // Método que llena una tabla con datos relacionados a otra tabla si es necesario.
         public OdbcDataAdapter LlenaTbl(string sTabla, List<Tuple<string, string, string, string>> relacionesForaneas)
@@ -979,7 +980,78 @@ namespace Capa_Modelo_Navegador
 
             return tipoCampo; // Retorna el tipo de dato (ejemplo: int, varchar, etc.)
         }
+        public void IniciarTransaccion()
+        {
+            connection = cn.ProbarConexion();
+            transaction = connection.BeginTransaction();
+        }
 
+        // Método para ejecutar una consulta dentro de una transacción
+        public void EjecutarQueryTransaccion(string sQuery)
+        {
+            try
+            {
+                OdbcCommand command = new OdbcCommand(sQuery, connection, transaction);
+                command.ExecuteNonQuery();
+            }
+            catch (OdbcException ex)
+            {
+                Console.WriteLine("Error al ejecutar consulta en transacción: " + ex.Message);
+                throw;
+            }
+        }
+
+        // Método para confirmar (commit) la transacción
+        public void CommitTransaccion()
+        {
+            try
+            {
+                if (transaction != null)
+                {
+                    transaction.Commit();
+                }
+            }
+            catch (OdbcException ex)
+            {
+                Console.WriteLine("Error al hacer commit de la transacción: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                CerrarConexion();
+            }
+        }
+
+        // Método para deshacer (rollback) la transacción
+        public void RollbackTransaccion()
+        {
+            try
+            {
+                if (transaction != null)
+                {
+                    transaction.Rollback();
+                }
+            }
+            catch (OdbcException ex)
+            {
+                Console.WriteLine("Error al hacer rollback de la transacción: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                CerrarConexion();
+            }
+        }
+
+        // Método para cerrar la conexión
+        private void CerrarConexion()
+        {
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+                Console.WriteLine("Conexión cerrada después de la transacción.");
+            }
+        }
 
     }
 }

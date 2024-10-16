@@ -44,8 +44,14 @@ namespace ejecucionNav
             
 
             navegador1.AsignarOperacion("vehiculos", "existencia_vehiculo", "inventario_vehiculos", "cantidad_existencia","copiar");
+            
 
           
+        }
+
+        private void navegador1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

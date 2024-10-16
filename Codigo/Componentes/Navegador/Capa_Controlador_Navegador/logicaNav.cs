@@ -236,6 +236,29 @@ namespace Capa_Controlador_Navegador
             return sn.ObtenerTipoCampo(tabla, campo); // Llamada a la función en la capa Modelo
         }
 
+        public void IniciarTransaccion()
+        {
+            sn.IniciarTransaccion();
+        }
+
+        // Método para ejecutar una consulta dentro de una transacción
+        public void NuevoQueryTransaccion(string sQuery)
+        {
+            sn.EjecutarQueryTransaccion(sQuery);
+        }
+
+        // Método para confirmar (commit) la transacción
+        public void CommitTransaccion()
+        {
+            sn.CommitTransaccion();
+        }
+
+        // Método para deshacer (rollback) la transacción
+        public void RollbackTransaccion()
+        {
+            sn.RollbackTransaccion();
+        }
+
 
 
 

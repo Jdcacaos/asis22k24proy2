@@ -885,52 +885,61 @@ namespace Capa_Vista_Navegador
                 switch (sTipos[i])
                 {
                     case "int":
-                        if (sLlaves[iIndex] != "MUL")
+                        arrTipoCampos[iIndex] = "Num";
+                        if (sLlaves[i] != "MUL")
                         {
                             CrearTextBoxNumerico(nombreComponente, controlPosition);
                         }
                         else
                         {
+                            // Es una clave foránea, crear ComboBox
                             string tablaRelacionada = logic.DetectarTablaRelacionada(tabla, sCampos[i]);
                             string campoClave = logic.DetectarClaveRelacionada(tabla, sCampos[i]);
-
                             dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
-
                             CrearComboBox(nombreComponente, controlPosition);
                         }
                         break;
+
                     case "varchar":
                     case "text":
-                        if (sLlaves[iIndex] != "MUL")
+                        arrTipoCampos[iIndex] = "Text";
+                        if (sLlaves[i] != "MUL")
                         {
                             CrearTextBoxVarchar(nombreComponente, controlPosition);
                         }
                         else
                         {
-                            // Clave foránea, crear ComboBox
+                            // Es una clave foránea, crear ComboBox
                             string tablaRelacionada = logic.DetectarTablaRelacionada(tabla, sCampos[i]);
                             string campoClave = logic.DetectarClaveRelacionada(tabla, sCampos[i]);
-
                             dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
-
                             CrearComboBox(nombreComponente, controlPosition);
                         }
                         break;
+
                     case "date":
                     case "datetime":
+                        arrTipoCampos[iIndex] = "Date";
                         CrearDateTimePicker(nombreComponente, controlPosition);
                         break;
+
                     case "time":
+                        arrTipoCampos[iIndex] = "Time";
                         CrearCampoHora(nombreComponente, controlPosition);
                         break;
+
                     case "float":
                     case "decimal":
                     case "double":
+                        arrTipoCampos[iIndex] = "Decimal";
                         CrearCampoDecimales(nombreComponente, controlPosition);
                         break;
+
                     case "tinyint":
+                        arrTipoCampos[iIndex] = "Bool";
                         CrearBotonEstado(nombreComponente, controlPosition);
                         break;
+
                     default:
                         if (!string.IsNullOrEmpty(sTipos[i]))
                         {
