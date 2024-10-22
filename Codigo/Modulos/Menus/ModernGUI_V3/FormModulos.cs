@@ -21,6 +21,7 @@ namespace Interfac_V3
 
             InitializeComponent();
             this.idUsuario = idUsuario;
+            UsuarioSesion.SetIdUsuario(idUsuario);
         }
 
         private void FormModulos_Load(object sender, EventArgs e)
@@ -73,7 +74,7 @@ namespace Interfac_V3
             Aqui debe de agregarse la referencia a nominas
             */
 
-            frm_principal_nominas nominas = new frm_principal_nominas(idUsuario);
+            frm_principal_nominas nominas = new frm_principal_nominas(UsuarioSesion.GetIdUsuario());
             nominas.Show();
 
 
@@ -81,9 +82,9 @@ namespace Interfac_V3
 
         private void Btn_Logistica_Click(object sender, EventArgs e)
         {
-           /*
-            Aqui debe de agregarse la referencia a logistica
-            */
+            /*
+             Aqui debe de agregarse la referencia a logistica
+             */
 
 
         }

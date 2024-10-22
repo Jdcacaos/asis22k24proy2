@@ -26,22 +26,6 @@ namespace Capa_Vista_Logistica
             navegador1.ObtenerIdUsuario(idUsuario);
             navegador1.AsignarAyuda("1");
             navegador1.AsignarNombreForm("Movimientos de Inventario");
-
-
-            navegador1.Dgv_Informacion.CellClick += DgvMovimiento_CellClick;
-        }
-
-        private void DgvMovimiento_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Verificar que la fila seleccionada es válida
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = navegador1.Dgv_Informacion.Rows[e.RowIndex];
-                string Pk_id_movimiento = row.Cells["Pk_id_movimiento"].Value.ToString();  // Asegúrate de que el nombre del campo sea correcto
-
-                Movimiento_de_Inventario movInventario = new Movimiento_de_Inventario(Pk_id_movimiento);
-                movInventario.Show();
-            }
         }
     }
 }

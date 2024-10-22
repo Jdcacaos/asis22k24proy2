@@ -18,8 +18,8 @@ namespace Capa_Vista_Produccion
             string[] alias = { "ID", "Producto","Descripción", "Cantidad", "Costo", "Campo", "Tipo", "Estado" };
             navegador1.AsignarAlias(alias);
             navegador1.AsignarSalida(this);
-            Color colorFondo = ColorTranslator.FromHtml("#AEA1D6"); // Color de fondo
-            Color colorFuente = ColorTranslator.FromHtml("#230050"); // Color de fuente
+            Color colorFondo = ColorTranslator.FromHtml("#B1CFE6"); // Color de fondo
+            Color colorFuente = ColorTranslator.FromHtml("#112B4D"); // Color de fuente
             navegador1.AsignarColorFondo(colorFondo);
             navegador1.AsignarColorFuente(colorFuente);
             navegador1.ObtenerIdAplicacion("1000");

@@ -19,11 +19,10 @@ namespace Capa_Modelo_Logistica
         public OdbcDataReader ObtenerExistenciasBodega(string idBodega)
         {
             OdbcDataReader dr = null;
-            OdbcConnection conn = null; // Declarar la conexión aquí
+            OdbcConnection conn = cn.conexion(); // Mover la conexión aquí
 
             try
             {
-                conn = cn.conexion();
                 string query = $"SELECT * FROM TBL_EXISTENCIAS_BODEGA WHERE Fk_ID_BODEGA = '{idBodega}'";
                 OdbcCommand cmd = new OdbcCommand(query, conn);
                 dr = cmd.ExecuteReader();
@@ -31,20 +30,14 @@ namespace Capa_Modelo_Logistica
             catch (Exception ex)
             {
                 Console.WriteLine("Error al obtener existencias: " + ex.Message);
-                // Asegurarse de que dr sea null en caso de error
-                dr = null;
-            }
-            finally
-            {
-                // Si se produce un error, cerramos la conexión
-                if (conn != null && conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close(); // Cerrar la conexión si está abierta
-                }
+                dr = null; // Asegurarse de que dr sea null en caso de error
             }
 
+            // La conexión se cerrará cuando el DataReader haya sido cerrado en el controlador
             return dr;
         }
+
+
 
         // Método para insertar una auditoría de inventario (Realizado por Daniel Sierra 0901-21-12740)
         public void InsertarAuditoria(string idBodega, string idProducto, int cantidadFisica, int cantidadRegistrada, bool discrepancia)
@@ -73,6 +66,8 @@ namespace Capa_Modelo_Logistica
                 }
             }
         }
+
+
         public void InsertarSolicitudMantenimiento(int idMantenimiento, string nombreSolicitante, string tipoMantenimiento, string componenteAfectado, string fecha, string responsableAsignado, string codigo_error_Problema, string estadoMantenimiento, string tiempoEstimado, int id_Movimiento)
         {
             OdbcConnection conn = cn.conexion();
@@ -105,35 +100,158 @@ namespace Capa_Modelo_Logistica
                 }
             }
         }
+        // Método para obtener Bodegas en la tabla (Realizado por Daniel Sierra 0901-21-12740)
 
-        public OdbcDataReader ObtenerProductosPorBodega(string idBodega) //realizado por José Daniel Sierra
+        public List<KeyValuePair<int, string>> GetBodegas()
         {
-            OdbcDataReader dr = null;
-            OdbcConnection conn = null;
+            string sQuery = "SELECT Pk_ID_BODEGA, NOMBRE_BODEGA FROM TBL_BODEGAS;";
+            List<KeyValuePair<int, string>> bodegas = new List<KeyValuePair<int, string>>();
 
-            try
+            using (OdbcConnection conn = cn.conexion())
             {
-                conn = cn.conexion(); // Establecer la conexión
-                string query = "SELECT * FROM Tbl_Productos WHERE Fk_id_bodega = ?";
-                OdbcCommand cmd = new OdbcCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Fk_id_bodega", idBodega);
-                dr = cmd.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error al obtener productos: " + ex.Message);
-                dr = null;
-            }
-            finally
-            {
-                if (conn != null && conn.State == System.Data.ConnectionState.Open)
+                try
                 {
-                    conn.Close();
+                    OdbcDataAdapter dataTable = new OdbcDataAdapter(sQuery, conn);
+                    DataTable table = new DataTable();
+                    dataTable.Fill(table);
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        int idBodega = Convert.ToInt32(row["Pk_ID_BODEGA"]);
+                        string nombreBodega = row["NOMBRE_BODEGA"].ToString();
+                        bodegas.Add(new KeyValuePair<int, string>(idBodega, nombreBodega));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message.ToString() + " \nNo se pudo consultar la tabla TBL_BODEGAS");
                 }
             }
 
-            return dr;
+            return bodegas;
         }
+        // Método para obtener Productos en la tabla (Realizado por Daniel Sierra 0901-21-12740)
+
+        public List<KeyValuePair<int, string>> GetProductos()
+        {
+            string sQuery = "SELECT Pk_id_Producto, nombreProducto FROM Tbl_Productos;";
+            List<KeyValuePair<int, string>> productos = new List<KeyValuePair<int, string>>();
+
+            using (OdbcConnection conn = cn.conexion())
+            {
+                try
+                {
+                    OdbcDataAdapter dataTable = new OdbcDataAdapter(sQuery, conn);
+                    DataTable table = new DataTable();
+                    dataTable.Fill(table);
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        int idProducto = Convert.ToInt32(row["Pk_id_Producto"]);
+                        string nombreProducto = row["nombreProducto"].ToString();
+                        productos.Add(new KeyValuePair<int, string>(idProducto, nombreProducto));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message.ToString() + " \nNo se pudo consultar la tabla Tbl_Productos");
+                }
+            }
+
+            return productos;
+        }
+
+        public List<string> GetProductosPorBodega(string idBodega)
+        {
+            string sQuery = $"SELECT Pk_ID_PRODUCTO, NOMBRE_PRODUCTO FROM Tbl_Productos WHERE Fk_ID_BODEGA = '{idBodega}';"; // Asegúrate de que esta consulta sea correcta según tu esquema
+            List<string> productos = new List<string>();
+
+            using (OdbcConnection conn = cn.conexion())
+            {
+                try
+                {
+                    OdbcDataAdapter dataTable = new OdbcDataAdapter(sQuery, conn);
+                    DataTable table = new DataTable();
+                    dataTable.Fill(table);
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        productos.Add(row["NOMBRE_PRODUCTO"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message.ToString() + " \nNo se pudo consultar la tabla Tbl_Productos");
+                }
+            }
+
+            return productos;
+        }
+        // Método para insertar auditorías (Realizado por José daniel sierra cruz)
+
+        public string InsertarAuditoria(int idBodega, int idProducto, DateTime fechaAuditoria, string observaciones, int cantidadRegistrada, int cantidadFisica, bool discrepancia)
+        {
+            using (OdbcConnection conn = cn.conexion())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "INSERT INTO TBL_AUDITORIAS (Fk_ID_BODEGA, Fk_ID_PRODUCTO, FECHA_AUDITORIA, OBSERVACIONES, CANTIDAD_REGISTRADA, CANTIDAD_FISICA, DISCREPANCIA_DETECTADA) " +
+                                   "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    using (OdbcCommand cmd = new OdbcCommand(query, conn))
+                    {
+                        // Establecer los parámetros
+                        cmd.Parameters.AddWithValue("?", idBodega);
+                        cmd.Parameters.AddWithValue("?", idProducto);
+                        cmd.Parameters.AddWithValue("?", fechaAuditoria);
+                        cmd.Parameters.AddWithValue("?", observaciones);
+                        cmd.Parameters.AddWithValue("?", cantidadRegistrada);
+                        cmd.Parameters.AddWithValue("?", cantidadFisica);
+                        cmd.Parameters.AddWithValue("?", discrepancia);
+
+                        int filasAfectadas = cmd.ExecuteNonQuery();
+                        return filasAfectadas > 0 ? "Auditoría realizada con éxito" : "No se insertaron registros en la auditoría.";
+                    }
+                }
+                catch (OdbcException ex)
+                {
+                    return "Error al realizar auditoría: " + ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    return "Error inesperado: " + ex.Message;
+                }
+            }
+        }
+
+        // Método para obtener auditorías (Realizado por José daniel sierra cruz)
+        public DataTable ObtenerAuditorias()
+        {
+            DataTable dtAuditorias = new DataTable();
+
+            try
+            {
+                using (OdbcConnection conn = cn.conexion())
+                {
+                    string query = "SELECT * FROM TBL_AUDITORIAS";
+                    using (OdbcCommand cmd = new OdbcCommand(query, conn))
+                    {
+                        using (OdbcDataAdapter da = new OdbcDataAdapter(cmd))
+                        {
+                            da.Fill(dtAuditorias); // Llenar el DataTable con los datos de auditorías
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener auditorías: " + ex.Message);
+            }
+
+            return dtAuditorias;
+        }
+
+
         // Realizado  Metodo de ingreso de chofer por Ammy Patricia Catún López - 0901-21-4857
         public void registrarChofer(string id_chofer, string nombreEmp, string numeroIdent, string nombre, string licencia, string telefono, string direccion)
         {

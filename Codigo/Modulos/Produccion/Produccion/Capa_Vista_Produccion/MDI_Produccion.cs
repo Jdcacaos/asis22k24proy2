@@ -19,26 +19,27 @@ namespace Capa_Vista_Produccion
         public MDI_Produccion(string idUsuario)
         {
             InitializeComponent();
-            ocultaSubMenu();
+            ocultaSubMenu(); // Solo oculta los menús al inicio
         }
 
-        // Ocultar submenús al iniciar
+        // Ocultar submenús al iniciar (sin cerrar al abrir otro)
         private void ocultaSubMenu()
         {
-            if (panelMenuProcesos.Visible == true)
-                panelMenuProcesos.Visible = false;
+            panelMenuProcesos.Visible = false;
+            panelMenuMantenimiento.Visible = false;
         }
 
-        // Mostrar u ocultar submenús
+        // Mostrar u ocultar submenús (ahora se permite que los dos estén abiertos al mismo tiempo)
         private void muestraSubMenu(Panel subMenu)
         {
             if (subMenu.Visible == false)
             {
-                ocultaSubMenu();
-                subMenu.Visible = true;
+                subMenu.Visible = true; // Solo muestra el panel si está oculto
             }
             else
-                subMenu.Visible = false;
+            {
+                subMenu.Visible = false; // Oculta el panel si ya está visible
+            }
         }
 
         // Función para cerrar el formulario
@@ -63,7 +64,7 @@ namespace Capa_Vista_Produccion
         }
 
         // Botón de maquinaria
-        private void btnMaquinaria_Click(object sender, EventArgs e)
+        private void btnMaquinaria_Click_1(object sender, EventArgs e)
         {
             Frm_Maquinaria maquinaria = new Frm_Maquinaria();
             maquinaria.Show();
@@ -105,21 +106,21 @@ namespace Capa_Vista_Produccion
         }
 
         // Botón de conversiones
-        private void btnConversiones_Click(object sender, EventArgs e)
+        private void btnConversiones_Click_1(object sender, EventArgs e)
         {
             Frm_Conversiones Conv = new Frm_Conversiones();
             Conv.Show();
         }
 
         // Botón de series
-        private void btnSeries_Click(object sender, EventArgs e)
+        private void btnSeries_Click_1(object sender, EventArgs e)
         {
             Frm_Series Series = new Frm_Series();
             Series.Show();
         }
 
         // Botón de lotes
-        private void btnLotes_Click(object sender, EventArgs e)
+        private void btnLotes_Click_1(object sender, EventArgs e)
         {
             Frm_Lotes Lotes = new Frm_Lotes();
             Lotes.Show();
@@ -130,6 +131,12 @@ namespace Capa_Vista_Produccion
         private void btnMenuProcesos_Click(object sender, EventArgs e)
         {
             muestraSubMenu(panelMenuProcesos);
+        }
+
+        // Mostrar el submenú de mantenimiento
+        private void btnMenuMantenimiento_Click_1(object sender, EventArgs e)
+        {
+            muestraSubMenu(panelMenuMantenimiento);
         }
 
         // Minimizar el formulario
@@ -152,12 +159,14 @@ namespace Capa_Vista_Produccion
             btnRestaurar.Visible = true;
         }
 
-        private void Btn_Recetas_Click(object sender, EventArgs e)
+        private void Btn_Recetas_Click_1(object sender, EventArgs e)
         {
             Frm_Receta receta = new Frm_Receta();
             receta.Show();
         }
 
+
+        // Restaurar el tamaño original de la ventana
         private void btnRestaurar_Click_1(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
@@ -167,7 +176,8 @@ namespace Capa_Vista_Produccion
             btnRestaurar.Visible = false;
         }
 
-        private void btnSalir_Click(object sender, EventArgs e)
+        // Función para salir del formulario
+        private void btnSalir_Click_1(object sender, EventArgs e)
         {
             this.Close();
         }

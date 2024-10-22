@@ -32,34 +32,45 @@ namespace Capa_Vista_Nominas
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_principal_nominas));
             this.Pnl_contenedor = new System.Windows.Forms.Panel();
             this.panelIdentificacion = new System.Windows.Forms.Panel();
+            this.Lbl_hora = new System.Windows.Forms.Label();
+            this.Lbl_usuario = new System.Windows.Forms.Label();
+            this.Lbl_usuario2 = new System.Windows.Forms.Label();
+            this.Lbl_fechaHora = new System.Windows.Forms.Label();
             this.Pnl_formularios = new System.Windows.Forms.Panel();
-            this.Pic_logoformularios = new System.Windows.Forms.PictureBox();
             this.panelMenu = new System.Windows.Forms.Panel();
-            this.Btn_salir = new System.Windows.Forms.Button();
             this.Pnl_mantenimientos = new System.Windows.Forms.Panel();
             this.Btn_percepdeduc = new System.Windows.Forms.Button();
             this.Btn_empleado = new System.Windows.Forms.Button();
             this.Btn_departamento = new System.Windows.Forms.Button();
             this.Btn_puesto = new System.Windows.Forms.Button();
+            this.Pnl_superior = new System.Windows.Forms.Panel();
+            this.Pnl_generacion = new System.Windows.Forms.Panel();
+            this.Btn_anticipo = new System.Windows.Forms.Button();
+            this.Btn_planilla = new System.Windows.Forms.Button();
+            this.Btn_contrato = new System.Windows.Forms.Button();
+            this.Btn_horasextra = new System.Windows.Forms.Button();
+            this.Btn_faltas = new System.Windows.Forms.Button();
+            this.Btn_generacionpercep = new System.Windows.Forms.Button();
+            this.Btn_generaciondeduc = new System.Windows.Forms.Button();
+            this.Pic_logoformularios = new System.Windows.Forms.PictureBox();
+            this.Btn_salir = new System.Windows.Forms.Button();
+            this.Btn_reportes = new System.Windows.Forms.Button();
+            this.Btn_generacion = new System.Windows.Forms.Button();
             this.Btn_mantenimientos = new System.Windows.Forms.Button();
             this.Btn_inicio = new System.Windows.Forms.Button();
-            this.Pnl_superior = new System.Windows.Forms.Panel();
             this.Pic_icono = new System.Windows.Forms.PictureBox();
             this.Btn_restaurar = new System.Windows.Forms.PictureBox();
             this.Btn_minimizar = new System.Windows.Forms.PictureBox();
             this.Btn_maximizar = new System.Windows.Forms.PictureBox();
             this.Btn_cerrar = new System.Windows.Forms.PictureBox();
-            this.Lbl_usuario = new System.Windows.Forms.Label();
-            this.Lbl_usuario2 = new System.Windows.Forms.Label();
-            this.Lbl_hora = new System.Windows.Forms.Label();
-            this.Lbl_fechaHora = new System.Windows.Forms.Label();
             this.Pnl_contenedor.SuspendLayout();
             this.panelIdentificacion.SuspendLayout();
             this.Pnl_formularios.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_logoformularios)).BeginInit();
             this.panelMenu.SuspendLayout();
             this.Pnl_mantenimientos.SuspendLayout();
             this.Pnl_superior.SuspendLayout();
+            this.Pnl_generacion.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_logoformularios)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_icono)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Btn_restaurar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Btn_minimizar)).BeginInit();
@@ -94,6 +105,46 @@ namespace Capa_Vista_Nominas
             this.panelIdentificacion.Size = new System.Drawing.Size(1157, 23);
             this.panelIdentificacion.TabIndex = 3;
             // 
+            // Lbl_hora
+            // 
+            this.Lbl_hora.AutoSize = true;
+            this.Lbl_hora.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lbl_hora.Location = new System.Drawing.Point(1020, 1);
+            this.Lbl_hora.Name = "Lbl_hora";
+            this.Lbl_hora.Size = new System.Drawing.Size(21, 20);
+            this.Lbl_hora.TabIndex = 3;
+            this.Lbl_hora.Text = "--";
+            // 
+            // Lbl_usuario
+            // 
+            this.Lbl_usuario.AutoSize = true;
+            this.Lbl_usuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lbl_usuario.Location = new System.Drawing.Point(757, 0);
+            this.Lbl_usuario.Name = "Lbl_usuario";
+            this.Lbl_usuario.Size = new System.Drawing.Size(77, 20);
+            this.Lbl_usuario.TabIndex = 0;
+            this.Lbl_usuario.Text = "Usuario: ";
+            // 
+            // Lbl_usuario2
+            // 
+            this.Lbl_usuario2.AutoSize = true;
+            this.Lbl_usuario2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lbl_usuario2.Location = new System.Drawing.Point(840, 0);
+            this.Lbl_usuario2.Name = "Lbl_usuario2";
+            this.Lbl_usuario2.Size = new System.Drawing.Size(21, 20);
+            this.Lbl_usuario2.TabIndex = 1;
+            this.Lbl_usuario2.Text = "--";
+            // 
+            // Lbl_fechaHora
+            // 
+            this.Lbl_fechaHora.AutoSize = true;
+            this.Lbl_fechaHora.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lbl_fechaHora.Location = new System.Drawing.Point(940, 0);
+            this.Lbl_fechaHora.Name = "Lbl_fechaHora";
+            this.Lbl_fechaHora.Size = new System.Drawing.Size(60, 20);
+            this.Lbl_fechaHora.TabIndex = 2;
+            this.Lbl_fechaHora.Text = "Fecha:";
+            // 
             // Pnl_formularios
             // 
             this.Pnl_formularios.BackColor = System.Drawing.SystemColors.Control;
@@ -106,24 +157,14 @@ namespace Capa_Vista_Nominas
             this.Pnl_formularios.Size = new System.Drawing.Size(1157, 622);
             this.Pnl_formularios.TabIndex = 2;
             // 
-            // Pic_logoformularios
-            // 
-            this.Pic_logoformularios.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.Pic_logoformularios.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.Pic_logoformularios.Image = ((System.Drawing.Image)(resources.GetObject("Pic_logoformularios.Image")));
-            this.Pic_logoformularios.Location = new System.Drawing.Point(298, 163);
-            this.Pic_logoformularios.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Pic_logoformularios.Name = "Pic_logoformularios";
-            this.Pic_logoformularios.Size = new System.Drawing.Size(225, 225);
-            this.Pic_logoformularios.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.Pic_logoformularios.TabIndex = 0;
-            this.Pic_logoformularios.TabStop = false;
-            // 
             // panelMenu
             // 
             this.panelMenu.AutoScroll = true;
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(0)))), ((int)(((byte)(140)))));
             this.panelMenu.Controls.Add(this.Btn_salir);
+            this.panelMenu.Controls.Add(this.Btn_reportes);
+            this.panelMenu.Controls.Add(this.Pnl_generacion);
+            this.panelMenu.Controls.Add(this.Btn_generacion);
             this.panelMenu.Controls.Add(this.Pnl_mantenimientos);
             this.panelMenu.Controls.Add(this.Btn_mantenimientos);
             this.panelMenu.Controls.Add(this.Btn_inicio);
@@ -134,27 +175,6 @@ namespace Capa_Vista_Nominas
             this.panelMenu.Size = new System.Drawing.Size(206, 622);
             this.panelMenu.TabIndex = 1;
             // 
-            // Btn_salir
-            // 
-            this.Btn_salir.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Btn_salir.FlatAppearance.BorderSize = 0;
-            this.Btn_salir.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
-            this.Btn_salir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
-            this.Btn_salir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_salir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_salir.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Btn_salir.Image = global::Capa_Vista_Nominas.Properties.Resources.cerrar_sesion;
-            this.Btn_salir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Btn_salir.Location = new System.Drawing.Point(0, 290);
-            this.Btn_salir.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Btn_salir.Name = "Btn_salir";
-            this.Btn_salir.Size = new System.Drawing.Size(206, 60);
-            this.Btn_salir.TabIndex = 7;
-            this.Btn_salir.Text = "     Salir";
-            this.Btn_salir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Btn_salir.UseVisualStyleBackColor = true;
-            this.Btn_salir.Click += new System.EventHandler(this.Btn_salir_Click);
-            // 
             // Pnl_mantenimientos
             // 
             this.Pnl_mantenimientos.Controls.Add(this.Btn_percepdeduc);
@@ -164,7 +184,7 @@ namespace Capa_Vista_Nominas
             this.Pnl_mantenimientos.Dock = System.Windows.Forms.DockStyle.Top;
             this.Pnl_mantenimientos.Location = new System.Drawing.Point(0, 120);
             this.Pnl_mantenimientos.Name = "Pnl_mantenimientos";
-            this.Pnl_mantenimientos.Size = new System.Drawing.Size(206, 170);
+            this.Pnl_mantenimientos.Size = new System.Drawing.Size(185, 170);
             this.Pnl_mantenimientos.TabIndex = 9;
             this.Pnl_mantenimientos.Visible = false;
             // 
@@ -177,7 +197,7 @@ namespace Capa_Vista_Nominas
             this.Btn_percepdeduc.Location = new System.Drawing.Point(0, 120);
             this.Btn_percepdeduc.Name = "Btn_percepdeduc";
             this.Btn_percepdeduc.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.Btn_percepdeduc.Size = new System.Drawing.Size(206, 43);
+            this.Btn_percepdeduc.Size = new System.Drawing.Size(185, 43);
             this.Btn_percepdeduc.TabIndex = 6;
             this.Btn_percepdeduc.Text = "Percepciones\r\nDeducciones";
             this.Btn_percepdeduc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -193,7 +213,7 @@ namespace Capa_Vista_Nominas
             this.Btn_empleado.Location = new System.Drawing.Point(0, 79);
             this.Btn_empleado.Name = "Btn_empleado";
             this.Btn_empleado.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.Btn_empleado.Size = new System.Drawing.Size(206, 41);
+            this.Btn_empleado.Size = new System.Drawing.Size(185, 41);
             this.Btn_empleado.TabIndex = 5;
             this.Btn_empleado.Text = "Empleado";
             this.Btn_empleado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -209,7 +229,7 @@ namespace Capa_Vista_Nominas
             this.Btn_departamento.Location = new System.Drawing.Point(0, 38);
             this.Btn_departamento.Name = "Btn_departamento";
             this.Btn_departamento.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.Btn_departamento.Size = new System.Drawing.Size(206, 41);
+            this.Btn_departamento.Size = new System.Drawing.Size(185, 41);
             this.Btn_departamento.TabIndex = 4;
             this.Btn_departamento.Text = "Departamento";
             this.Btn_departamento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -225,55 +245,12 @@ namespace Capa_Vista_Nominas
             this.Btn_puesto.Location = new System.Drawing.Point(0, 0);
             this.Btn_puesto.Name = "Btn_puesto";
             this.Btn_puesto.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.Btn_puesto.Size = new System.Drawing.Size(206, 38);
+            this.Btn_puesto.Size = new System.Drawing.Size(185, 38);
             this.Btn_puesto.TabIndex = 3;
             this.Btn_puesto.Text = "Puesto";
             this.Btn_puesto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Btn_puesto.UseVisualStyleBackColor = true;
             this.Btn_puesto.Click += new System.EventHandler(this.Btn_puesto_Click);
-            // 
-            // Btn_mantenimientos
-            // 
-            this.Btn_mantenimientos.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Btn_mantenimientos.FlatAppearance.BorderSize = 0;
-            this.Btn_mantenimientos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
-            this.Btn_mantenimientos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
-            this.Btn_mantenimientos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_mantenimientos.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_mantenimientos.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Btn_mantenimientos.Image = global::Capa_Vista_Nominas.Properties.Resources.mantenimiento_web;
-            this.Btn_mantenimientos.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Btn_mantenimientos.Location = new System.Drawing.Point(0, 60);
-            this.Btn_mantenimientos.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Btn_mantenimientos.Name = "Btn_mantenimientos";
-            this.Btn_mantenimientos.Size = new System.Drawing.Size(206, 60);
-            this.Btn_mantenimientos.TabIndex = 2;
-            this.Btn_mantenimientos.Text = "     Mantenimientos";
-            this.Btn_mantenimientos.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Btn_mantenimientos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Btn_mantenimientos.UseVisualStyleBackColor = true;
-            this.Btn_mantenimientos.Click += new System.EventHandler(this.Btn_mantenimientos_Click);
-            // 
-            // Btn_inicio
-            // 
-            this.Btn_inicio.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Btn_inicio.FlatAppearance.BorderSize = 0;
-            this.Btn_inicio.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
-            this.Btn_inicio.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
-            this.Btn_inicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_inicio.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_inicio.ForeColor = System.Drawing.Color.Gainsboro;
-            this.Btn_inicio.Image = global::Capa_Vista_Nominas.Properties.Resources.pagina_de_inicio;
-            this.Btn_inicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Btn_inicio.Location = new System.Drawing.Point(0, 0);
-            this.Btn_inicio.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Btn_inicio.Name = "Btn_inicio";
-            this.Btn_inicio.Size = new System.Drawing.Size(206, 60);
-            this.Btn_inicio.TabIndex = 1;
-            this.Btn_inicio.Text = "     Inicio";
-            this.Btn_inicio.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Btn_inicio.UseVisualStyleBackColor = true;
-            this.Btn_inicio.Click += new System.EventHandler(this.Btn_inicio_Click);
             // 
             // Pnl_superior
             // 
@@ -290,9 +267,258 @@ namespace Capa_Vista_Nominas
             this.Pnl_superior.Size = new System.Drawing.Size(1363, 39);
             this.Pnl_superior.TabIndex = 0;
             // 
+            // Pnl_generacion
+            // 
+            this.Pnl_generacion.Controls.Add(this.Btn_generaciondeduc);
+            this.Pnl_generacion.Controls.Add(this.Btn_generacionpercep);
+            this.Pnl_generacion.Controls.Add(this.Btn_faltas);
+            this.Pnl_generacion.Controls.Add(this.Btn_anticipo);
+            this.Pnl_generacion.Controls.Add(this.Btn_planilla);
+            this.Pnl_generacion.Controls.Add(this.Btn_contrato);
+            this.Pnl_generacion.Controls.Add(this.Btn_horasextra);
+            this.Pnl_generacion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Pnl_generacion.Location = new System.Drawing.Point(0, 350);
+            this.Pnl_generacion.Name = "Pnl_generacion";
+            this.Pnl_generacion.Size = new System.Drawing.Size(185, 303);
+            this.Pnl_generacion.TabIndex = 11;
+            this.Pnl_generacion.Visible = false;
+            // 
+            // Btn_anticipo
+            // 
+            this.Btn_anticipo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_anticipo.FlatAppearance.BorderSize = 0;
+            this.Btn_anticipo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_anticipo.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_anticipo.Location = new System.Drawing.Point(0, 120);
+            this.Btn_anticipo.Name = "Btn_anticipo";
+            this.Btn_anticipo.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_anticipo.Size = new System.Drawing.Size(185, 43);
+            this.Btn_anticipo.TabIndex = 6;
+            this.Btn_anticipo.Text = "Anticipo";
+            this.Btn_anticipo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_anticipo.UseVisualStyleBackColor = true;
+            this.Btn_anticipo.Click += new System.EventHandler(this.Btn_anticipo_Click);
+            // 
+            // Btn_planilla
+            // 
+            this.Btn_planilla.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_planilla.FlatAppearance.BorderSize = 0;
+            this.Btn_planilla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_planilla.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_planilla.Location = new System.Drawing.Point(0, 79);
+            this.Btn_planilla.Name = "Btn_planilla";
+            this.Btn_planilla.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_planilla.Size = new System.Drawing.Size(185, 41);
+            this.Btn_planilla.TabIndex = 5;
+            this.Btn_planilla.Text = "Planilla";
+            this.Btn_planilla.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_planilla.UseVisualStyleBackColor = true;
+            this.Btn_planilla.Click += new System.EventHandler(this.Btn_planilla_Click);
+            // 
+            // Btn_contrato
+            // 
+            this.Btn_contrato.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_contrato.FlatAppearance.BorderSize = 0;
+            this.Btn_contrato.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_contrato.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_contrato.Location = new System.Drawing.Point(0, 38);
+            this.Btn_contrato.Name = "Btn_contrato";
+            this.Btn_contrato.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_contrato.Size = new System.Drawing.Size(185, 41);
+            this.Btn_contrato.TabIndex = 4;
+            this.Btn_contrato.Text = "Contrato";
+            this.Btn_contrato.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_contrato.UseVisualStyleBackColor = true;
+            this.Btn_contrato.Click += new System.EventHandler(this.Btn_contrato_Click);
+            // 
+            // Btn_horasextra
+            // 
+            this.Btn_horasextra.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_horasextra.FlatAppearance.BorderSize = 0;
+            this.Btn_horasextra.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_horasextra.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_horasextra.Location = new System.Drawing.Point(0, 0);
+            this.Btn_horasextra.Name = "Btn_horasextra";
+            this.Btn_horasextra.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_horasextra.Size = new System.Drawing.Size(185, 38);
+            this.Btn_horasextra.TabIndex = 3;
+            this.Btn_horasextra.Text = "Horas Extras";
+            this.Btn_horasextra.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_horasextra.UseVisualStyleBackColor = true;
+            this.Btn_horasextra.Click += new System.EventHandler(this.Btn_horasextra_Click);
+            // 
+            // Btn_faltas
+            // 
+            this.Btn_faltas.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_faltas.FlatAppearance.BorderSize = 0;
+            this.Btn_faltas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_faltas.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_faltas.Location = new System.Drawing.Point(0, 163);
+            this.Btn_faltas.Name = "Btn_faltas";
+            this.Btn_faltas.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_faltas.Size = new System.Drawing.Size(185, 43);
+            this.Btn_faltas.TabIndex = 7;
+            this.Btn_faltas.Text = "Faltas";
+            this.Btn_faltas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_faltas.UseVisualStyleBackColor = true;
+            this.Btn_faltas.Click += new System.EventHandler(this.Btn_faltas_Click);
+            // 
+            // Btn_generacionpercep
+            // 
+            this.Btn_generacionpercep.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_generacionpercep.FlatAppearance.BorderSize = 0;
+            this.Btn_generacionpercep.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_generacionpercep.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_generacionpercep.Location = new System.Drawing.Point(0, 206);
+            this.Btn_generacionpercep.Name = "Btn_generacionpercep";
+            this.Btn_generacionpercep.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_generacionpercep.Size = new System.Drawing.Size(185, 43);
+            this.Btn_generacionpercep.TabIndex = 8;
+            this.Btn_generacionpercep.Text = "Percepciones de Empleados";
+            this.Btn_generacionpercep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_generacionpercep.UseVisualStyleBackColor = true;
+            this.Btn_generacionpercep.Click += new System.EventHandler(this.Btn_generacionpercep_Click);
+            // 
+            // Btn_generaciondeduc
+            // 
+            this.Btn_generaciondeduc.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_generaciondeduc.FlatAppearance.BorderSize = 0;
+            this.Btn_generaciondeduc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_generaciondeduc.ForeColor = System.Drawing.Color.Silver;
+            this.Btn_generaciondeduc.Location = new System.Drawing.Point(0, 249);
+            this.Btn_generaciondeduc.Name = "Btn_generaciondeduc";
+            this.Btn_generaciondeduc.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.Btn_generaciondeduc.Size = new System.Drawing.Size(185, 43);
+            this.Btn_generaciondeduc.TabIndex = 9;
+            this.Btn_generaciondeduc.Text = "Deducciones de Empleados";
+            this.Btn_generaciondeduc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_generaciondeduc.UseVisualStyleBackColor = true;
+            this.Btn_generaciondeduc.Click += new System.EventHandler(this.Btn_generaciondeduc_Click);
+            // 
+            // Pic_logoformularios
+            // 
+            this.Pic_logoformularios.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.Pic_logoformularios.BackColor = System.Drawing.SystemColors.Control;
+            this.Pic_logoformularios.Image = global::Capa_Vista_Nominas.Properties.Resources.logonominasprincipal1;
+            this.Pic_logoformularios.Location = new System.Drawing.Point(385, 120);
+            this.Pic_logoformularios.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Pic_logoformularios.Name = "Pic_logoformularios";
+            this.Pic_logoformularios.Size = new System.Drawing.Size(369, 356);
+            this.Pic_logoformularios.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.Pic_logoformularios.TabIndex = 0;
+            this.Pic_logoformularios.TabStop = false;
+            this.Pic_logoformularios.Click += new System.EventHandler(this.Pic_logoformularios_Click);
+            // 
+            // Btn_salir
+            // 
+            this.Btn_salir.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_salir.FlatAppearance.BorderSize = 0;
+            this.Btn_salir.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.Btn_salir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.Btn_salir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_salir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_salir.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Btn_salir.Image = global::Capa_Vista_Nominas.Properties.Resources.cerrar_sesion1;
+            this.Btn_salir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_salir.Location = new System.Drawing.Point(0, 713);
+            this.Btn_salir.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Btn_salir.Name = "Btn_salir";
+            this.Btn_salir.Size = new System.Drawing.Size(185, 60);
+            this.Btn_salir.TabIndex = 15;
+            this.Btn_salir.Text = "     Salir";
+            this.Btn_salir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Btn_salir.UseVisualStyleBackColor = true;
+            this.Btn_salir.Click += new System.EventHandler(this.Btn_salir_Click);
+            // 
+            // Btn_reportes
+            // 
+            this.Btn_reportes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_reportes.FlatAppearance.BorderSize = 0;
+            this.Btn_reportes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.Btn_reportes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.Btn_reportes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_reportes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_reportes.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Btn_reportes.Image = global::Capa_Vista_Nominas.Properties.Resources.noticias;
+            this.Btn_reportes.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_reportes.Location = new System.Drawing.Point(0, 653);
+            this.Btn_reportes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Btn_reportes.Name = "Btn_reportes";
+            this.Btn_reportes.Size = new System.Drawing.Size(185, 60);
+            this.Btn_reportes.TabIndex = 14;
+            this.Btn_reportes.Text = "     Reportes";
+            this.Btn_reportes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Btn_reportes.UseVisualStyleBackColor = true;
+            this.Btn_reportes.Click += new System.EventHandler(this.Btn_reportes_Click);
+            // 
+            // Btn_generacion
+            // 
+            this.Btn_generacion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_generacion.FlatAppearance.BorderSize = 0;
+            this.Btn_generacion.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.Btn_generacion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.Btn_generacion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_generacion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_generacion.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Btn_generacion.Image = global::Capa_Vista_Nominas.Properties.Resources.actualizar;
+            this.Btn_generacion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_generacion.Location = new System.Drawing.Point(0, 290);
+            this.Btn_generacion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Btn_generacion.Name = "Btn_generacion";
+            this.Btn_generacion.Size = new System.Drawing.Size(185, 60);
+            this.Btn_generacion.TabIndex = 10;
+            this.Btn_generacion.Text = "     Generación Nominas";
+            this.Btn_generacion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Btn_generacion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Btn_generacion.UseVisualStyleBackColor = true;
+            this.Btn_generacion.Click += new System.EventHandler(this.Btn_generacion_Click);
+            // 
+            // Btn_mantenimientos
+            // 
+            this.Btn_mantenimientos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_mantenimientos.FlatAppearance.BorderSize = 0;
+            this.Btn_mantenimientos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.Btn_mantenimientos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.Btn_mantenimientos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_mantenimientos.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_mantenimientos.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Btn_mantenimientos.Image = global::Capa_Vista_Nominas.Properties.Resources.mantenimiento_web1;
+            this.Btn_mantenimientos.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_mantenimientos.Location = new System.Drawing.Point(0, 60);
+            this.Btn_mantenimientos.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Btn_mantenimientos.Name = "Btn_mantenimientos";
+            this.Btn_mantenimientos.Size = new System.Drawing.Size(185, 60);
+            this.Btn_mantenimientos.TabIndex = 2;
+            this.Btn_mantenimientos.Text = "     Mantenimientos";
+            this.Btn_mantenimientos.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Btn_mantenimientos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Btn_mantenimientos.UseVisualStyleBackColor = true;
+            this.Btn_mantenimientos.Click += new System.EventHandler(this.Btn_mantenimientos_Click);
+            // 
+            // Btn_inicio
+            // 
+            this.Btn_inicio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Btn_inicio.FlatAppearance.BorderSize = 0;
+            this.Btn_inicio.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.Btn_inicio.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.Btn_inicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Btn_inicio.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_inicio.ForeColor = System.Drawing.Color.Gainsboro;
+            this.Btn_inicio.Image = global::Capa_Vista_Nominas.Properties.Resources.pagina_de_inicio__1_1;
+            this.Btn_inicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Btn_inicio.Location = new System.Drawing.Point(0, 0);
+            this.Btn_inicio.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Btn_inicio.Name = "Btn_inicio";
+            this.Btn_inicio.Size = new System.Drawing.Size(185, 60);
+            this.Btn_inicio.TabIndex = 1;
+            this.Btn_inicio.Text = "     Inicio";
+            this.Btn_inicio.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Btn_inicio.UseVisualStyleBackColor = true;
+            this.Btn_inicio.Click += new System.EventHandler(this.Btn_inicio_Click);
+            // 
             // Pic_icono
             // 
-            this.Pic_icono.Image = global::Capa_Vista_Nominas.Properties.Resources.seguridad;
+            this.Pic_icono.Image = global::Capa_Vista_Nominas.Properties.Resources.seguridad1;
             this.Pic_icono.Location = new System.Drawing.Point(12, 4);
             this.Pic_icono.Name = "Pic_icono";
             this.Pic_icono.Size = new System.Drawing.Size(39, 32);
@@ -357,46 +583,6 @@ namespace Capa_Vista_Nominas
             this.Btn_cerrar.TabStop = false;
             this.Btn_cerrar.Click += new System.EventHandler(this.btnCerrar_Click_1);
             // 
-            // Lbl_usuario
-            // 
-            this.Lbl_usuario.AutoSize = true;
-            this.Lbl_usuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Lbl_usuario.Location = new System.Drawing.Point(757, 0);
-            this.Lbl_usuario.Name = "Lbl_usuario";
-            this.Lbl_usuario.Size = new System.Drawing.Size(77, 20);
-            this.Lbl_usuario.TabIndex = 0;
-            this.Lbl_usuario.Text = "Usuario: ";
-            // 
-            // Lbl_usuario2
-            // 
-            this.Lbl_usuario2.AutoSize = true;
-            this.Lbl_usuario2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Lbl_usuario2.Location = new System.Drawing.Point(840, 0);
-            this.Lbl_usuario2.Name = "Lbl_usuario2";
-            this.Lbl_usuario2.Size = new System.Drawing.Size(21, 20);
-            this.Lbl_usuario2.TabIndex = 1;
-            this.Lbl_usuario2.Text = "--";
-            // 
-            // Lbl_hora
-            // 
-            this.Lbl_hora.AutoSize = true;
-            this.Lbl_hora.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Lbl_hora.Location = new System.Drawing.Point(1020, 1);
-            this.Lbl_hora.Name = "Lbl_hora";
-            this.Lbl_hora.Size = new System.Drawing.Size(21, 20);
-            this.Lbl_hora.TabIndex = 3;
-            this.Lbl_hora.Text = "--";
-            // 
-            // Lbl_fechaHora
-            // 
-            this.Lbl_fechaHora.AutoSize = true;
-            this.Lbl_fechaHora.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Lbl_fechaHora.Location = new System.Drawing.Point(940, 0);
-            this.Lbl_fechaHora.Name = "Lbl_fechaHora";
-            this.Lbl_fechaHora.Size = new System.Drawing.Size(60, 20);
-            this.Lbl_fechaHora.TabIndex = 2;
-            this.Lbl_fechaHora.Text = "Fecha:";
-            // 
             // frm_principal_nominas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -412,11 +598,11 @@ namespace Capa_Vista_Nominas
             this.panelIdentificacion.ResumeLayout(false);
             this.panelIdentificacion.PerformLayout();
             this.Pnl_formularios.ResumeLayout(false);
-            this.Pnl_formularios.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_logoformularios)).EndInit();
             this.panelMenu.ResumeLayout(false);
             this.Pnl_mantenimientos.ResumeLayout(false);
             this.Pnl_superior.ResumeLayout(false);
+            this.Pnl_generacion.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_logoformularios)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_icono)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Btn_restaurar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Btn_minimizar)).EndInit();
@@ -431,7 +617,6 @@ namespace Capa_Vista_Nominas
         private System.Windows.Forms.Panel Pnl_contenedor;
         private System.Windows.Forms.Panel panelIdentificacion;
         private System.Windows.Forms.Panel Pnl_formularios;
-        private System.Windows.Forms.PictureBox Pic_logoformularios;
         private System.Windows.Forms.Panel panelMenu;
         private System.Windows.Forms.Button Btn_inicio;
         private System.Windows.Forms.Panel Pnl_superior;
@@ -440,7 +625,6 @@ namespace Capa_Vista_Nominas
         private System.Windows.Forms.PictureBox Btn_minimizar;
         private System.Windows.Forms.PictureBox Btn_maximizar;
         private System.Windows.Forms.PictureBox Btn_cerrar;
-        private System.Windows.Forms.Button Btn_salir;
         private System.Windows.Forms.Panel Pnl_mantenimientos;
         private System.Windows.Forms.Button Btn_departamento;
         private System.Windows.Forms.Button Btn_puesto;
@@ -451,5 +635,17 @@ namespace Capa_Vista_Nominas
         private System.Windows.Forms.Label Lbl_fechaHora;
         private System.Windows.Forms.Label Lbl_usuario2;
         private System.Windows.Forms.Label Lbl_usuario;
+        private System.Windows.Forms.PictureBox Pic_logoformularios;
+        private System.Windows.Forms.Panel Pnl_generacion;
+        private System.Windows.Forms.Button Btn_generaciondeduc;
+        private System.Windows.Forms.Button Btn_generacionpercep;
+        private System.Windows.Forms.Button Btn_faltas;
+        private System.Windows.Forms.Button Btn_anticipo;
+        private System.Windows.Forms.Button Btn_planilla;
+        private System.Windows.Forms.Button Btn_contrato;
+        private System.Windows.Forms.Button Btn_horasextra;
+        private System.Windows.Forms.Button Btn_generacion;
+        private System.Windows.Forms.Button Btn_salir;
+        private System.Windows.Forms.Button Btn_reportes;
     }
 }

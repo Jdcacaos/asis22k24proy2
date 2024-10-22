@@ -25,6 +25,7 @@ namespace Capa_Vista_Nominas
         public frm_deducciones()
         {
             InitializeComponent();
+
         }
     }
 }

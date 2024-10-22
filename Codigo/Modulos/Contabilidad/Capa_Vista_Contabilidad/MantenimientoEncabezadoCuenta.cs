@@ -30,7 +30,7 @@ namespace Capa_Vista_Contabilidad
             // navegador1.AsignarForaneas("marcas_vehiculos", "nombre_marca", "codigo_marca", "codigo_marca");
             // navegador1.AsignarForaneas("tipos_vehiculos", "nombre_tipo", "codigo_tipo", "codigo_tipo");
 
-            navegador1.AsignarNombreForm("ENCABEZADO CUENTA");
+            navegador1.AsignarNombreForm("CLASE CUENTA");
             // Configuración de los alias para las tablas adicionales
 
             // List<string> tablas = new List<string> { "inventario_vehiculos" };

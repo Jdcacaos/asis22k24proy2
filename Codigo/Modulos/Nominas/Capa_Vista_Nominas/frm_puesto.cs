@@ -12,12 +12,11 @@ namespace Capa_Vista_Nominas
 {
     public partial class frm_puesto : Form
     {
-        String idUsuario;
-        public frm_puesto(String idUsuario)
+        public frm_puesto()
         {
             InitializeComponent();
 
-
+            string idUsuario = Interfac_V3.UsuarioSesion.GetIdUsuario();
             /*********Prueba con la tabla inicial*********/
             string[] alias = { "pk_id_puestos", "nombre_puesto", "descripcion", "estado" };
             navegador1.AsignarAlias(alias);

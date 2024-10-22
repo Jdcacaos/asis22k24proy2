@@ -18,15 +18,26 @@ namespace Capa_Vista_Logistica
         Controlador controlador = new Controlador(); // Instancia del controlador
 
         // Constructor que recibe el ID de la bodega
-        public MonitoreoAlmacen(string idBodega)
+        public MonitoreoAlmacen()
         {
             InitializeComponent();
-            this.idBodega = idBodega;
-            controlador = new Controlador(); // Inicializa el controlador
 
             // Cargar información de la bodega
             CargarInformacionBodega(idBodega);
+
+            // Cargar bodegas y productos
+            cargarBodegas(); // Cargar primero las bodegas
+            cargarProductos(); // Luego cargar los productos
+
+            // Cargar bodegas y productos en auditoría
+            cargarBodegasAuditoria();
+            cargarProductosAuditoria();
         }
+
+
+
+
+
 
         private void CargarInformacionBodega(string idBodega)
         {
@@ -61,22 +72,7 @@ namespace Capa_Vista_Logistica
             }
         }
 
-        private void CargarProductosPorBodega(string idBodega)
-        {
-            try
-            {
-                OdbcDataReader drProductos = controlador.ObtenerProductosPorBodega(idBodega);
-                DataTable dtProductos = new DataTable();
-                dtProductos.Load(drProductos);
-                cmbProducto.DataSource = dtProductos;
-                cmbProducto.DisplayMember = "nombreProducto"; // Cambia esto si tu columna tiene otro nombre
-                cmbProducto.ValueMember = "Pk_id_Producto"; // Cambia esto si tu columna tiene otro nombre
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar productos: " + ex.Message);
-            }
-        }
+
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -94,72 +90,170 @@ namespace Capa_Vista_Logistica
 
         private void btnCargarExistencias_Click(object sender, EventArgs e)
         {
-            // Verificar si hay un elemento seleccionado
             if (cmbBodega.SelectedItem == null)
             {
                 MessageBox.Show("Por favor, selecciona una bodega antes de cargar las existencias.");
                 return; // Salir del método si no hay selección
             }
 
-            // Obtener el ID de la bodega seleccionada
-            string idBodega = cmbBodega.SelectedItem.ToString(); // Asegúrate de obtener el ID correcto
-            controlador.CargarExistencias(idBodega);
+            var selectedBodega = (KeyValuePair<int, string>)cmbBodega.SelectedItem; // Obtener el KeyValuePair
+            int idBodega = selectedBodega.Key; // Usar la clave como ID de bodega
+
+            DataTable dtExistencias = new DataTable(); // Crear un DataTable para recibir los datos
+            try
+            {
+                controlador.CargarExistencias(idBodega.ToString(), dtExistencias); // Cargar las existencias en el DataTable
+                dgvExistencias.DataSource = dtExistencias; // Asignar el DataTable al DataGridView
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message); // Mostrar cualquier error que ocurra
+            }
         }
 
         private void btnRealizarAuditoria_Click(object sender, EventArgs e)
         {
-            // Verificar si hay un producto seleccionado
-            if (cmbProductoAuditoria.SelectedValue == null)
+            try
             {
-                MessageBox.Show("Por favor, selecciona un producto antes de realizar la auditoría.");
-                return; // Salir del método si no hay selección
+                // Verificar que los ComboBoxes tengan un valor seleccionado
+                if (cmbBodegaAuditoria.SelectedItem == null || cmbProductoAuditoria.SelectedItem == null)
+                {
+                    MessageBox.Show("Seleccione una bodega y un producto.");
+                    return;
+                }
+
+                // Obtener valores de los controles con validaciones adecuadas
+                int idBodega = Convert.ToInt32(cmbBodegaAuditoria.SelectedValue);
+                int idProducto = Convert.ToInt32(cmbProductoAuditoria.SelectedValue);
+                DateTime fechaAuditoria = dtpFechaAuditoria.Value;
+                string observaciones = txtObservaciones.Text;
+
+                // Validación y conversión de la cantidad registrada
+                if (!int.TryParse(txtCantidadRegistrada.Text, out int cantidadRegistrada))
+                {
+                    MessageBox.Show("La cantidad registrada debe ser un número entero.");
+                    return;
+                }
+
+                // Validación y conversión de la cantidad física
+                if (!int.TryParse(txtCantidadFisica.Text, out int cantidadFisica))
+                {
+                    MessageBox.Show("La cantidad física debe ser un número entero.");
+                    return;
+                }
+
+                // Obtener valor del CheckBox como booleano
+                bool discrepancia = chkDiscrepanciaDetectada.Checked;
+
+                // Realizar la auditoría a través del controlador
+                controlador.RealizarAuditoria(idBodega, idProducto, fechaAuditoria, observaciones, cantidadRegistrada, cantidadFisica, discrepancia, dgvAuditorias);
+
+                // Mostrar mensaje de éxito
+                MessageBox.Show("Auditoría realizada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Cargar auditorías en el DataGridView
+                controlador.CargarAuditorias(dgvAuditorias);
             }
-
-            // Obtener valores de los controles de la interfaz
-            string idProducto = cmbProductoAuditoria.SelectedValue.ToString();
-
-            // Verificar que los campos de cantidad no estén vacíos
-            if (string.IsNullOrWhiteSpace(txtCantidadFisica.Text) || string.IsNullOrWhiteSpace(txtCantidadRegistrada.Text))
+            catch (FormatException ex)
             {
-                MessageBox.Show("Por favor, completa las cantidades físicas y registradas.");
-                return; // Salir del método si faltan cantidades
+                MessageBox.Show("Error en el formato de entrada: " + ex.Message);
             }
-
-            int cantidadFisica;
-            int cantidadRegistrada;
-
-            // Intentar convertir las cantidades a enteros, manejando excepciones si es necesario
-            if (!int.TryParse(txtCantidadFisica.Text, out cantidadFisica) || !int.TryParse(txtCantidadRegistrada.Text, out cantidadRegistrada))
+            catch (Exception ex)
             {
-                MessageBox.Show("Las cantidades deben ser números enteros válidos.");
-                return; // Salir del método si hay un error en la conversión
+                MessageBox.Show("Error al realizar auditoría: " + ex.Message);
             }
-
-            bool discrepancia = chkDiscrepanciaDetectada.Checked;
-
-            // Realiza la auditoría a través del controlador
-            controlador.RealizarAuditoria(idBodega, idProducto, cantidadFisica, cantidadRegistrada, discrepancia);
-            MessageBox.Show("Auditoría realizada con éxito");
         }
+
+        // Método para cargar las bodegas en el ComboBox
+        private void cargarBodegas()
+        {
+            List<KeyValuePair<int, string>> bodegas = controlador.listadoBodegas();
+            cmbBodega.DataSource = bodegas;
+            cmbBodega.DisplayMember = "Value"; // Mostrar el nombre de la bodega
+            cmbBodega.ValueMember = "Key"; // Usar el ID de la bodega como valor
+        }
+
+        private void cargarBodegasAuditoria()
+        {
+            List<KeyValuePair<int, string>> bodegas = controlador.listadoBodegas();
+
+            // Depuración
+            Console.WriteLine($"Bodegas encontradas: {bodegas.Count}");
+
+            if (bodegas.Count > 0)
+            {
+                cmbBodegaAuditoria.DataSource = bodegas; // Asigna la lista al ComboBox
+                cmbBodegaAuditoria.DisplayMember = "Key"; // Mostrar ID de la bodega
+                cmbBodegaAuditoria.ValueMember = "Key"; // Usar el ID de la bodega como valor
+            }
+            else
+            {
+                MessageBox.Show("No se encontraron bodegas.");
+            }
+        }
+
+
+
+        private void cargarProductosAuditoria()
+        {
+            List<KeyValuePair<int, string>> productos = controlador.listadoProductos(); // Cambia aquí
+
+            // Depuración
+            Console.WriteLine($"Productos encontrados: {productos.Count}");
+
+            if (productos.Count > 0)
+            {
+                cmbProductoAuditoria.DataSource = productos; // Asigna la lista al ComboBox
+                cmbProductoAuditoria.DisplayMember = "Key"; // Mostrar ID del producto
+                cmbProductoAuditoria.ValueMember = "Key"; // Usar el ID del producto como valor
+            }
+            else
+            {
+                MessageBox.Show("No se encontraron productos.");
+            }
+        }
+
+
+        private void cargarProductos()
+        {
+            List<string> productos = controlador.listadoProductos().Select(p => p.Value).ToList(); // Solo nombres de productos
+
+            // Depuración
+            Console.WriteLine($"Productos encontrados: {productos.Count}"); // Imprime la cantidad de productos
+
+            if (productos.Count > 0)
+            {
+                cmbProducto.DataSource = productos; // Asigna la lista al ComboBox
+            }
+            else
+            {
+                MessageBox.Show("No se encontraron productos."); // Mensaje si no hay productos
+            }
+        }
+
+
+
+
+
 
         private void cmbBodega_SelectedIndexChanged(object sender, EventArgs e)
         {
-           
+
         }
 
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
-          
+
         }
 
         private void cmbBodegaAuditoria_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void cmbProductoAuditoria_SelectedIndexChanged(object sender, EventArgs e)
         {
-          
+
         }
     }
 }

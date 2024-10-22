@@ -16,7 +16,6 @@ CREATE TABLE Tbl_vehiculos (
     descripcion TEXT,
     horaLlegada DATETIME NOT NULL,
     horaSalida DATETIME,
-    totalBultos INT NOT NULL,
     pesoTotal DECIMAL(10, 2) NOT NULL,
     Fk_id_chofer INT NOT NULL,
     Estado VARCHAR (30),
@@ -59,7 +58,7 @@ CREATE TABLE Tbl_datos_pedido (
 CREATE TABLE Tbl_Productos (
     Pk_id_Producto INT AUTO_INCREMENT PRIMARY KEY,
     codigoProducto INT NOT NULL,
-    nombreProducto VARCHAR(20) NOT NULL,
+    nombreProducto VARCHAR(30) NOT NULL,
     medidaProducto VARCHAR(20) NOT NULL,
     precioUnitario DECIMAL(10, 2) NOT NULL,
     clasificacion VARCHAR(30) NOT NULL,
@@ -70,7 +69,7 @@ CREATE TABLE Tbl_TrasladoProductos (
     Pk_id_TrasladoProductos INT AUTO_INCREMENT PRIMARY KEY,
     documento VARCHAR(50) NOT NULL,
     fecha DATETIME NOT NULL,
-    cantidad INT NOT NULL UNIQUE,  
+    cantidad INT NOT NULL,  
     costoTotal DECIMAL(10, 2) NOT NULL,
     costoTotalGeneral DECIMAL(10, 2) NOT NULL,
     precioTotal DECIMAL(10, 2) NOT NULL,
@@ -80,27 +79,34 @@ CREATE TABLE Tbl_TrasladoProductos (
     FOREIGN KEY (Fk_id_guia) REFERENCES Tbl_datos_pedido(Pk_id_guia)
 );
 
--- 9001
+drop table if exists TBL_LOCALES;
+CREATE TABLE TBL_LOCALES (
+    Pk_ID_LOCAL INT AUTO_INCREMENT PRIMARY KEY,
+    NOMBRE_LOCAL VARCHAR(100) NOT NULL,
+    UBICACION VARCHAR(255) NOT NULL,
+    CAPACIDAD INT NOT NULL,
+    ESTADO VARCHAR(50) NOT NULL DEFAULT 'Activo',
+    FECHA_REGISTRO DATETIME DEFAULT NOW()
+);
+
 CREATE TABLE Tbl_movimiento_de_inventario (
 	Pk_id_movimiento INT PRIMARY KEY AUTO_INCREMENT,
     estado varchar(15),
     Fk_id_producto INT NOT NULL,
     Fk_id_stock INT NOT NULL,
-    id_bodegaOrigen INT,
-    id_bodegaDestino INT,
-    id_sucursalOrigen INT,
-    id_sucursalDestino INT,
+    Fk_ID_LOCALES INT NOT NULL,
     FOREIGN KEY (Fk_id_producto) REFERENCES Tbl_Productos(Pk_id_Producto),
-    FOREIGN KEY (Fk_id_stock) REFERENCES Tbl_TrasladoProductos(cantidad)
+    FOREIGN KEY (Fk_id_stock) REFERENCES Tbl_TrasladoProductos(Pk_id_TrasladoProductos),
+    CONSTRAINT FK_EXISTENCIA_LOCAL FOREIGN KEY (Fk_ID_LOCALES) REFERENCES TBL_LOCALES(Pk_ID_LOCAL)
 );
 
--- 9002
+
 CREATE TABLE Tbl_mantenimiento (
 	Pk_id_Mantenimiento INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nombre_Solicitante varchar(20) NOT NULL,
     tipo_de_Mantenimiento varchar(15) NOT NULL,
     componente_Afectado varchar(15) NOT NULL,
-    fecha datetime NOT NULL,
+    fecha DATE NOT NULL,
     responsable_Asignado varchar(20) NOT NULL,
     codigo_Error_Problema varchar (50) NOT NULL,
     estado_del_Mantenimiento varchar (20) NOT NULL,
@@ -119,16 +125,6 @@ CREATE TABLE TBL_BODEGAS (
 ALTER TABLE TBL_BODEGAS
 ADD COLUMN estado VARCHAR(50) NOT NULL DEFAULT 'Activo';
 
-drop table if exists TBL_LOCALES;
-CREATE TABLE TBL_LOCALES (
-    Pk_ID_LOCAL INT AUTO_INCREMENT PRIMARY KEY,
-    NOMBRE_LOCAL VARCHAR(100) NOT NULL,
-    UBICACION VARCHAR(255) NOT NULL,
-    CAPACIDAD INT NOT NULL,
-    ESTADO VARCHAR(50) NOT NULL DEFAULT 'Activo',
-    FECHA_REGISTRO DATETIME DEFAULT NOW()
-);
-
 CREATE TABLE TBL_EXISTENCIAS_BODEGA (
     Pk_ID_EXISTENCIA INT AUTO_INCREMENT PRIMARY KEY,
     Fk_ID_BODEGA INT NOT NULL,
@@ -142,13 +138,14 @@ CREATE TABLE TBL_EXISTENCIAS_BODEGA (
 CREATE TABLE TBL_AUDITORIAS (
     Pk_ID_AUDITORIA INT AUTO_INCREMENT PRIMARY KEY,
     Fk_ID_BODEGA INT NOT NULL,
-    Fk_ID_LOTE INT NOT NULL,
+    Fk_ID_PRODUCTO INT NOT NULL,  -- Agregando la clave foránea para el producto
     FECHA_AUDITORIA DATE DEFAULT NOW(),
     DISCREPANCIA_DETECTADA BOOLEAN DEFAULT FALSE,
     CANTIDAD_REGISTRADA INT NOT NULL,
     CANTIDAD_FISICA INT NOT NULL,
     OBSERVACIONES TEXT,
-    CONSTRAINT FK_AUDITORIA_BODEGA FOREIGN KEY (Fk_ID_BODEGA) REFERENCES TBL_BODEGAS(Pk_ID_BODEGA)
+    FOREIGN KEY (Fk_ID_BODEGA) REFERENCES TBL_BODEGAS(Pk_ID_BODEGA),
+    FOREIGN KEY (Fk_ID_PRODUCTO) REFERENCES Tbl_Productos(Pk_id_Producto)  -- Clave foránea para el producto
 );
 
 CREATE TABLE Tbl_Marca (

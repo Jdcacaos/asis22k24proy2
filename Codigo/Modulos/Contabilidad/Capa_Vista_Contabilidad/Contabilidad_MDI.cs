@@ -14,10 +14,32 @@ namespace Capa_Vista_Contabilidad
 {
     public partial class Contabilidad_MDI : Form
     {
-        public Contabilidad_MDI()
+        string idUsuario;
+        public Contabilidad_MDI(String idUsuario)
         {
             InitializeComponent();
             ocultaSubMenu();
+
+            this.idUsuario = idUsuario;
+
+            //Primera label
+            lbl_usuario2.Text = idUsuario;
+
+            //Segunda label
+            DateTime fechaHoraActual = DateTime.Now;
+            lbl_fecha2.Text = fechaHoraActual.ToString();
+
+            lx = this.Location.X;
+            ly = this.Location.Y;
+            sw = this.Size.Width;
+            sh = this.Size.Height;
+            /*Btn_maximizar.Visible = false;
+             Btn_restaurar.Visible = true;*/
+            this.Size = Screen.PrimaryScreen.WorkingArea.Size;
+            this.Location = Screen.PrimaryScreen.WorkingArea.Location;
+
+
+
         }
         private void ocultaSubMenu() 
         {
@@ -237,6 +259,11 @@ namespace Capa_Vista_Contabilidad
             AbrirFormulario<Mantenimientoactivofijo>();
             btnmCuenta.BackColor = Color.FromArgb(12, 61, 92);
             ocultaSubMenu();
+        }
+
+        private void lbl_usuario_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
         //Metodo para abrir formularios dentro de panel contenedor

@@ -15,10 +15,9 @@ namespace Capa_Vista_Logistica
         Capa_Controlador_Logistica.Controlador capa_Controlador_Logistica = new Capa_Controlador_Logistica.Controlador();
         private string Pk_id_Mantenimiento;
 
-        public MantenimientoVehiculos(string Pk_id_Mantenimiento)
+        public MantenimientoVehiculos()
         {
             InitializeComponent();
-            this.Pk_id_Mantenimiento = Pk_id_Mantenimiento;
             CargarInformacionMantenimiento(Pk_id_Mantenimiento);
         }
         private void CargarInformacionMantenimiento(string Pk_id_Mantenimiento)

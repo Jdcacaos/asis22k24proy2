@@ -13,6 +13,7 @@ namespace Capa_Vista_Logistica
 {
     public partial class FormPrincipal : Form
     {
+        // Realizado por: Pedro Alejandro Citalán Herrera - 0901-20-16151
         public FormPrincipal()
         {
             InitializeComponent();
@@ -166,7 +167,7 @@ namespace Capa_Vista_Logistica
 
         private void btnMenuProcesosOpcion1_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<Transporte>();
+            AbrirFormulario<Chofer>();
             ocultaSubMenu();
         }
 
@@ -207,7 +208,43 @@ namespace Capa_Vista_Logistica
 
         private void Btn_MenuProcesosOpcion2_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<Chofer>();
+            AbrirFormulario<Transporte>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion3_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<Transporte_Vehiculos>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion4_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<TrasladoDProductos>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion5_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<MantenimientoVehiculos>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion6_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<Movimiento_de_Inventario>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion7_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<Locales>();
+            ocultaSubMenu();
+        }
+
+        private void Btn_MenuProcesosOpcion8_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<MonitoreoAlmacen>();
             ocultaSubMenu();
         }
 

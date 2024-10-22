@@ -13,22 +13,22 @@ namespace Capa_Vista_Nominas
 {
     public partial class frm_departamentos : Form
     {
-        String idUsuario;
+
 
         //Metodos para que se abra solamente una ventana y no multiples
-        //private static frm_departamentos instancia = null;
-        //public static frm_departamentos ventana_unica()
-        //{
-        //    if (instancia == null || instancia.IsDisposed)
-        //    {
-        //        instancia = new frm_departamentos(idUsuario);
-        //    }
-        //    return instancia;
-        //}
-        public frm_departamentos(String idUsuario)
+        private static frm_departamentos instancia = null;
+        public static frm_departamentos ventana_unica()
+        {
+            if (instancia == null || instancia.IsDisposed)
+            {
+                instancia = new frm_departamentos();
+            }
+            return instancia;
+        }
+        public frm_departamentos()
         {
             InitializeComponent();
-
+            string idUsuario = Interfac_V3.UsuarioSesion.GetIdUsuario();
             /*Marco Alejandro Monroy**/
             /****Prueba con la tabla inicial****/
             string[] alias = { "pk_id_departamento", "nombre_departamento", "descripcion", "estado" };

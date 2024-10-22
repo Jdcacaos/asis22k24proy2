@@ -27,23 +27,6 @@ namespace Capa_Vista_Logistica
             navegador1.AsignarAyuda("1");
             navegador1.AsignarNombreForm("Productos");
 
-            // Configurar el DataGridView para que responda a clics en las celdas
-            navegador1.Dgv_Informacion.CellClick += DgvTrasDProductos_CellClick; // Asegúrate de que DgvAlmacenes esté definido
-
-        }
-        private void DgvTrasDProductos_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Verificar que la fila seleccionada es válida
-            if (e.RowIndex >= 0)
-            {
-                // Obtener datos de la fila seleccionada, por ejemplo, el ID de la bodega
-                DataGridViewRow row = navegador1.Dgv_Informacion.Rows[e.RowIndex];
-                string idProductos = row.Cells["Pk_id_Producto"].Value.ToString();  // Asegúrate de que el nombre del campo sea correcto
-
-                // Abrir el formulario TrasladoDProductos y pasarle el ID de la TrasDProductos
-                Linea linea = new Linea(idProductos);
-                linea.Show();
-            }
         }
     }
 }

@@ -40,6 +40,8 @@ namespace Capa_Vista_Nominas
         {
             if (Pnl_mantenimientos.Visible == true)
                 Pnl_mantenimientos.Visible = false;
+            if (Pnl_generacion.Visible == true)
+                Pnl_generacion.Visible = false;
         }
 
         private void muestraSubMenu(Panel subMenu)
@@ -168,7 +170,6 @@ namespace Capa_Vista_Nominas
             {
                 form.Close();
             }
-            // Opcional: puedes agregar cualquier otra lógica para restablecer el formulario principal a su estado inicial.
             ocultaSubMenu(); // Cerrar los submenús
         }
 
@@ -179,28 +180,89 @@ namespace Capa_Vista_Nominas
 
         private void Btn_puesto_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<frm_puesto>(idUsuario); // Pasa el idUsuario
+            AbrirFormulario<frm_puesto>(); // Pasa el idUsuario
             Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
             ocultaSubMenu();
         }
 
         private void Btn_departamento_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<frm_departamentos>(idUsuario);
+            AbrirFormulario<frm_departamentos>();
             Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
             ocultaSubMenu();
         }
 
         private void Btn_empleado_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<frm_empleados>(idUsuario);
+            AbrirFormulario<frm_empleados>();
             Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
             ocultaSubMenu();
         }
 
         private void Btn_percepdeduc_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<frm_procesos_percepciones>(idUsuario);
+            AbrirFormulario<frm_procesos_percepciones>();
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+
+        private void Pic_logoformularios_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Btn_generacion_Click(object sender, EventArgs e)
+        {
+            muestraSubMenu(Pnl_generacion);
+        }
+
+        private void Btn_horasextra_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_horasextra>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+
+        private void Btn_contrato_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_gencontrato>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+        private void Btn_planilla_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_genplanilla>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+        private void Btn_anticipo_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_genanticipo>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+        private void Btn_faltas_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_genfaltas>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+        private void Btn_generacionpercep_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_genpercepciones>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
+        private void Btn_generaciondeduc_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_gendeducciones>(); // Pasa el idUsuario
             Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
             ocultaSubMenu();
         }
@@ -210,41 +272,50 @@ namespace Capa_Vista_Nominas
             this.Close();
         }
 
+        private void Btn_reportes_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<frm_reportes>(); // Pasa el idUsuario
+            Btn_puesto.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+        }
+
         #endregion
         //Metodo para abrir formularios dentro de panel contenedor
-        //private void AbrirFormulario<MiForm>(string idUsuario) where MiForm : Form, new()
-        //{
-        //    Form formulario = Pnl_formularios.Controls.OfType<MiForm>().FirstOrDefault(); // Busca en la colección el formulario
-
-        //    // Si el formulario/instancia no existe
-        //    if (formulario == null)
-        //    {
-        //        formulario = (MiForm)Activator.CreateInstance(typeof(MiForm), idUsuario); // Crea una nueva instancia pasando el idUsuario
-        //        formulario.TopLevel = false;
-        //        formulario.FormBorderStyle = FormBorderStyle.None;
-
-        //        // Ajusta el formulario hijo al panel contenedor
-        //        formulario.Dock = DockStyle.Fill; // Hace que el formulario se ajuste al tamaño del panel
-
-        //        Pnl_formularios.Controls.Add(formulario);
-        //        Pnl_formularios.Tag = formulario;
-        //        formulario.Show();
-        //        formulario.BringToFront();
-        //        formulario.FormClosed += new FormClosedEventHandler(CloseForms);
-        //    }
-        //    else
-        //    {
-        //        formulario.BringToFront();
-        //    }
-        //}
-
-
-        private void AbrirFormulario<T>(string idUsuario) where T : Form
+        private void AbrirFormulario<MiForm>() where MiForm : Form, new()
         {
-            // Usamos reflexión para crear una instancia del formulario con el idUsuario
-            var formulario = (T)Activator.CreateInstance(typeof(T), idUsuario);
-            formulario.Show(); // O formulario.ShowDialog();
+            Form formulario;
+            formulario = Pnl_formularios.Controls.OfType<MiForm>().FirstOrDefault(); // Busca en la colección el formulario
+
+            // Si el formulario/instancia no existe
+            if (formulario == null)
+            {
+                formulario = new MiForm();
+                formulario.TopLevel = false;
+                formulario.FormBorderStyle = FormBorderStyle.None;
+
+                // Ajusta el formulario hijo al panel contenedor
+                formulario.Dock = DockStyle.Fill; // Hace que el formulario se ajuste al tamaño del panel
+
+                Pnl_formularios.Controls.Add(formulario);
+                Pnl_formularios.Tag = formulario;
+                formulario.Show();
+                formulario.BringToFront();
+                formulario.FormClosed += new FormClosedEventHandler(CloseForms);
+            }
+            else
+            {
+                formulario.BringToFront();
+            }
         }
+
+
+
+        //private void AbrirFormulario<T>(string idUsuario) where T : Form
+        //{
+        //     Usamos reflexión para crear una instancia del formulario con el idUsuario
+        //    var formulario = (T)Activator.CreateInstance(typeof(T), idUsuario);
+        //    formulario.Show(); // O formulario.ShowDialog();
+        //}
 
 
 

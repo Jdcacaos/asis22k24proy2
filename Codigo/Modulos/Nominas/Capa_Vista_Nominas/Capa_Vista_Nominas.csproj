@@ -37,6 +37,9 @@
     <Reference Include="Capa_Vista_Navegador">
       <HintPath>..\..\..\Componentes\Navegador\Capa_Vista_Navegador\bin\Debug\Capa_Vista_Navegador.dll</HintPath>
     </Reference>
+    <Reference Include="Interfac_V3">
+      <HintPath>..\..\Menus\ModernGUI_V3\bin\Debug\Interfac_V3.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -67,11 +70,47 @@
     <Compile Include="frm_empleados.Designer.cs">
       <DependentUpon>frm_empleados.cs</DependentUpon>
     </Compile>
-    <Compile Include="frm_mdi_nominas.cs">
+    <Compile Include="frm_genanticipo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_mdi_nominas.Designer.cs">
-      <DependentUpon>frm_mdi_nominas.cs</DependentUpon>
+    <Compile Include="frm_genanticipo.Designer.cs">
+      <DependentUpon>frm_genanticipo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_gencontrato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_gencontrato.Designer.cs">
+      <DependentUpon>frm_gencontrato.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_gendeducciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_gendeducciones.Designer.cs">
+      <DependentUpon>frm_gendeducciones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_genfaltas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_genfaltas.Designer.cs">
+      <DependentUpon>frm_genfaltas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_genpercepciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_genpercepciones.Designer.cs">
+      <DependentUpon>frm_genpercepciones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_genplanilla.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_genplanilla.Designer.cs">
+      <DependentUpon>frm_genplanilla.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_horasextra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_horasextra.Designer.cs">
+      <DependentUpon>frm_horasextra.cs</DependentUpon>
     </Compile>
     <Compile Include="frm_nominas.cs">
       <SubType>Form</SubType>
@@ -132,8 +171,26 @@
     <EmbeddedResource Include="frm_empleados.resx">
       <DependentUpon>frm_empleados.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frm_mdi_nominas.resx">
-      <DependentUpon>frm_mdi_nominas.cs</DependentUpon>
+    <EmbeddedResource Include="frm_genanticipo.resx">
+      <DependentUpon>frm_genanticipo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_gencontrato.resx">
+      <DependentUpon>frm_gencontrato.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_gendeducciones.resx">
+      <DependentUpon>frm_gendeducciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_genfaltas.resx">
+      <DependentUpon>frm_genfaltas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_genpercepciones.resx">
+      <DependentUpon>frm_genpercepciones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_genplanilla.resx">
+      <DependentUpon>frm_genplanilla.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_horasextra.resx">
+      <DependentUpon>frm_horasextra.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frm_nominas.resx">
       <DependentUpon>frm_nominas.cs</DependentUpon>
@@ -172,6 +229,36 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\seguridad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pagina-de-inicio %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pagina-de-inicio1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pagina-de-inicio %281%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mantenimiento-web1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cerrar-sesion1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\seguridad1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logonominasprincipal.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logonominasprincipal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\actualizar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\noticias.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

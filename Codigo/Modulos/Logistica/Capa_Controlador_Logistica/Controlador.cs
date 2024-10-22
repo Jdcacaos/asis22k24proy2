@@ -29,7 +29,6 @@ namespace Capa_Controlador_Logistica
                 return 1;
             }
         }
-
         public DataTable cargarChoferes()
         {
             return sentencias.cargarChoferes();
@@ -66,6 +65,10 @@ namespace Capa_Controlador_Logistica
         {
             return sentencias.buscarChofer(idChofer);
         }
+        public void RealizarSolicitudMantenimiento(int idMantenimiento, string nombreSolicitante, string tipoMantenimiento, string componenteAfectado, string fecha, string responsableAsignado, string codigo_error_Problema, string estadoMantenimiento, string tiempoEstimado, int id_Movimiento)
+        {
+            sentencias.InsertarSolicitudMantenimiento(idMantenimiento, nombreSolicitante, tipoMantenimiento, componenteAfectado, fecha, responsableAsignado, codigo_error_Problema, estadoMantenimiento, tiempoEstimado, id_Movimiento);
+        }
 
         // Método para obtener existencias de una bodega (Realizado por Daniel Sierra 0901-21-12740)
         public OdbcDataReader ObtenerExistenciasBodega(string idBodega)
@@ -80,20 +83,125 @@ namespace Capa_Controlador_Logistica
             // Aquí puedes agregar lógica para manejar los datos obtenidos, como llenarlos en un DataGridView
         }
 
+        public void CargarExistencias(string idBodega, DataTable dtExistencias)
+        {
+            using (OdbcDataReader dr = ObtenerExistenciasBodega(idBodega))
+            {
+                if (dr != null)
+                {
+                    try
+                    {
+                        dtExistencias.Load(dr); // Carga los datos en el DataTable
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Error al cargar las existencias: " + ex.Message);
+                    }
+                    finally
+                    {
+                        dr.Close(); // Asegúrate de cerrar el DataReader
+                    }
+                }
+                else
+                {
+                    throw new Exception("No se pudieron obtener existencias para la bodega seleccionada.");
+                }
+            }
+        }
+
         // Método para realizar auditoría (Realizado por Daniel Sierra 0901-21-12740)
         public void RealizarAuditoria(string idBodega, string idProducto, int cantidadFisica, int cantidadRegistrada, bool discrepancia)
         {
             sentencias.InsertarAuditoria(idBodega, idProducto, cantidadFisica, cantidadRegistrada, discrepancia);
         }
-        // Método para obtener productos de bodega (Realizado por Daniel Sierra 0901-21-12740)
-        public OdbcDataReader ObtenerProductosPorBodega(string idBodega)
+
+        // Método para obtener las bodegas
+
+        public List<KeyValuePair<int, string>> listadoBodegas()
         {
-            return sentencias.ObtenerProductosPorBodega(idBodega);
+            return sentencias.GetBodegas(); // Llama al método actualizado
         }
-        public void RealizarSolicitudMantenimiento(int idMantenimiento, string nombreSolicitante, string tipoMantenimiento, string componenteAfectado, string fecha, string responsableAsignado, string codigo_error_Problema, string estadoMantenimiento, string tiempoEstimado, int id_Movimiento)
+
+
+
+
+        // Método para obtener productos
+        public List<KeyValuePair<int, string>> listadoProductos()
         {
-            sentencias.InsertarSolicitudMantenimiento(idMantenimiento, nombreSolicitante, tipoMantenimiento, componenteAfectado, fecha, responsableAsignado, codigo_error_Problema, estadoMantenimiento, tiempoEstimado, id_Movimiento);
+            return sentencias.GetProductos(); // Llama al método actualizado
         }
+
+        // Método para registrar una auditoría
+        public void RealizarAuditoria(int idBodega, int idProducto, DateTime fechaAuditoria, string observaciones, int cantidadRegistrada, int cantidadFisica, bool discrepancia)
+        {
+            sentencias.InsertarAuditoria(idBodega, idProducto, fechaAuditoria, observaciones, cantidadRegistrada, cantidadFisica, discrepancia);
+        }
+
+        // Método para cargar las auditorías en el DataGridView
+        public DataTable CargarAuditorias()
+        {
+            return sentencias.ObtenerAuditorias();
+        }
+
+        public void RealizarAuditoria(
+     int idBodega,
+     int idProducto,
+     DateTime fechaAuditoria,
+     string observaciones,
+     int cantidadRegistrada,
+     int cantidadFisica,
+     bool discrepancia,
+     DataGridView dgvAuditorias)
+        {
+            try
+            {
+                // Llamar al método para insertar auditoría
+                string resultado = sentencias.InsertarAuditoria(idBodega, idProducto, fechaAuditoria, observaciones, cantidadRegistrada, cantidadFisica, discrepancia);
+
+                // Comprobar el resultado de la inserción
+                if (resultado == "Auditoría realizada con éxito")
+                {
+                    MessageBox.Show(resultado, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarAuditorias(dgvAuditorias); // Actualizar DataGridView
+                }
+                else
+                {
+                    MessageBox.Show("Error al realizar auditoría: " + resultado, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error inesperado: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        public void CargarAuditorias(DataGridView dgvAuditorias)
+        {
+            try
+            {
+                DataTable dtAuditorias = sentencias.ObtenerAuditorias();
+                dgvAuditorias.DataSource = dtAuditorias;
+
+                // Configura las columnas según sea necesario
+                if (dtAuditorias.Columns.Count > 0)
+                {
+                    dgvAuditorias.Columns[0].HeaderText = "ID Auditoría"; // Pk_ID_AUDITORIA
+                    dgvAuditorias.Columns[1].HeaderText = "Bodega"; // Fk_ID_BODEGA
+                    dgvAuditorias.Columns[2].HeaderText = "Producto"; // Fk_ID_PRODUCTO
+                    dgvAuditorias.Columns[3].HeaderText = "Fecha Auditoría"; // FECHA_AUDITORIA
+                    dgvAuditorias.Columns[4].HeaderText = "Observaciones"; // OBSERVACIONES
+                    dgvAuditorias.Columns[5].HeaderText = "Cantidad Registrada"; // CANTIDAD_REGISTRADA
+                    dgvAuditorias.Columns[6].HeaderText = "Cantidad Física"; // CANTIDAD_FISICA
+                    dgvAuditorias.Columns[7].HeaderText = "Discrepancia"; // DISCREPANCIA_DETECTADA
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar auditorías: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
 

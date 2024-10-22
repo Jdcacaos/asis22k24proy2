@@ -16,6 +16,7 @@ namespace Interfac_V3
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             Application.Run(new splash());
             //Application.Run(new FormModulos());
             //Application.Run(new Capa_Vista_Seguridad.frm_login());

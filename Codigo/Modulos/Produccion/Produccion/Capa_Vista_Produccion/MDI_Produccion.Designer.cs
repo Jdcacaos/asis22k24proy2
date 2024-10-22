@@ -38,19 +38,21 @@ namespace Capa_Vista_Produccion
             this.btnCerrar = new System.Windows.Forms.PictureBox();
             this.panelMenu = new System.Windows.Forms.Panel();
             this.btnSalir = new System.Windows.Forms.Button();
-            this.panelMenuProcesos = new System.Windows.Forms.Panel();
+            this.panelMenuMantenimiento = new System.Windows.Forms.Panel();
             this.Btn_Recetas = new System.Windows.Forms.Button();
             this.btnLotes = new System.Windows.Forms.Button();
             this.btnSeries = new System.Windows.Forms.Button();
             this.btnConversiones = new System.Windows.Forms.Button();
+            this.btnMaquinaria = new System.Windows.Forms.Button();
+            this.btnMenuMantenimiento = new System.Windows.Forms.Button();
+            this.panelMenuProcesos = new System.Windows.Forms.Panel();
+            this.btnMantenimiento = new System.Windows.Forms.Button();
             this.btnPolizas = new System.Windows.Forms.Button();
             this.btnProduccion = new System.Windows.Forms.Button();
             this.btnImplosionExplosion = new System.Windows.Forms.Button();
             this.btnCierre = new System.Windows.Forms.Button();
             this.btnEmpleados = new System.Windows.Forms.Button();
-            this.btnMaquinaria = new System.Windows.Forms.Button();
             this.btnOrdenesProduccion = new System.Windows.Forms.Button();
-            this.btnMantenimiento = new System.Windows.Forms.Button();
             this.btnMenuProcesos = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelBarraTitulo.SuspendLayout();
@@ -60,6 +62,7 @@ namespace Capa_Vista_Produccion
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).BeginInit();
             this.panelMenu.SuspendLayout();
+            this.panelMenuMantenimiento.SuspendLayout();
             this.panelMenuProcesos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -152,13 +155,15 @@ namespace Capa_Vista_Produccion
             this.panelMenu.AutoScroll = true;
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(43)))), ((int)(((byte)(77)))));
             this.panelMenu.Controls.Add(this.btnSalir);
+            this.panelMenu.Controls.Add(this.panelMenuMantenimiento);
+            this.panelMenu.Controls.Add(this.btnMenuMantenimiento);
             this.panelMenu.Controls.Add(this.panelMenuProcesos);
             this.panelMenu.Controls.Add(this.btnMenuProcesos);
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 39);
             this.panelMenu.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.Size = new System.Drawing.Size(181, 633);
+            this.panelMenu.Size = new System.Drawing.Size(181, 747);
             this.panelMenu.TabIndex = 2;
             // 
             // btnSalir
@@ -172,37 +177,30 @@ namespace Capa_Vista_Produccion
             this.btnSalir.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnSalir.Image = ((System.Drawing.Image)(resources.GetObject("btnSalir.Image")));
             this.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSalir.Location = new System.Drawing.Point(0, 566);
+            this.btnSalir.Location = new System.Drawing.Point(0, 622);
             this.btnSalir.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(181, 43);
-            this.btnSalir.TabIndex = 7;
+            this.btnSalir.TabIndex = 21;
             this.btnSalir.Text = "Salir";
             this.btnSalir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSalir.UseVisualStyleBackColor = true;
-            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
+            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click_1);
             // 
-            // panelMenuProcesos
+            // panelMenuMantenimiento
             // 
-            this.panelMenuProcesos.Controls.Add(this.Btn_Recetas);
-            this.panelMenuProcesos.Controls.Add(this.btnLotes);
-            this.panelMenuProcesos.Controls.Add(this.btnSeries);
-            this.panelMenuProcesos.Controls.Add(this.btnConversiones);
-            this.panelMenuProcesos.Controls.Add(this.btnPolizas);
-            this.panelMenuProcesos.Controls.Add(this.btnProduccion);
-            this.panelMenuProcesos.Controls.Add(this.btnImplosionExplosion);
-            this.panelMenuProcesos.Controls.Add(this.btnCierre);
-            this.panelMenuProcesos.Controls.Add(this.btnEmpleados);
-            this.panelMenuProcesos.Controls.Add(this.btnMaquinaria);
-            this.panelMenuProcesos.Controls.Add(this.btnOrdenesProduccion);
-            this.panelMenuProcesos.Controls.Add(this.btnMantenimiento);
-            this.panelMenuProcesos.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelMenuProcesos.Location = new System.Drawing.Point(0, 46);
-            this.panelMenuProcesos.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panelMenuProcesos.Name = "panelMenuProcesos";
-            this.panelMenuProcesos.Size = new System.Drawing.Size(181, 520);
-            this.panelMenuProcesos.TabIndex = 6;
-            this.panelMenuProcesos.Visible = false;
+            this.panelMenuMantenimiento.Controls.Add(this.Btn_Recetas);
+            this.panelMenuMantenimiento.Controls.Add(this.btnLotes);
+            this.panelMenuMantenimiento.Controls.Add(this.btnSeries);
+            this.panelMenuMantenimiento.Controls.Add(this.btnConversiones);
+            this.panelMenuMantenimiento.Controls.Add(this.btnMaquinaria);
+            this.panelMenuMantenimiento.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelMenuMantenimiento.Location = new System.Drawing.Point(0, 404);
+            this.panelMenuMantenimiento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelMenuMantenimiento.Name = "panelMenuMantenimiento";
+            this.panelMenuMantenimiento.Size = new System.Drawing.Size(181, 218);
+            this.panelMenuMantenimiento.TabIndex = 15;
+            this.panelMenuMantenimiento.Visible = false;
             // 
             // Btn_Recetas
             // 
@@ -210,16 +208,16 @@ namespace Capa_Vista_Produccion
             this.Btn_Recetas.FlatAppearance.BorderSize = 0;
             this.Btn_Recetas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Btn_Recetas.ForeColor = System.Drawing.Color.Silver;
-            this.Btn_Recetas.Location = new System.Drawing.Point(0, 481);
+            this.Btn_Recetas.Location = new System.Drawing.Point(0, 168);
             this.Btn_Recetas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Btn_Recetas.Name = "Btn_Recetas";
             this.Btn_Recetas.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.Btn_Recetas.Size = new System.Drawing.Size(181, 35);
-            this.Btn_Recetas.TabIndex = 12;
+            this.Btn_Recetas.Size = new System.Drawing.Size(181, 40);
+            this.Btn_Recetas.TabIndex = 24;
             this.Btn_Recetas.Text = "Recetas";
             this.Btn_Recetas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Btn_Recetas.UseVisualStyleBackColor = true;
-            this.Btn_Recetas.Click += new System.EventHandler(this.Btn_Recetas_Click);
+            this.Btn_Recetas.Click += new System.EventHandler(this.Btn_Recetas_Click_1);
             // 
             // btnLotes
             // 
@@ -227,16 +225,16 @@ namespace Capa_Vista_Produccion
             this.btnLotes.FlatAppearance.BorderSize = 0;
             this.btnLotes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLotes.ForeColor = System.Drawing.Color.Silver;
-            this.btnLotes.Location = new System.Drawing.Point(0, 439);
+            this.btnLotes.Location = new System.Drawing.Point(0, 126);
             this.btnLotes.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLotes.Name = "btnLotes";
             this.btnLotes.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
             this.btnLotes.Size = new System.Drawing.Size(181, 42);
-            this.btnLotes.TabIndex = 11;
+            this.btnLotes.TabIndex = 23;
             this.btnLotes.Text = "Lotes";
             this.btnLotes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLotes.UseVisualStyleBackColor = true;
-            this.btnLotes.Click += new System.EventHandler(this.btnLotes_Click);
+            this.btnLotes.Click += new System.EventHandler(this.btnLotes_Click_1);
             // 
             // btnSeries
             // 
@@ -244,16 +242,16 @@ namespace Capa_Vista_Produccion
             this.btnSeries.FlatAppearance.BorderSize = 0;
             this.btnSeries.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSeries.ForeColor = System.Drawing.Color.Silver;
-            this.btnSeries.Location = new System.Drawing.Point(0, 397);
+            this.btnSeries.Location = new System.Drawing.Point(0, 84);
             this.btnSeries.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSeries.Name = "btnSeries";
             this.btnSeries.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
             this.btnSeries.Size = new System.Drawing.Size(181, 42);
-            this.btnSeries.TabIndex = 10;
+            this.btnSeries.TabIndex = 22;
             this.btnSeries.Text = "Series";
             this.btnSeries.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSeries.UseVisualStyleBackColor = true;
-            this.btnSeries.Click += new System.EventHandler(this.btnSeries_Click);
+            this.btnSeries.Click += new System.EventHandler(this.btnSeries_Click_1);
             // 
             // btnConversiones
             // 
@@ -261,16 +259,87 @@ namespace Capa_Vista_Produccion
             this.btnConversiones.FlatAppearance.BorderSize = 0;
             this.btnConversiones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConversiones.ForeColor = System.Drawing.Color.Silver;
-            this.btnConversiones.Location = new System.Drawing.Point(0, 347);
+            this.btnConversiones.Location = new System.Drawing.Point(0, 34);
             this.btnConversiones.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnConversiones.Name = "btnConversiones";
             this.btnConversiones.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
             this.btnConversiones.Size = new System.Drawing.Size(181, 50);
-            this.btnConversiones.TabIndex = 9;
+            this.btnConversiones.TabIndex = 21;
             this.btnConversiones.Text = "Conversiones";
             this.btnConversiones.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConversiones.UseVisualStyleBackColor = true;
-            this.btnConversiones.Click += new System.EventHandler(this.btnConversiones_Click);
+            this.btnConversiones.Click += new System.EventHandler(this.btnConversiones_Click_1);
+            // 
+            // btnMaquinaria
+            // 
+            this.btnMaquinaria.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMaquinaria.FlatAppearance.BorderSize = 0;
+            this.btnMaquinaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMaquinaria.ForeColor = System.Drawing.Color.Silver;
+            this.btnMaquinaria.Location = new System.Drawing.Point(0, 0);
+            this.btnMaquinaria.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMaquinaria.Name = "btnMaquinaria";
+            this.btnMaquinaria.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnMaquinaria.Size = new System.Drawing.Size(181, 34);
+            this.btnMaquinaria.TabIndex = 20;
+            this.btnMaquinaria.Text = "Maquinaria";
+            this.btnMaquinaria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMaquinaria.UseVisualStyleBackColor = true;
+            this.btnMaquinaria.Click += new System.EventHandler(this.btnMaquinaria_Click_1);
+            // 
+            // btnMenuMantenimiento
+            // 
+            this.btnMenuMantenimiento.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMenuMantenimiento.FlatAppearance.BorderSize = 0;
+            this.btnMenuMantenimiento.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
+            this.btnMenuMantenimiento.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(61)))), ((int)(((byte)(92)))));
+            this.btnMenuMantenimiento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMenuMantenimiento.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMenuMantenimiento.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnMenuMantenimiento.Image = ((System.Drawing.Image)(resources.GetObject("btnMenuMantenimiento.Image")));
+            this.btnMenuMantenimiento.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMenuMantenimiento.Location = new System.Drawing.Point(0, 358);
+            this.btnMenuMantenimiento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMenuMantenimiento.Name = "btnMenuMantenimiento";
+            this.btnMenuMantenimiento.Size = new System.Drawing.Size(181, 46);
+            this.btnMenuMantenimiento.TabIndex = 14;
+            this.btnMenuMantenimiento.Text = "Mantenimientos";
+            this.btnMenuMantenimiento.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnMenuMantenimiento.UseVisualStyleBackColor = true;
+            this.btnMenuMantenimiento.Click += new System.EventHandler(this.btnMenuMantenimiento_Click_1);
+            // 
+            // panelMenuProcesos
+            // 
+            this.panelMenuProcesos.Controls.Add(this.btnMantenimiento);
+            this.panelMenuProcesos.Controls.Add(this.btnPolizas);
+            this.panelMenuProcesos.Controls.Add(this.btnProduccion);
+            this.panelMenuProcesos.Controls.Add(this.btnImplosionExplosion);
+            this.panelMenuProcesos.Controls.Add(this.btnCierre);
+            this.panelMenuProcesos.Controls.Add(this.btnEmpleados);
+            this.panelMenuProcesos.Controls.Add(this.btnOrdenesProduccion);
+            this.panelMenuProcesos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelMenuProcesos.Location = new System.Drawing.Point(0, 46);
+            this.panelMenuProcesos.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelMenuProcesos.Name = "panelMenuProcesos";
+            this.panelMenuProcesos.Size = new System.Drawing.Size(181, 312);
+            this.panelMenuProcesos.TabIndex = 6;
+            this.panelMenuProcesos.Visible = false;
+            // 
+            // btnMantenimiento
+            // 
+            this.btnMantenimiento.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMantenimiento.FlatAppearance.BorderSize = 0;
+            this.btnMantenimiento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMantenimiento.ForeColor = System.Drawing.Color.Silver;
+            this.btnMantenimiento.Location = new System.Drawing.Point(0, 276);
+            this.btnMantenimiento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMantenimiento.Name = "btnMantenimiento";
+            this.btnMantenimiento.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnMantenimiento.Size = new System.Drawing.Size(181, 37);
+            this.btnMantenimiento.TabIndex = 14;
+            this.btnMantenimiento.Text = "Mantenimiento";
+            this.btnMantenimiento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMantenimiento.UseVisualStyleBackColor = true;
             // 
             // btnPolizas
             // 
@@ -278,7 +347,7 @@ namespace Capa_Vista_Produccion
             this.btnPolizas.FlatAppearance.BorderSize = 0;
             this.btnPolizas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPolizas.ForeColor = System.Drawing.Color.Silver;
-            this.btnPolizas.Location = new System.Drawing.Point(0, 297);
+            this.btnPolizas.Location = new System.Drawing.Point(0, 226);
             this.btnPolizas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPolizas.Name = "btnPolizas";
             this.btnPolizas.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -295,7 +364,7 @@ namespace Capa_Vista_Produccion
             this.btnProduccion.FlatAppearance.BorderSize = 0;
             this.btnProduccion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProduccion.ForeColor = System.Drawing.Color.Silver;
-            this.btnProduccion.Location = new System.Drawing.Point(0, 247);
+            this.btnProduccion.Location = new System.Drawing.Point(0, 176);
             this.btnProduccion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnProduccion.Name = "btnProduccion";
             this.btnProduccion.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -312,7 +381,7 @@ namespace Capa_Vista_Produccion
             this.btnImplosionExplosion.FlatAppearance.BorderSize = 0;
             this.btnImplosionExplosion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImplosionExplosion.ForeColor = System.Drawing.Color.Silver;
-            this.btnImplosionExplosion.Location = new System.Drawing.Point(0, 197);
+            this.btnImplosionExplosion.Location = new System.Drawing.Point(0, 126);
             this.btnImplosionExplosion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnImplosionExplosion.Name = "btnImplosionExplosion";
             this.btnImplosionExplosion.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -329,7 +398,7 @@ namespace Capa_Vista_Produccion
             this.btnCierre.FlatAppearance.BorderSize = 0;
             this.btnCierre.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCierre.ForeColor = System.Drawing.Color.Silver;
-            this.btnCierre.Location = new System.Drawing.Point(0, 163);
+            this.btnCierre.Location = new System.Drawing.Point(0, 92);
             this.btnCierre.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCierre.Name = "btnCierre";
             this.btnCierre.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -346,7 +415,7 @@ namespace Capa_Vista_Produccion
             this.btnEmpleados.FlatAppearance.BorderSize = 0;
             this.btnEmpleados.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmpleados.ForeColor = System.Drawing.Color.Silver;
-            this.btnEmpleados.Location = new System.Drawing.Point(0, 129);
+            this.btnEmpleados.Location = new System.Drawing.Point(0, 58);
             this.btnEmpleados.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEmpleados.Name = "btnEmpleados";
             this.btnEmpleados.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -357,30 +426,13 @@ namespace Capa_Vista_Produccion
             this.btnEmpleados.UseVisualStyleBackColor = true;
             this.btnEmpleados.Click += new System.EventHandler(this.btnEmpleados_Click);
             // 
-            // btnMaquinaria
-            // 
-            this.btnMaquinaria.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnMaquinaria.FlatAppearance.BorderSize = 0;
-            this.btnMaquinaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMaquinaria.ForeColor = System.Drawing.Color.Silver;
-            this.btnMaquinaria.Location = new System.Drawing.Point(0, 95);
-            this.btnMaquinaria.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMaquinaria.Name = "btnMaquinaria";
-            this.btnMaquinaria.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnMaquinaria.Size = new System.Drawing.Size(181, 34);
-            this.btnMaquinaria.TabIndex = 2;
-            this.btnMaquinaria.Text = "Maquinaria";
-            this.btnMaquinaria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMaquinaria.UseVisualStyleBackColor = true;
-            this.btnMaquinaria.Click += new System.EventHandler(this.btnMaquinaria_Click);
-            // 
             // btnOrdenesProduccion
             // 
             this.btnOrdenesProduccion.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnOrdenesProduccion.FlatAppearance.BorderSize = 0;
             this.btnOrdenesProduccion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOrdenesProduccion.ForeColor = System.Drawing.Color.Silver;
-            this.btnOrdenesProduccion.Location = new System.Drawing.Point(0, 37);
+            this.btnOrdenesProduccion.Location = new System.Drawing.Point(0, 0);
             this.btnOrdenesProduccion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnOrdenesProduccion.Name = "btnOrdenesProduccion";
             this.btnOrdenesProduccion.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
@@ -390,23 +442,6 @@ namespace Capa_Vista_Produccion
             this.btnOrdenesProduccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnOrdenesProduccion.UseVisualStyleBackColor = true;
             this.btnOrdenesProduccion.Click += new System.EventHandler(this.btnOrdenesProduccion_Click);
-            // 
-            // btnMantenimiento
-            // 
-            this.btnMantenimiento.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnMantenimiento.FlatAppearance.BorderSize = 0;
-            this.btnMantenimiento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMantenimiento.ForeColor = System.Drawing.Color.Silver;
-            this.btnMantenimiento.Location = new System.Drawing.Point(0, 0);
-            this.btnMantenimiento.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMantenimiento.Name = "btnMantenimiento";
-            this.btnMantenimiento.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnMantenimiento.Size = new System.Drawing.Size(181, 37);
-            this.btnMantenimiento.TabIndex = 0;
-            this.btnMantenimiento.Text = "Mantenimiento";
-            this.btnMantenimiento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMantenimiento.UseVisualStyleBackColor = true;
-            this.btnMantenimiento.Click += new System.EventHandler(this.btnMantenimiento_Click);
             // 
             // btnMenuProcesos
             // 
@@ -434,7 +469,7 @@ namespace Capa_Vista_Produccion
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(445, 198);
+            this.pictureBox1.Location = new System.Drawing.Point(445, 255);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(225, 225);
@@ -446,7 +481,7 @@ namespace Capa_Vista_Produccion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1189, 672);
+            this.ClientSize = new System.Drawing.Size(1189, 786);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panelMenu);
             this.Controls.Add(this.panelBarraTitulo);
@@ -461,6 +496,7 @@ namespace Capa_Vista_Produccion
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).EndInit();
             this.panelMenu.ResumeLayout(false);
+            this.panelMenuMantenimiento.ResumeLayout(false);
             this.panelMenuProcesos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -477,21 +513,23 @@ namespace Capa_Vista_Produccion
         private System.Windows.Forms.PictureBox btnMaximizar;
         private System.Windows.Forms.PictureBox btnCerrar;
         private System.Windows.Forms.Panel panelMenu;
-        private System.Windows.Forms.Button btnSalir;
-        private System.Windows.Forms.Panel panelMenuProcesos;
-        private System.Windows.Forms.Button btnOrdenesProduccion;
-        private System.Windows.Forms.Button btnMantenimiento;
-        private System.Windows.Forms.Button btnMenuProcesos;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnSalir;
+        private System.Windows.Forms.Panel panelMenuMantenimiento;
+        private System.Windows.Forms.Button btnMenuMantenimiento;
+        private System.Windows.Forms.Panel panelMenuProcesos;
+        private System.Windows.Forms.Button btnMantenimiento;
         private System.Windows.Forms.Button btnPolizas;
         private System.Windows.Forms.Button btnProduccion;
         private System.Windows.Forms.Button btnImplosionExplosion;
         private System.Windows.Forms.Button btnCierre;
         private System.Windows.Forms.Button btnEmpleados;
-        private System.Windows.Forms.Button btnMaquinaria;
-        private System.Windows.Forms.Button btnConversiones;
-        private System.Windows.Forms.Button btnSeries;
-        private System.Windows.Forms.Button btnLotes;
+        private System.Windows.Forms.Button btnMenuProcesos;
         private System.Windows.Forms.Button Btn_Recetas;
+        private System.Windows.Forms.Button btnLotes;
+        private System.Windows.Forms.Button btnSeries;
+        private System.Windows.Forms.Button btnConversiones;
+        private System.Windows.Forms.Button btnMaquinaria;
+        private System.Windows.Forms.Button btnOrdenesProduccion;
     }
 }

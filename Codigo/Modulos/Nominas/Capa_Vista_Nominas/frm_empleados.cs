@@ -12,20 +12,21 @@ namespace Capa_Vista_Nominas
 {
     public partial class frm_empleados : Form
     {
-        String idUsuario;
+     
         //Metodos para que se abra solamente una ventana y no multiples
-        //private static frm_empleados instancia = null;
-        //public static frm_empleados ventana_unica()
-        //{
-        //    if (instancia == null || instancia.IsDisposed)
-        //    {
-        //        instancia = new frm_empleados();
-        //    }
-        //    return instancia;
-        //}
-        public frm_empleados(String idUsuario)
+        private static frm_empleados instancia = null;
+        public static frm_empleados ventana_unica()
+        {
+            if (instancia == null || instancia.IsDisposed)
+            {
+                instancia = new frm_empleados();
+            }
+            return instancia;
+        }
+        public frm_empleados()
         {
             InitializeComponent();
+            string idUsuario = Interfac_V3.UsuarioSesion.GetIdUsuario();
             /***************Fernando Jose Garcia <3*********************/
             ///*****Con tabla que tenga comboboxs foraneas *****/
             string[] alias = { "Clave", "nombre", "apellido", "fecha nacimiento", "no_identificacion",

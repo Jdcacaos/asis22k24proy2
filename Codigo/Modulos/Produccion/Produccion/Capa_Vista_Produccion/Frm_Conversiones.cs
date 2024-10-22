@@ -15,13 +15,13 @@ namespace Capa_Vista_Produccion
         public Frm_Conversiones()
         {
             InitializeComponent();
-            string[] alias = { "ID", "Unidad Origen", "Unidad Destino", "Factor de Conversión", "Tipo de conversión", "Descripción", "Estado" };
+            string[] alias = { "ID", "Unidad Origen", "Unidad Destino", "Factor", "Tipo de conversión", "Descripción", "Estado" };
             navegador1.AsignarAlias(alias);
             navegador1.AsignarSalida(this);
 
             // Instanciar colores personalizados
-            Color colorFondo = ColorTranslator.FromHtml("#AEA1D6"); // Color de fondo
-            Color colorFuente = ColorTranslator.FromHtml("#230050"); // Color de fuente
+            Color colorFondo = ColorTranslator.FromHtml("#B1CFE6"); // Color de fondo
+            Color colorFuente = ColorTranslator.FromHtml("#112B4D"); // Color de fuente
             // Asignar colores al navegador
             navegador1.AsignarColorFondo(colorFondo);
             navegador1.AsignarColorFuente(colorFuente);

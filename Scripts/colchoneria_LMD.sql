@@ -704,3 +704,72 @@ INSERT INTO `venta` (`id_venta`, `monto`, `nombre_cliente`, `nombre_empleado`, `
 (36, 65656, 'djf', 'kjk', 1),
 (37, 0, '', '', 1),
 (38, 0, '', '', 1);
+
+
+-- DATOS DE LAS TABLAS MAESTRAS DE CUENTAS CORRIENTES
+-- Insertar datos en Tbl_vendedor
+INSERT INTO `Tbl_vendedor` (nombre_vendedor, direccion_vendedor, telefono_vendedor, departamento_vendedor, estado_vendedor)
+VALUES
+('Juan Pérez', 'Calle Martí 112-62', 12345678, 'Ventas', 1),
+('María Gómez', 'Av. Siempre Viva 456', 98765432, 'Ventas',1);
+
+-- Insertar datos en Tbl_clientes
+INSERT INTO `Tbl_clientes` (Fk_id_vendedor, nombre_cliente, telefono_cliente, direccion_cliente, saldo_cuenta, estado_cliente)
+VALUES
+(1, 'Carlos Ruiz', 23456789, 'Calle 10', 0, 1),  -- Habilitado
+(1, 'Lucía Martínez', 34567890, 'Calle 20', 0, 0);  -- Inhabilitado
+
+-- Insertar datos en Tbl_cobrador
+INSERT INTO `Tbl_cobrador` (nombre_cobrador, direccion_cobrador, telefono_cobrador, departamento_cobrador, estado_cobrador)
+VALUES
+('Jorge López', 'Calle 5', 45678901, 'Cobranzas', 1),
+('Ana Fernández', 'Calle 15', 56789014, 'Cobranzas', 0);
+
+-- Insertar datos en Tbl_paises
+INSERT INTO `Tbl_paises` (nombre_pais, region_pais, estatus_pais)
+VALUES
+('Argentina', 'Sudamérica', 1),
+('México', 'América del Norte', 1);
+
+SELECT * FROM tbl_paises;
+-- Insertar datos en Tbl_tipodepago
+INSERT INTO `Tbl_tipodepago` (nombre_pago, tipo_moneda, estado_pago)
+VALUES
+('Efectivo', 'USD', '1'),
+('Tarjeta de Crédito', 'Quetrzales', 1),
+('Tarjeta de Débito', 'Quetrzales', 1),
+('Transferencia', 'Quetzales', 1);
+
+-- Insertar datos en Tbl_Deudas_Cliente
+INSERT INTO `Tbl_Deudas_Clientes` (Fk_id_cliente, Fk_id_cobrador, Fk_id_pago, monto_deuda, fecha_inicio_deuda, 
+fecha_vencimiento_deuda, descripcion_deuda, estado_deuda)
+VALUES
+(1, 1, 1, 500.00, '2024-01-01', '2024-12-31', 'Deuda por compra de productos', 0),  -- Inhabilitado 
+(2, 2, 2, 300.00, '2024-02-01', '2024-11-30', 'Deuda por servicios', 1);  -- Habilitado 
+
+-- Insertar datos en Tbl_Transaccion_cliente
+INSERT INTO `Tbl_Transaccion_cliente` (Fk_id_cliente, Fk_id_pais, fecha_transaccion, cuenta_tansaccion, cuotas_transaccion, 
+Fk_id_deuda, monto_deuda, monto_transaccion, saldo_pendiente, Fk_id_pago, tipo_moneda, serie_transaccion, estado_transaccion)
+VALUES
+(1, 1, '2024-03-01', 'Cuenta 123', 'mensual', 1, 500.00, 500.00, 0.00, 1, 'USD', 'T001', '0'), -- pagado 
+(2, 2, '2024-03-05', 'Cuenta 456', 'mensual', 2, 300.00, 150.00, 150.00, 2, 'Quetzales', 'T001', '1'); -- pendiente
+
+-- Insertar datos en Tbl_proveedores
+INSERT INTO `Tbl_proveedores` (fecha_registro, nombre_proveedor, direccion, telefono, email, saldo_cuenta, estado_proveedor)
+VALUES
+('2024-01-15', 'Proveedor A', 'Calle 100', '12345678', 'proveedorA@example.com', 0, '1'),
+('2024-01-20', 'Proveedor B', 'Calle 200', '09876541', 'proveedorB@example.com', 0, '0');
+
+-- Insertar datos en Tbl_Deudas_Proveedores
+INSERT INTO `Tbl_Deudas_Proveedores` (Fk_id_proveedor, Fk_id_pago, monto_deuda, fecha_inicio_deuda, 
+fecha_vencimiento_deuda, descripcion_deuda, estado_deuda)
+VALUES
+(1, 1, 1000.00, '2024-01-15', '2024-12-31', 'Deuda por compra de materiales', 0),  -- Inhabilitado 
+(2, 2, 500.00, '2024-01-20', '2024-06-30', 'Deuda por servicios', 1);  -- Habilitado 
+
+-- Insertar datos en Tbl_Transaccion_proveedor
+INSERT INTO `Tbl_Transaccion_proveedor` (Fk_id_proveedor, Fk_id_pais, fecha_transaccion, cuenta_tansaccion, cuotas_transaccion, 
+Fk_id_deuda, monto_deuda, monto_transaccion, saldo_pendiente, Fk_id_pago, tipo_moneda, serie_transaccion, estado_transaccion)
+VALUES
+(1, 1, '2024-02-01', 'Cuenta 100', 'menusal', 1, 1000.00, 1000.00, 0.00, 1, 'USD', 'P001', 0),  
+(2, 2, '2024-02-05', 'Cuenta 200', 'mensual', 2, 500.00, 250.00, 250.00, 2, 'Quetzales', 'P002', 1); 

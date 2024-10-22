@@ -27,20 +27,7 @@ namespace Capa_Vista_Logistica
             navegador1.ObtenerIdUsuario(idUsuario);
             navegador1.AsignarAyuda("1");
             navegador1.AsignarNombreForm("Mantenimiento de Vehiculos");
-            navegador1.Dgv_Informacion.CellClick += DgvMantenimiento_CellClick;
 
-        }
-        private void DgvMantenimiento_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Verificar que la fila seleccionada es válida
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = navegador1.Dgv_Informacion.Rows[e.RowIndex];
-                string Pk_id_Mantenimiento = row.Cells["Pk_id_vehiculo"].Value.ToString();  // Asegúrate de que el nombre del campo sea correcto
-
-                MantenimientoVehiculos movInventario = new MantenimientoVehiculos(Pk_id_Mantenimiento);
-                movInventario.Show();
-            }
         }
     }
 }

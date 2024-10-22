@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{83130444-93A6-49DE-B86C-C1C5BE36CD16}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Capa_Vista_CompraVenta</RootNamespace>
+    <AssemblyName>Capa_Vista_CompraVenta</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Capa_Controlador_CompraVenta">
+      <HintPath>..\Capa_Controlador_CompraVenta\bin\Debug\Capa_Controlador_CompraVenta.dll</HintPath>
+    </Reference>
+    <Reference Include="Capa_Vista_Navegador">
+      <HintPath>..\..\..\Componentes\Navegador\Capa_Vista_Navegador\bin\Debug\Capa_Vista_Navegador.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Frm_clientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_clientes.Designer.cs">
+      <DependentUpon>Frm_clientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_comisiones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_comisiones.Designer.cs">
+      <DependentUpon>Frm_comisiones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_Cotizacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_Cotizacion.Designer.cs">
+      <DependentUpon>frm_Cotizacion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_Factura.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_Factura.Designer.cs">
+      <DependentUpon>frm_Factura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_generarOrdenParaCompra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_generarOrdenParaCompra.Designer.cs">
+      <DependentUpon>frm_generarOrdenParaCompra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_ListadoDetalle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_ListadoDetalle.Designer.cs">
+      <DependentUpon>frm_ListadoDetalle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_ListadoEncabezado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_ListadoEncabezado.Designer.cs">
+      <DependentUpon>frm_ListadoEncabezado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_Mantenimientopoliza.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_Mantenimientopoliza.Designer.cs">
+      <DependentUpon>frm_Mantenimientopoliza.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_ordenCompras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_ordenCompras.Designer.cs">
+      <DependentUpon>frm_ordenCompras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_Pedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_Pedido.Designer.cs">
+      <DependentUpon>frm_Pedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_proveedores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_proveedores.Designer.cs">
+      <DependentUpon>Frm_proveedores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_traspasopoliza.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_traspasopoliza.Designer.cs">
+      <DependentUpon>Frm_traspasopoliza.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_MDI_general_CompraVenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_MDI_general_CompraVenta.Designer.cs">
+      <DependentUpon>Frm_MDI_general_CompraVenta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_vendedores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_vendedores.Designer.cs">
+      <DependentUpon>Frm_vendedores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Frm_clientes.resx">
+      <DependentUpon>Frm_clientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_comisiones.resx">
+      <DependentUpon>Frm_comisiones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_Cotizacion.resx">
+      <DependentUpon>frm_Cotizacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_Factura.resx">
+      <DependentUpon>frm_Factura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_generarOrdenParaCompra.resx">
+      <DependentUpon>frm_generarOrdenParaCompra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_ListadoDetalle.resx">
+      <DependentUpon>frm_ListadoDetalle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_ListadoEncabezado.resx">
+      <DependentUpon>frm_ListadoEncabezado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_Mantenimientopoliza.resx">
+      <DependentUpon>frm_Mantenimientopoliza.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_MDI_general_CompraVenta.resx">
+      <DependentUpon>Frm_MDI_general_CompraVenta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_ordenCompras.resx">
+      <DependentUpon>frm_ordenCompras.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_Pedido.resx">
+      <DependentUpon>frm_Pedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_proveedores.resx">
+      <DependentUpon>Frm_proveedores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_traspasopoliza.resx">
+      <DependentUpon>Frm_traspasopoliza.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_vendedores.resx">
+      <DependentUpon>Frm_vendedores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\agregar11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\borrar11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\editar11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\buscar11.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
