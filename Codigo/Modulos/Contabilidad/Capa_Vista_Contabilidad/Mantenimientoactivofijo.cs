@@ -15,7 +15,7 @@ namespace Capa_Vista_Contabilidad
         public Mantenimientoactivofijo()
         {
             InitializeComponent();
-            string[] alias = { "pkid", "Codigo_Activo", "Tipo_Activo", "Descripcion", "Marca", "Modelo", "Fecha_Adqui", "Costo_Adqui", "Vida_Util", "Valor_Residual", "Estado" };
+            string[] alias = { "pkid", "Codigo_Activo", "Tipo_Activo", "Descripcion", "Marca", "Modelo", "Fecha_Adqui", "Costo_Adqui", "Vida_Util", "Valor_Residual", "Estado", "pkCuenta" };
             navegador1.AsignarAlias(alias);
             navegador1.AsignarSalida(this);
             navegador1.AsignarColorFondo(Color.LightBlue);
