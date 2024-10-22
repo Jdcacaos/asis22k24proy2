@@ -43,13 +43,13 @@ namespace Interfac_V3
 
         private void btnSeguridad_Click(object sender, EventArgs e)
         {
-            // var usuario = new Capa_Vista_Seguridad.frm_login();
-            //string idUsuario= usuario.Txt_usuario.ToString();
+            var usuario = new Capa_Vista_Seguridad.frm_login();
+           string idUsuario= usuario.Txt_usuario.ToString();
 
-            //frm_login login = new frm_login();
-            //login.ShowDialog();
+           frm_login login = new frm_login();
+           login.ShowDialog();
 
-            MDI_Seguridad formMDI = new MDI_Seguridad(idUsuario);
+           MDI_Seguridad formMDI = new MDI_Seguridad(idUsuario);
             formMDI.Show();
         }
 
@@ -76,7 +76,7 @@ namespace Interfac_V3
             */
 
             frm_principal_nominas nominas = new frm_principal_nominas(UsuarioSesion.GetIdUsuario());
-            nominas.Show();
+           nominas.Show();
 
 
         }
@@ -92,8 +92,8 @@ namespace Interfac_V3
 
         private void Btn_Contabilidad_Click(object sender, EventArgs e)
         {
-            Contabilidad_MDI conta = new Contabilidad_MDI(UsuarioSesion.GetIdUsuario());
-            conta.Show();
+          Contabilidad_MDI conta = new Contabilidad_MDI(UsuarioSesion.GetIdUsuario());
+          conta.Show();
         }
 
         private void Btn_Compras_Click(object sender, EventArgs e)

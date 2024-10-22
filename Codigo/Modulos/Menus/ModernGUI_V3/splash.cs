@@ -23,7 +23,7 @@ namespace Interfac_V3
                 this.Hide();
 
                 frm_login login = new frm_login();
-                login.ShowDialog();
+               login.ShowDialog();
 
 
                 //FormModulos b = new FormModulos();

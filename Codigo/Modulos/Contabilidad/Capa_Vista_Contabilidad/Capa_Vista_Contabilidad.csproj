@@ -107,6 +107,18 @@
     <Compile Include="MantenimientoEncabezadoCuenta.Designer.cs">
       <DependentUpon>MantenimientoEncabezadoCuenta.cs</DependentUpon>
     </Compile>
+    <Compile Include="mantenimientomarca.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mantenimientomarca.Designer.cs">
+      <DependentUpon>mantenimientomarca.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mantenimientotipoactivo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mantenimientotipoactivo.Designer.cs">
+      <DependentUpon>Mantenimientotipoactivo.cs</DependentUpon>
+    </Compile>
     <Compile Include="MantenimientoTipoCuenta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +184,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MantenimientoEncabezadoCuenta.resx">
       <DependentUpon>MantenimientoEncabezadoCuenta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mantenimientomarca.resx">
+      <DependentUpon>mantenimientomarca.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mantenimientotipoactivo.resx">
+      <DependentUpon>Mantenimientotipoactivo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MantenimientoTipoCuenta.resx">
       <DependentUpon>MantenimientoTipoCuenta.cs</DependentUpon>

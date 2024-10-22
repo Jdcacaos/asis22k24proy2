@@ -31,6 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Contabilidad_MDI));
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.panelIdentificacion = new System.Windows.Forms.Panel();
+            this.lbl_fecha2 = new System.Windows.Forms.Label();
+            this.lbl_fecha = new System.Windows.Forms.Label();
+            this.lbl_usuario2 = new System.Windows.Forms.Label();
+            this.lbl_usuario = new System.Windows.Forms.Label();
             this.panelformularios = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelMenu = new System.Windows.Forms.Panel();
@@ -58,10 +62,8 @@
             this.btnMinimizar = new System.Windows.Forms.PictureBox();
             this.btnMaximizar = new System.Windows.Forms.PictureBox();
             this.btnCerrar = new System.Windows.Forms.PictureBox();
-            this.lbl_usuario = new System.Windows.Forms.Label();
-            this.lbl_usuario2 = new System.Windows.Forms.Label();
-            this.lbl_fecha = new System.Windows.Forms.Label();
-            this.lbl_fecha2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panelContenedor.SuspendLayout();
             this.panelIdentificacion.SuspendLayout();
             this.panelformularios.SuspendLayout();
@@ -105,6 +107,43 @@
             this.panelIdentificacion.Name = "panelIdentificacion";
             this.panelIdentificacion.Size = new System.Drawing.Size(1140, 30);
             this.panelIdentificacion.TabIndex = 3;
+            // 
+            // lbl_fecha2
+            // 
+            this.lbl_fecha2.AutoSize = true;
+            this.lbl_fecha2.Location = new System.Drawing.Point(558, 10);
+            this.lbl_fecha2.Name = "lbl_fecha2";
+            this.lbl_fecha2.Size = new System.Drawing.Size(46, 17);
+            this.lbl_fecha2.TabIndex = 3;
+            this.lbl_fecha2.Text = "label1";
+            // 
+            // lbl_fecha
+            // 
+            this.lbl_fecha.AutoSize = true;
+            this.lbl_fecha.Location = new System.Drawing.Point(501, 10);
+            this.lbl_fecha.Name = "lbl_fecha";
+            this.lbl_fecha.Size = new System.Drawing.Size(51, 17);
+            this.lbl_fecha.TabIndex = 2;
+            this.lbl_fecha.Text = "Fecha:";
+            // 
+            // lbl_usuario2
+            // 
+            this.lbl_usuario2.AutoSize = true;
+            this.lbl_usuario2.Location = new System.Drawing.Point(423, 10);
+            this.lbl_usuario2.Name = "lbl_usuario2";
+            this.lbl_usuario2.Size = new System.Drawing.Size(46, 17);
+            this.lbl_usuario2.TabIndex = 1;
+            this.lbl_usuario2.Text = "label1";
+            // 
+            // lbl_usuario
+            // 
+            this.lbl_usuario.AutoSize = true;
+            this.lbl_usuario.Location = new System.Drawing.Point(360, 10);
+            this.lbl_usuario.Name = "lbl_usuario";
+            this.lbl_usuario.Size = new System.Drawing.Size(61, 17);
+            this.lbl_usuario.TabIndex = 0;
+            this.lbl_usuario.Text = "Usuario:";
+            this.lbl_usuario.Click += new System.EventHandler(this.lbl_usuario_Click);
             // 
             // panelformularios
             // 
@@ -161,7 +200,7 @@
             this.btnSalir.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnSalir.Image = ((System.Drawing.Image)(resources.GetObject("btnSalir.Image")));
             this.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSalir.Location = new System.Drawing.Point(0, 619);
+            this.btnSalir.Location = new System.Drawing.Point(0, 686);
             this.btnSalir.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(202, 43);
@@ -176,7 +215,7 @@
             this.panelMenuPolizasLocales.Controls.Add(this.button3);
             this.panelMenuPolizasLocales.Controls.Add(this.button4);
             this.panelMenuPolizasLocales.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelMenuPolizasLocales.Location = new System.Drawing.Point(0, 527);
+            this.panelMenuPolizasLocales.Location = new System.Drawing.Point(0, 594);
             this.panelMenuPolizasLocales.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelMenuPolizasLocales.Name = "panelMenuPolizasLocales";
             this.panelMenuPolizasLocales.Size = new System.Drawing.Size(202, 92);
@@ -226,7 +265,7 @@
             this.btnPolizasLocales.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnPolizasLocales.Image = ((System.Drawing.Image)(resources.GetObject("btnPolizasLocales.Image")));
             this.btnPolizasLocales.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPolizasLocales.Location = new System.Drawing.Point(0, 481);
+            this.btnPolizasLocales.Location = new System.Drawing.Point(0, 548);
             this.btnPolizasLocales.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPolizasLocales.Name = "btnPolizasLocales";
             this.btnPolizasLocales.Size = new System.Drawing.Size(202, 46);
@@ -239,6 +278,8 @@
             // panelMenuMant
             // 
             this.panelMenuMant.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(55)))), ((int)(((byte)(62)))));
+            this.panelMenuMant.Controls.Add(this.button2);
+            this.panelMenuMant.Controls.Add(this.button1);
             this.panelMenuMant.Controls.Add(this.btnmActivosFijos);
             this.panelMenuMant.Controls.Add(this.btnmTipoPoliza);
             this.panelMenuMant.Controls.Add(this.btnmCuenta);
@@ -248,7 +289,7 @@
             this.panelMenuMant.Location = new System.Drawing.Point(0, 274);
             this.panelMenuMant.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelMenuMant.Name = "panelMenuMant";
-            this.panelMenuMant.Size = new System.Drawing.Size(202, 207);
+            this.panelMenuMant.Size = new System.Drawing.Size(202, 274);
             this.panelMenuMant.TabIndex = 6;
             this.panelMenuMant.Visible = false;
             // 
@@ -547,42 +588,39 @@
             this.btnCerrar.TabStop = false;
             this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
-            // lbl_usuario
+            // button1
             // 
-            this.lbl_usuario.AutoSize = true;
-            this.lbl_usuario.Location = new System.Drawing.Point(360, 10);
-            this.lbl_usuario.Name = "lbl_usuario";
-            this.lbl_usuario.Size = new System.Drawing.Size(61, 17);
-            this.lbl_usuario.TabIndex = 0;
-            this.lbl_usuario.Text = "Usuario:";
-            this.lbl_usuario.Click += new System.EventHandler(this.lbl_usuario_Click);
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.ForeColor = System.Drawing.Color.Silver;
+            this.button1.Location = new System.Drawing.Point(0, 186);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.button1.Size = new System.Drawing.Size(202, 37);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Tipo Activo";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // lbl_usuario2
+            // button2
             // 
-            this.lbl_usuario2.AutoSize = true;
-            this.lbl_usuario2.Location = new System.Drawing.Point(423, 10);
-            this.lbl_usuario2.Name = "lbl_usuario2";
-            this.lbl_usuario2.Size = new System.Drawing.Size(46, 17);
-            this.lbl_usuario2.TabIndex = 1;
-            this.lbl_usuario2.Text = "label1";
-            // 
-            // lbl_fecha
-            // 
-            this.lbl_fecha.AutoSize = true;
-            this.lbl_fecha.Location = new System.Drawing.Point(501, 10);
-            this.lbl_fecha.Name = "lbl_fecha";
-            this.lbl_fecha.Size = new System.Drawing.Size(51, 17);
-            this.lbl_fecha.TabIndex = 2;
-            this.lbl_fecha.Text = "Fecha:";
-            // 
-            // lbl_fecha2
-            // 
-            this.lbl_fecha2.AutoSize = true;
-            this.lbl_fecha2.Location = new System.Drawing.Point(558, 10);
-            this.lbl_fecha2.Name = "lbl_fecha2";
-            this.lbl_fecha2.Size = new System.Drawing.Size(46, 17);
-            this.lbl_fecha2.TabIndex = 3;
-            this.lbl_fecha2.Text = "label1";
+            this.button2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.ForeColor = System.Drawing.Color.Silver;
+            this.button2.Location = new System.Drawing.Point(0, 223);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button2.Name = "button2";
+            this.button2.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.button2.Size = new System.Drawing.Size(202, 37);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Marca";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Contabilidad_MDI
             // 
@@ -652,6 +690,8 @@
         private System.Windows.Forms.Label lbl_usuario;
         private System.Windows.Forms.Label lbl_fecha2;
         private System.Windows.Forms.Label lbl_fecha;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

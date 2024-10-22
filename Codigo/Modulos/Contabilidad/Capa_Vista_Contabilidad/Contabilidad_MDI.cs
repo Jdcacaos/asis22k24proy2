@@ -265,6 +265,22 @@ namespace Capa_Vista_Contabilidad
         {
 
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            AbrirFormulario<Mantenimientotipoactivo>();
+            btnmCuenta.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<mantenimientomarca>();
+            btnmCuenta.BackColor = Color.FromArgb(12, 61, 92);
+            ocultaSubMenu();
+          
+        }
         #endregion
         //Metodo para abrir formularios dentro de panel contenedor
         private void AbrirFormulario<MiForm>() where MiForm : Form, new() {
