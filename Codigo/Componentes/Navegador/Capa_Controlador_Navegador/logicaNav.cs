@@ -15,11 +15,16 @@ namespace Capa_Controlador_Navegador
         // Obtiene el último ID insertado en la tabla especificada
         public string UltimoID(string sTabla)
         {
-            string sUltimoID = sn.ObtenerId(sTabla);
+            string sUltimoID = sn.ContadorID(sTabla);
             Console.WriteLine(sUltimoID);
             return sUltimoID;
         }
-
+        public string Contador(string sTabla)
+        {
+            string sUltimoID = sn.ContadorID(sTabla);
+            Console.WriteLine(sUltimoID);
+            return sUltimoID;
+        }
         // Realiza una consulta lógica sobre la tabla y la tabla relacionada, devolviendo un DataTable con los resultados
         public DataTable ConsultaLogica(string sTabla, List<Tuple<string, string, string, string>> relacionesForaneas)
         {
@@ -42,11 +47,11 @@ namespace Capa_Controlador_Navegador
             return dtTabla;
         }
 
-    
 
 
-    // Modifica el índice proporcionado a través de la lógica interna
-    public string ModIndice(string sIndice1)
+
+        // Modifica el índice proporcionado a través de la lógica interna
+        public string ModIndice(string sIndice1)
 
         {
             string sIndice = sn.ModIndice(sIndice1);
@@ -122,6 +127,9 @@ namespace Capa_Controlador_Navegador
         {
             return sn.ObtenerItems(sTabla, sCampoClave, sCampoDisplay);
         }
+
+
+
 
         // Devuelve la clave primaria correspondiente a un valor específico en un campo específico de la tabla
         public string LlaveCampolo(string sTabla, string sCampo, string sValor)
@@ -210,5 +218,82 @@ namespace Capa_Controlador_Navegador
             dt.Fill(table);
             return table;
         }
+
+        public List<Dictionary<string, string>> ObtenerDatosExtra(string tabla, string primaryKeyValue, string tablaPrincipal)
+        {
+            // Llamar a la capa Modelo para obtener los datos de la tabla relacionada
+            return sn.ObtenerDatosTablaRelacionada(tabla, primaryKeyValue, tablaPrincipal);
+        }
+
+        public string ObtenerValorCampo(string tabla, string campo, string clavePrimaria, string valorClavePrimaria)
+        {
+            return sn.ObtenerValorCampo(tabla, campo, clavePrimaria, valorClavePrimaria);  // Llamamos al método de la capa lógica
+        }
+
+
+        public void ActualizarCampo(string tabla, string campo, string nuevoValor, string clavePrimaria, string valorClavePrimaria)
+        {
+            // Llama al modelo para ejecutar la actualización con la clave primaria
+            sn.ActualizarCampo(tabla, campo, nuevoValor, clavePrimaria, valorClavePrimaria);
+        }
+
+
+
+        public string ObtenerTipoCampo(string tabla, string campo)
+        {
+            return sn.ObtenerTipoCampo(tabla, campo); // Llamada a la función en la capa Modelo
+        }
+
+        public void IniciarTransaccion()
+        {
+            sn.IniciarTransaccion();
+        }
+
+        // Método para ejecutar una consulta dentro de una transacción
+        public void NuevoQueryTransaccion(string sQuery)
+        {
+            sn.EjecutarQueryTransaccion(sQuery);
+        }
+
+        // Método para confirmar (commit) la transacción
+        public void CommitTransaccion()
+        {
+            sn.CommitTransaccion();
+        }
+
+        // Método para deshacer (rollback) la transacción
+        public void RollbackTransaccion()
+        {
+            sn.RollbackTransaccion();
+        }
+
+        public string ObtenerIdPorValorDescriptivo(string tabla, string campoClave, string campoDescriptivo, string valorDescriptivo)
+        {
+            try
+            {
+                // Llama al método en la capa de datos (sentencias) para obtener el ID
+                return sn.ObtenerIdPorValorDescriptivo(tabla, campoClave, campoDescriptivo, valorDescriptivo);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en ObtenerIdPorValorDescriptivo: {ex.Message}");
+                return null;
+            }
+        }
+
+        public string RealizarInsercionCondicional(string tabla, Dictionary<string, string> valoresComponentes, Dictionary<string, string> mapeoComponentesCampos)
+        {
+            if (valoresComponentes == null || valoresComponentes.Count == 0)
+            {
+                Console.WriteLine("No se proporcionaron valores para la inserción.");
+                return null;
+            }
+
+            return sn.GenerarInsertCondicional(tabla, valoresComponentes, mapeoComponentesCampos); // Obtiene la consulta `INSERT` como `string`
+        }
+
+
+
+
     }
 }

@@ -84,23 +84,35 @@
       <DependentUpon>Ayudas.cs</DependentUpon>
     </Compile>
     <Compile Include="diseñobotones.cs" />
+    <Compile Include="IngresarVarios.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IngresarVarios.Designer.cs">
+      <DependentUpon>IngresarVarios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Navegador.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Navegador.Designer.cs">
       <DependentUpon>Navegador.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperacionCampo.cs" />
+    <Compile Include="OperacionCondicional.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ReglaOperacion.cs" />
     <Compile Include="RelacionForanea.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Ayudas.resx">
       <DependentUpon>Ayudas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IngresarVarios.resx">
+      <DependentUpon>IngresarVarios.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Navegador.resx">
       <DependentUpon>Navegador.cs</DependentUpon>
