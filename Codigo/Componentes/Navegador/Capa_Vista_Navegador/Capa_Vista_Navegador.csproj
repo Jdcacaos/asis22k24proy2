@@ -83,6 +83,7 @@
     <Compile Include="Ayudas.Designer.cs">
       <DependentUpon>Ayudas.cs</DependentUpon>
     </Compile>
+    <Compile Include="ComponenteInvisible.cs" />
     <Compile Include="diseñobotones.cs" />
     <Compile Include="IngresarVarios.cs">
       <SubType>UserControl</SubType>

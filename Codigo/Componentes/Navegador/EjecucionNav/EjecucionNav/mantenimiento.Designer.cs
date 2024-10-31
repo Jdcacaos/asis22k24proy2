@@ -50,6 +50,7 @@ namespace EjecucionNav
             this.Controls.Add(this.navegador1);
             this.Name = "mantenimiento";
             this.Text = "mantenimiento";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
 
         }

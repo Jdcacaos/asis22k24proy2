@@ -1,7 +1,7 @@
 ﻿
 namespace EjecucionNav
 {
-    partial class Facturas
+    partial class Pagos
     {
         /// <summary>
         /// Required designer variable.
@@ -39,19 +39,18 @@ namespace EjecucionNav
             this.navegador1.Location = new System.Drawing.Point(0, 0);
             this.navegador1.Margin = new System.Windows.Forms.Padding(4);
             this.navegador1.Name = "navegador1";
-            this.navegador1.Size = new System.Drawing.Size(1134, 952);
+            this.navegador1.Size = new System.Drawing.Size(1107, 892);
             this.navegador1.TabIndex = 0;
             // 
-            // Facturas
+            // Pagos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1134, 952);
+            this.ClientSize = new System.Drawing.Size(1107, 892);
             this.Controls.Add(this.navegador1);
-            this.Name = "Facturas";
-            this.Text = "Facturas";
+            this.Name = "Pagos";
+            this.Text = "Pagos";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.Facturas_Load);
             this.ResumeLayout(false);
 
         }

@@ -95,6 +95,7 @@ namespace Capa_Vista_Navegador
         private bool activarIngresarVarios;
         private string nombreTablaVarios;
         private List<ReglaOperacion> listaReglas = new List<ReglaOperacion>();
+        private Dictionary<string, ComponenteInvisible> componentesInvisibles = new Dictionary<string, ComponenteInvisible>();
 
 
 
@@ -186,8 +187,8 @@ namespace Capa_Vista_Navegador
                                 }
 
                                 CreaComponentes();
-                                MessageBox.Show("hola");
-
+                                //MessageBox.Show("hola");
+                                
                                 // Crear componentes de las tablas adicionales
                                 if (lstTablasParaComponentes != null)
                                 {
@@ -364,6 +365,19 @@ namespace Capa_Vista_Navegador
             Console.WriteLine("Nombre de la tabla almacenado: " + nombreTabla);
         }
 
+
+
+        // Método para añadir un componente invisible con un valor específico
+        public void AñadirComponenteInvisible(string nombreComponente, string valorClave, string valorDisplay)
+        {
+            // Crear un nuevo componente invisible con ambos valores
+            var componente = new ComponenteInvisible(valorClave, valorDisplay);
+
+            // Agregar al diccionario
+            componentesInvisibles[nombreComponente] = componente;
+
+            Console.WriteLine($"Componente invisible '{nombreComponente}' añadido con ValorClave '{valorClave}' y ValorDisplay '{valorDisplay}'.");
+        }
         public void AsignarReglaOperacion(
            string componenteOrigen,
            string tablaComparacion,
@@ -628,29 +642,36 @@ namespace Capa_Vista_Navegador
 
         public void AsignarOperacionEnTiempoReal(string componenteOrigen1, string componenteOrigen2, string operacion, string componenteDestino)
         {
-            string valorOrigen1 = ObtenerValorActualizar(componenteOrigen1); // Validar si contiene el nombre del campo
-            string valorOrigen2 = ObtenerValorActualizar(componenteOrigen2);
-            Control compDest = this.Controls.Find(componenteDestino, true).FirstOrDefault();
+            // Intentar obtener los valores con y sin prefijo "extra_"
+            string valorOrigen1 = ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1);
+            string valorOrigen2 = ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2);
 
-            /*  if (string.IsNullOrEmpty(valorOrigen1) || string.IsNullOrEmpty(valorOrigen2) || compDest == null)
-              {
-                  Console.WriteLine($"Error: Uno o más componentes no fueron encontrados o están vacíos. Verifique los nombres de los componentes.");
-                  return;
-              }*/
+            // Buscar el componente destino
+            Control compDest = this.Controls.Find(componenteDestino, true).FirstOrDefault()
+                    ?? this.Controls.Find("extra_" + componenteDestino, true).FirstOrDefault();
+
+            Console.WriteLine($"TIEMPO REAL: valorOrigen1 = {valorOrigen1}, valorOrigen2 = {valorOrigen2}");
+
+            // Verificar si los valores se obtuvieron correctamente
+           // if (string.IsNullOrEmpty(valorOrigen1) || string.IsNullOrEmpty(valorOrigen2) || compDest == null)
+           // {
+             //   Console.WriteLine($"Error: Uno o más componentes no fueron encontrados o están vacíos. Verifique los nombres de los componentes.");
+              //  return;
+           // }
 
             // Suscribirse a los eventos de cambio de ambos componentes origen
-            Control comp1 = this.Controls.Find(componenteOrigen1, true).FirstOrDefault();
-            Control comp2 = this.Controls.Find(componenteOrigen2, true).FirstOrDefault();
+            Control comp1 = this.Controls.Find(componenteOrigen1, true).FirstOrDefault() ?? this.Controls.Find("extra_" + componenteOrigen1, true).FirstOrDefault();
+            Control comp2 = this.Controls.Find(componenteOrigen2, true).FirstOrDefault() ?? this.Controls.Find("extra_" + componenteOrigen2, true).FirstOrDefault();
 
             if (comp1 != null)
             {
                 if (comp1 is TextBox tb1)
                 {
-                    tb1.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1), ObtenerValorActualizar(componenteOrigen2), operacion, compDest);
+                    tb1.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
                 }
                 else if (comp1 is ComboBox cb1)
                 {
-                    cb1.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1), ObtenerValorActualizar(componenteOrigen2), operacion, compDest);
+                    cb1.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
                 }
             }
 
@@ -658,11 +679,11 @@ namespace Capa_Vista_Navegador
             {
                 if (comp2 is TextBox tb2)
                 {
-                    tb2.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1), ObtenerValorActualizar(componenteOrigen2), operacion, compDest);
+                    tb2.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
                 }
                 else if (comp2 is ComboBox cb2)
                 {
-                    cb2.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1), ObtenerValorActualizar(componenteOrigen2), operacion, compDest);
+                    cb2.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
                 }
             }
         }
@@ -680,31 +701,41 @@ namespace Capa_Vista_Navegador
                 Console.WriteLine("Error: Ambos valores deben estar presentes antes de realizar la operación.");
                 return;
             }
-
+            Console.WriteLine($"Valores para operación: valor1 = {valor1}, valor2 = {valor2}, operación = {operacion}");
             try
             {
                 decimal resultado = 0;
                 decimal num1 = decimal.Parse(valor1);
                 decimal num2 = decimal.Parse(valor2);
+                Console.WriteLine("NUMEROS: "+num1+" "+ num2);
 
                 switch (operacion.ToLower())
                 {
                     case "sumar":
                         resultado = num1 + num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
                         break;
                     case "restar":
                         resultado = num1 - num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
                         break;
                     case "multiplicar":
                         resultado = num1 * num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
                         break;
                     case "dividir":
                         if (num2 == 0)
                         {
                             Console.WriteLine("Error: No se puede dividir entre cero.");
+
                             return;
                         }
                         resultado = num1 / num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
                         break;
                     default:
                         Console.WriteLine("Operación no reconocida.");
@@ -714,10 +745,12 @@ namespace Capa_Vista_Navegador
                 // Actualizar el valor del componente destino
                 if (componenteDestino is TextBox tb)
                 {
+                    Console.WriteLine($"Actualizando TextBox con resultado: {resultado}");
                     tb.Text = resultado.ToString();
                 }
                 else if (componenteDestino is Label lbl)
                 {
+                    Console.WriteLine($"Actualizando Label con resultado: {resultado}");
                     lbl.Text = resultado.ToString();
                 }
                 else
@@ -801,6 +834,7 @@ namespace Capa_Vista_Navegador
                         {
                             string insertQuery = logic.RealizarInsercionCondicional(regla.TablaInsercion, valoresComponentes, regla.MapeoComponentesCampos);
                             MessageBox.Show("Se asignó un registro en " + regla.TablaInsercion);
+                            lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + regla.TablaInsercion, regla.TablaInsercion, sIdAplicacion);
                             if (insertQuery != null)
                             {
                                 lstQueries2.Add(insertQuery); // Añade la consulta a la lista si es válida
@@ -945,25 +979,35 @@ namespace Capa_Vista_Navegador
 
         private string ObtenerValorActualizar(string campoNombre)
         {
-            // Buscar el componente correspondiente por su nombre (primero intenta con 'extra_')
-            Control componente = this.Controls.Find("extra_" + campoNombre, true).FirstOrDefault();
+            // Primero intenta encontrar el valor en los componentes invisibles
+            if (componentesInvisibles.ContainsKey(campoNombre))
+            {
+                Console.WriteLine($"Componente invisible encontrado para {campoNombre}");
+                var componenteInvisible = componentesInvisibles[campoNombre];
+                return componenteInvisible.ValorClave; // Retorna el valor clave del componente invisible
+            }
 
+            // Si no está en los componentes invisibles, busca en los controles visibles del formulario
+            Console.WriteLine($"Buscando componente con prefijo 'extra_': extra_{campoNombre}");
+            Control componente = this.Controls.Find("extra_" + campoNombre, true).FirstOrDefault();
+          
             // Si no se encuentra con 'extra_', intenta con el nombre original
             if (componente == null)
             {
                 componente = this.Controls.Find(campoNombre, true).FirstOrDefault();
             }
 
+            // Si el componente aún no se encuentra, devuelve un mensaje de error y null
             if (componente == null)
             {
                 Console.WriteLine($"Error: No se encontró un componente con el nombre '{campoNombre}' o 'extra_{campoNombre}'.");
                 return null;
             }
 
-            // Dependiendo del tipo de componente, obtener su valor
+            // Obtener el valor dependiendo del tipo de componente
             if (componente is ComboBox cb)
             {
-                return cb.SelectedValue.ToString();  // Retorna el texto mostrado en el ComboBox
+                return cb.SelectedValue?.ToString() ?? "";  // Retorna el valor seleccionado en el ComboBox
             }
             else if (componente is DateTimePicker dtp)
             {
@@ -971,7 +1015,7 @@ namespace Capa_Vista_Navegador
             }
             else if (componente is TextBox tb)
             {
-                return tb.Text; // Retorna el valor de un TextBox
+                return tb.Text; // Retorna el texto de un TextBox
             }
             else if (componente is Button btn)
             {
@@ -980,8 +1024,6 @@ namespace Capa_Vista_Navegador
 
             return "";
         }
-
-
 
         // Función para verificar si un valor es numérico
         private bool EsNumero(string valor)
@@ -1406,8 +1448,9 @@ namespace Capa_Vista_Navegador
             tb.Height = (int)(tb.Height * 1.2);
             tb.Location = location; // Establece la ubicación del TextBox
             tb.Name = sNom; // Establece el nombre del TextBox
+            tb.KeyPress += ParaValidarDecimales_KeyPress;
             this.Controls.Add(tb); // Añade el TextBox al formulario
-            tb.KeyPress += ParaValidarDecimales_KeyPress; // Asigna la función de validación de decimales al evento KeyPress
+             // Asigna la función de validación de decimales al evento KeyPress
                                                           // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
         }
 
@@ -3191,6 +3234,7 @@ namespace Capa_Vista_Navegador
                                 // Limpiar lstQueries2 después de la transacción
                                 //MessageBox.Show("La transaccion se completo correctamente.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 logic.InsertarDatosEnMultiplesTablas(lstQueries2);
+                                lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional + Movimiento Inventario " , sTablaAdicional, sIdAplicacion);
                             }
                             else
                             {
@@ -3234,10 +3278,12 @@ namespace Capa_Vista_Navegador
 
                                     // Agregar las consultas generadas a la lista principal de consultas
                                     lstQueries.AddRange(queriesGrid);
+                                    lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
                                 }
                                 else
                                 {
                                     string queryControles = CrearInsertDesdeControles(sTablaAdicional, sUltimoIdPrimeraTabla);
+                                    lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
                                     if (!string.IsNullOrEmpty(queryControles)) lstQueries.Add(queryControles);
                                 }
                             }
@@ -3274,6 +3320,7 @@ namespace Capa_Vista_Navegador
                                     {
                                         lstQueries.Add(sQueryAsociativa);
                                         Console.WriteLine("QUERY GENERADO: " + sQueryAsociativa);
+                                        lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla asociativa", nombreTablaAsociativa, sIdAplicacion);
                                     }
                                 }
                                 else

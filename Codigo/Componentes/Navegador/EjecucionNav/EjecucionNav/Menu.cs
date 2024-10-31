@@ -29,5 +29,11 @@ namespace EjecucionNav
             Facturas facturas = new Facturas();
             facturas.Show();
         }
+
+        private void pAGOSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Pagos pagos = new Pagos();
+            pagos.Show();
+        }
     }
 }

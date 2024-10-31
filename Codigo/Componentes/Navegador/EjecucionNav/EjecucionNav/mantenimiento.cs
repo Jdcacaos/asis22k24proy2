@@ -31,6 +31,30 @@ namespace EjecucionNav
 
             navegador1.AsignarForaneas("lineas", "nombre_linea", "codigo_linea", "codigo_linea");
             navegador1.AsignarForaneas("marcas", "nombre_marca", "codigo_marca", "codigo_marca");
+
+            List<string> tablascomponentes = new List<string> {"existencias" };
+            navegador1.AsignarTablaComponentes(tablascomponentes);
+            string[] aliasbodega = { "id_bodega" };
+            navegador1.AsignarAliasExtras("existencias", aliasbodega);
+            navegador1.AsignarComboConTabla("bodegas", "id_bodega", "nombre_bodega", 1);
+            List<Tuple<string, List<string>>> tablasAsociativas = new List<Tuple<string, List<string>>>()
+            {
+                // Ejemplo para la tabla asociativa 'existencias'
+                Tuple.Create("existencias", new List<string>
+                {
+                    "id_bodega","id_bodega",    // Primera clave foránea
+                    
+                    "id_producto","Pk_producto",
+
+                    "cantidad", "cantidad",      // Segunda clave foránea
+                    
+                    "estado","estado"
+
+                })
+            };
+
+            // Llamada al método
+            navegador1.AsignarAsociativas(tablasAsociativas);
         }
     }
 }
