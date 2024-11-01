@@ -3812,7 +3812,7 @@ namespace Capa_Vista_Navegador
                 }
             }
         }
-
+        //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS *****************************
         private void Btn_Ayuda_Click(object sender, EventArgs e)
         {
             try
@@ -3845,8 +3845,6 @@ namespace Capa_Vista_Navegador
                 MessageBox.Show("Ocurrió un error al abrir la ayuda: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("Error al abrir la ayuda: " + ex.ToString());
             }
-
-            BotonesYPermisosSinMensaje();
         }
         private void button_Paint(object sender, PaintEventArgs e)
         {
@@ -3884,6 +3882,6 @@ namespace Capa_Vista_Navegador
                                     SystemColors.ControlDark, 3, ButtonBorderStyle.Inset);
         }
 
-        //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS *****************************
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ *****************************
     }
 }
