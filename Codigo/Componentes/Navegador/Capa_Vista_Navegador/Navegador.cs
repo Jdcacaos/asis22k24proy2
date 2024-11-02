@@ -2160,6 +2160,59 @@ namespace Capa_Vista_Navegador
             return sQuery;
         }
 
+        List<string> CrearUpdateDesdeDataGridView(string sNombreTabla, string sClavePrimaria, DataGridView dgvProductos)
+        {
+            List<string> lstQueries = new List<string>();
+            var columnasPropiedades = logic.ObtenerColumnasYPropiedadesLogica(sNombreTabla);
+
+            foreach (DataGridViewRow fila in dgvProductos.Rows)
+            {
+                if (fila.IsNewRow) continue;
+
+                string sWhereClause = "";
+                string sSetClause = "";
+
+                foreach (var (nombreColumna, esAutoIncremental, esClaveForanea, esTinyInt) in columnasPropiedades)
+                {
+                    // Verifica si el nombre de la columna es la clave primaria
+                    if (nombreColumna == sClavePrimaria)
+                    {
+                        // Intenta obtener el valor de la clave primaria para el WHERE
+                        sWhereClause = $"{sClavePrimaria} = '{fila.Cells[nombreColumna].Value}'";
+                        continue; // Omite la clave primaria en el SET
+                    }
+
+                    // Si la columna no es autoincremental y está en el DataGridView, agrega el valor al SET
+                    if (!esAutoIncremental && dgvProductos.Columns.Contains(nombreColumna))
+                    {
+                        string sValorCampo = fila.Cells[nombreColumna].Value?.ToString() ?? "";
+                        if (esTinyInt)
+                        {
+                            sValorCampo = (sValorCampo == "1") ? "1" : "0";
+                        }
+
+                        sSetClause += $"{nombreColumna} = '{sValorCampo}', ";
+                    }
+                }
+
+                sSetClause = sSetClause.TrimEnd(' ', ',');
+
+                // Solo añade la consulta si el WHERE y el SET están correctamente configurados
+                if (!string.IsNullOrEmpty(sWhereClause) && !string.IsNullOrEmpty(sSetClause))
+                {
+                    string sQuery = $"UPDATE {sNombreTabla} SET {sSetClause} WHERE {sWhereClause};";
+                    lstQueries.Add(sQuery);
+                    Console.WriteLine("QUERY GENERADA PARA GRID: " + sQuery);
+                }
+                else
+                {
+                    Console.WriteLine($"Advertencia: No se pudo generar una consulta UPDATE válida para la fila en la tabla {sNombreTabla}.");
+                }
+            }
+
+            return lstQueries;
+        }
+
         private string ObtenerValorDelComponente(Control componente, ref int valor)
         {
             string sValorCampo = "";
@@ -2311,9 +2364,16 @@ namespace Capa_Vista_Navegador
             Btn_Ingresar.Enabled = false;
             Btn_Modificar.Enabled = false;
             Btn_Eliminar.Enabled = false;
+            Btn_Anterior.Enabled = false;
+            Btn_FlechaFin.Enabled = false;
+            Btn_FlechaInicio.Enabled = false;
+            Btn_Refrescar.Enabled = false;
+            Btn_Salir.Enabled = false;
+            Btn_Siguiente.Enabled = false;
             Btn_Cancelar.Enabled = true;
+            Dgv_Informacion.Enabled = false;
 
-           //BotonesYPermisosSinMensaje();
+            //BotonesYPermisosSinMensaje();
         }
 
 
@@ -2447,10 +2507,14 @@ namespace Capa_Vista_Navegador
 
                 // Habilita y deshabilita botones según el usuario
                BotonesYPermisosSinMensaje();
-
                 Btn_Ingresar.Enabled = false;
                 Btn_Eliminar.Enabled = false;
                 Btn_Cancelar.Enabled = true;
+                if (IngresarVariosControl != null)
+                {
+                    IngresarVariosControl.DataGridViewInformacionExtra.Enabled = true;
+                  
+                }
             }
             catch (Exception ex)
             {
@@ -2499,6 +2563,20 @@ namespace Capa_Vista_Navegador
                 Btn_Ingresar.Enabled = true;
                 Btn_Eliminar.Enabled = true;
                 Btn_Refrescar.Enabled = true;
+                Btn_Anterior.Enabled = true;
+                Btn_FlechaFin.Enabled = true;
+                Btn_FlechaInicio.Enabled = true;
+                Btn_Salir.Enabled = true;
+                Btn_Siguiente.Enabled = true;
+                Dgv_Informacion.Enabled = true;
+                if (IngresarVariosControl != null)
+                {
+                    IngresarVariosControl.Btn_agregar.Enabled = false;
+                    IngresarVariosControl.Btn_quitar.Enabled = false;
+
+                    IngresarVariosControl.DataGridViewInformacionExtra.Enabled = false;
+                    IngresarVariosControl.DataGridViewInformacionExtra.Rows.Clear();
+                }
                 Deshabilitarcampos_y_botones();
                 ActualizarDataGridView();
                 if (logic.TestRegistros(sTablaPrincipal) > 0)
@@ -2657,11 +2735,24 @@ namespace Capa_Vista_Navegador
                 // Refrescar la DataGridView y actualizar los controles
                 ActualizarDataGridView();
 
+                // Verificar si hay una fila seleccionada
+                if (Dgv_Informacion.CurrentRow == null)
+                {
+                    MessageBox.Show("No hay una fila seleccionada para refrescar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Iterar sobre los controles y actualizar sus valores con los datos del DataGridView
                 int iIndex = 0;
                 int iNumCombo = 0;
+
                 foreach (Control componente in Controls)
                 {
+                    if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                    {
+                        break; // Evita acceder fuera del rango de las celdas
+                    }
+
                     if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                     {
                         if (componente is ComboBox)
@@ -2674,7 +2765,7 @@ namespace Capa_Vista_Navegador
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; 
+                            iNumCombo++;
                         }
                         else
                         {
@@ -2683,15 +2774,20 @@ namespace Capa_Vista_Navegador
 
                         iIndex++;
                     }
-                    if (componente is Button)
+                    else if (componente is Button)
                     {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); 
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                        {
+                            break; // Evita acceder fuera del rango de las celdas
+                        }
+
+                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                         if (sVarEstado == "0")
                         {
                             componente.Text = "Desactivado";
                             componente.BackColor = Color.Red;
                         }
-                        if (sVarEstado == "1")
+                        else if (sVarEstado == "1")
                         {
                             componente.Text = "Activado";
                             componente.BackColor = Color.Green;
@@ -2728,249 +2824,367 @@ namespace Capa_Vista_Navegador
         // Este método maneja el evento de clic en el botón "Anterior".
         private void Btn_Anterior_Click(object sender, EventArgs e)
         {
-            int iIndex = 0;
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-
-            if (iFila > 0)
+            try
             {
-                Dgv_Informacion.Rows[iFila - 1].Selected = true; 
-                Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila - 1].Cells[0];
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
 
-                int iNumCombo = 0;
-                foreach (Control componente in Controls)
+                // Verificar que haya una fila seleccionada
+                if (Dgv_Informacion.SelectedRows.Count == 0)
                 {
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay una fila seleccionada.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                // Verificar si es posible moverse a la fila anterior
+                if (iFila > 0)
+                {
+                    Dgv_Informacion.Rows[iFila - 1].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila - 1].Cells[0];
+
+                    int iNumCombo = 0;
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; 
+                            iIndex++;
                         }
-                        else
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); 
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al moverse a la fila anterior.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
-        // Este método maneja el evento de clic en el botón "Siguiente".
         private void Btn_Siguiente_Click(object sender, EventArgs e)
         {
-            int iIndex = 0;
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                Dgv_Informacion.Rows[iFila + 1].Selected = true; 
-                Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila + 1].Cells[0]; 
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
 
-                int iNumCombo = 0; 
-                foreach (Control componente in Controls)
+                // Verificar que haya una fila seleccionada
+                if (Dgv_Informacion.SelectedRows.Count == 0)
                 {
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay una fila seleccionada.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                // Verificar si es posible moverse a la siguiente fila
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
+                {
+                    Dgv_Informacion.Rows[iFila + 1].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila + 1].Cells[0];
+
+                    int iNumCombo = 0;
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++;
+                            iIndex++;
                         }
-                        else
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al moverse a la siguiente fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
-
-
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ*****************************
-
-
-
-
-        //******************************************** CODIGO HECHO POR JOEL LOPEZ***************************** 
 
         // Este método maneja el evento de clic del botón "Flecha Fin" para moverse al último registro visible en el DataGridView.
         private void Btn_FlechaFin_Click(object sender, EventArgs e)
         {
-            // Selecciona la penúltima fila (contando desde cero) en el DataGridView y la establece como la fila actual.
-            Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
-            Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
-
-            int iIndex = 0;
-            // Obtiene los nombres de las columnas de la sTablaPrincipal en la base de datos.
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            // Obtiene el índice de la fila actualmente seleccionada en el DataGridView.
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                // Vuelve a seleccionar la penúltima fila para asegurarse de que es la fila correcta.
+                // Verificar que haya al menos dos filas en el DataGridView
+                if (Dgv_Informacion.Rows.Count < 2)
+                {
+                    MessageBox.Show("No hay suficientes datos en la tabla para seleccionar la penúltima fila.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Selecciona la penúltima fila y la establece como la fila actual.
                 Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
                 Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
 
-                int iNumCombo = 0; 
-                 // Itera sobre todos los controles en el formulario.
-                foreach (Control componente in Controls)
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
                 {
-                    // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    // Vuelve a seleccionar la penúltima fila para asegurarse de que es la fila correcta.
+                    Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
+
+                    int iNumCombo = 0;
+
+                    // Itera sobre todos los controles en el formulario.
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            // Para los ComboBox, se verifica si el campo es clave externa (arrModoCampoCombo) y se obtiene el valor adecuado.
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; // Cambiado numCombo a iNumCombo
+                            iIndex++;
                         }
-                        else
+                        // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); // Cambiado var1 a sVarEstado
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al seleccionar la penúltima fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
-
-        
         // Este método maneja el evento de clic del botón "Flecha Inicio" para moverse al primer registro en el DataGridView.
         private void Btn_FlechaInicio_Click(object sender, EventArgs e)
         {
-            // Selecciona la primera fila en el DataGridView y la establece como la fila actual.
-            Dgv_Informacion.Rows[0].Selected = true;
-            Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
-
-            int iIndex = 0;
-            // Obtiene los nombres de las columnas de la sTablaPrincipal en la base de datos.
-            string[] arrCampos = logic.Campos(sTablaPrincipal);
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index;
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                // Vuelve a seleccionar la primera fila para asegurarse de que es la fila correcta.
+                // Selecciona la primera fila en el DataGridView y la establece como la fila actual.
                 Dgv_Informacion.Rows[0].Selected = true;
                 Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
 
-                int iNumCombo = 0;
-                                   // Itera sobre todos los controles en el formulario.
-                foreach (Control componente in Controls)
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
+
+                // Verificar que haya filas en el DataGridView
+                if (Dgv_Informacion.Rows.Count == 0)
                 {
-                    // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay datos disponibles en la tabla.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
+                {
+                    // Vuelve a seleccionar la primera fila para asegurarse de que es la fila correcta.
+                    Dgv_Informacion.Rows[0].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
+
+                    int iNumCombo = 0;
+
+                    // Itera sobre todos los controles en el formulario.
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            // Para los ComboBox, se verifica si el campo es clave externa (arrModoCampoCombo) y se obtiene el valor adecuado.
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++;
+                            iIndex++;
                         }
-                        else
+                        // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al seleccionar la primera fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
 
@@ -3179,28 +3393,59 @@ namespace Capa_Vista_Navegador
                             // Itera sobre las tablas adicionales para actualizar registros relacionados.
                             foreach (string sTablaAdicional in lstTablasAdicionales)
                             {
-                                if (!string.IsNullOrEmpty(sTablaAdicional))
+                                // Obtiene la DataGridView correspondiente a la tabla adicional
+                                DataGridView dgvProductos = (IngresarVariosControl != null && IngresarVariosControl.TablaVarios == sTablaAdicional)
+                                                            ? IngresarVariosControl.DataGridViewInformacionExtra
+                                                            : null;
+
+                                if (dgvProductos != null)
                                 {
+                                    // Usa CrearUpdateDesdeDataGridView para actualizar las filas en la tabla adicional
+                                    var queriesGrid = CrearUpdateDesdeDataGridView(sTablaAdicional, sClavePrimariaPrincipal, dgvProductos);
+
+                                    // Si alguna consulta falla, cancelar todo el proceso
+                                    if (queriesGrid == null)
+                                    {
+                                        MessageBox.Show("Error en la generación de consultas para los datos adicionales en DataGridView. Transacción cancelada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        lstQueries.Clear(); // Limpiar todas las consultas para evitar actualizaciones parciales
+                                        Deshabilitarcampos_y_botones(); // Restablecer el estado de los botones si es necesario
+                                        return; // Cancelar la operación
+                                    }
+
+                                    // Agregar las consultas generadas a la lista principal de consultas
+                                    lstQueries.AddRange(queriesGrid);
+                                    lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla adicional desde DataGridView " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
+                                }
+                                else
+                                {
+                                    // Si no existe DataGridView para la tabla adicional, usa los controles para actualizar
                                     string sClavePrimariaAdicional = logic.ObtenerClavePrimaria(sTablaAdicional);
                                     string sClaveForaneaAdicional = logic.ObtenerClaveForanea(sTablaAdicional, sTablaPrincipal);
 
-                                    // Crear una consulta de actualización para la tabla adicional.
-                                    // Nota: CrearUpdateParaTablasExtras se asegura de que solo se actualicen campos de la tabla adicional.
-                                    string sQueryAdicional = CrearUpdateParaTablasExtras(sTablaAdicional, sClavePrimariaAdicional, sClaveForaneaAdicional);
+                                    // Genera la consulta de actualización usando los controles de la UI
+                                    string queryControles = CrearUpdateParaTablasExtras(sTablaAdicional, sClavePrimariaAdicional, sClaveForaneaAdicional);
 
-                                    if (!string.IsNullOrEmpty(sQueryAdicional))
+                                    if (!string.IsNullOrEmpty(queryControles))
                                     {
-                                        lstQueries.Add(sQueryAdicional); // Añade la consulta adicional a la lista.
+                                        lstQueries.Add(queryControles);
+                                        lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla adicional usando controles " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
                                     }
                                 }
                             }
 
-                            // Ejecuta las consultas para actualizar datos en múltiples tablas.
+                            // Ejecuta todas las consultas para actualizar datos en múltiples tablas
                             logic.InsertarDatosEnMultiplesTablas(lstQueries);
                             MessageBox.Show("El registro ha sido actualizado correctamente.", "Actualización Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             // Inserta en la bitácora
                             lg.funinsertarabitacora(sIdUsuario, "Actualizó registro", sTablaPrincipal, sIdAplicacion);
+                            Btn_Anterior.Enabled = true;
+                            Btn_FlechaFin.Enabled = true;
+                            Btn_FlechaInicio.Enabled = true;
+                            Btn_Salir.Enabled = true;
+                            Btn_Siguiente.Enabled = true;
+                            Dgv_Informacion.Enabled = true;
+                            Btn_Refrescar.Enabled = true;
                         }
                         catch (Exception ex)
                         {
@@ -3331,7 +3576,13 @@ namespace Capa_Vista_Navegador
 
                             // Ejecutar todas las consultas en una sola transacción
                             logic.InsertarDatosEnMultiplesTablas(lstQueries);
-
+                            Btn_Anterior.Enabled = true;
+                            Btn_FlechaFin.Enabled = true;
+                            Btn_FlechaInicio.Enabled = true;
+                            Btn_Salir.Enabled = true;
+                            Btn_Siguiente.Enabled = true;
+                            Dgv_Informacion.Enabled = true;
+                            Btn_Refrescar.Enabled = true;
                             MessageBox.Show("El registro ha sido guardado correctamente.", "Guardado Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)

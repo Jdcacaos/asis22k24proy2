@@ -43,7 +43,7 @@ namespace EjecucionNav
             navegador1.AsignarTablaComponentes(tablascomponentes);
 
             //PARAMETROS PARA CREAR NUEVOS COMPONENTES DE OTRA TABLA
-            string[] aliasfacturadetalle = { "id_producto", "cantidad", "precio_unitario", "subtotal", "estado" };
+            string[] aliasfacturadetalle = {"id_producto", "cantidad", "precio_unitario", "subtotal", "estado" };
             navegador1.AsignarAliasExtras("detalle_factura", aliasfacturadetalle);
             navegador1.AsignarComboConTabla("productos", "Pk_producto", "nombre_producto", 1);
 
@@ -101,7 +101,7 @@ namespace EjecucionNav
                 );
 
             // Ejecutar todas las reglas configuradas
-            //navegador1.AsignarOperacionIndividual("cantidad", "existencias", "cantidad", "restar", "id_bodega", "id_bodega");
+            navegador1.AsignarOperacionIndividual("cantidad", "existencias", "cantidad", "restar", "id_bodega", "id_bodega");
             navegador1.AsignarOperacionIndividual("monto_total", "clientes", "saldo", "restar", "Pk_cliente", "id_cliente");
             navegador1.AsignarOperacionVarios("cantidad", "productos", "cantidad", "restar", "Pk_producto", "id_producto");
             
