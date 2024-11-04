@@ -27,6 +27,8 @@ namespace EjecucionNav
             navegador1.AsignarNombreForm("PAGOS");
             navegador1.AsignarOperacionIndividual("monto", "clientes", "saldo", "sumar", "Pk_cliente", "id_cliente");
             navegador1.AsignarComboConTabla("clientes", "Pk_cliente", "nombre_cliente", 1);
+            navegador1.AsignarForaneas("clientes", "nombre_cliente", "id_cliente", "Pk_cliente");
+            navegador1.AsignarComboConLista(5,"tarjeta,Efectivo");
         }
     }
 }

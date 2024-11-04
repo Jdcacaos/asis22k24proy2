@@ -32,7 +32,7 @@ namespace EjecucionNav
             navegador1.AsignarForaneas("lineas", "nombre_linea", "codigo_linea", "codigo_linea");
             navegador1.AsignarForaneas("marcas", "nombre_marca", "codigo_marca", "codigo_marca");
 
-            List<string> tablascomponentes = new List<string> {"existencias" };
+            List<string> tablascomponentes = new List<string> { "existencias" };
             navegador1.AsignarTablaComponentes(tablascomponentes);
             string[] aliasbodega = { "id_bodega" };
             navegador1.AsignarAliasExtras("existencias", aliasbodega);
@@ -52,9 +52,42 @@ namespace EjecucionNav
 
                 })
             };
-
+            string fechaActual = DateTime.Now.ToString("yyyy-MM-dd");
             // Llamada al método
             navegador1.AsignarAsociativas(tablasAsociativas);
+            var valoresIniciales = new Dictionary<string, (string valorClave, string valorDisplay)>
+                {
+                    { "tipoOperacion", ("1", "1") },
+                    { "fecha", (fechaActual, fechaActual) }
+
+                };
+
+            // Agregar componentes invisibles según los valores iniciales
+            foreach (var item in valoresIniciales)
+            {
+                navegador1.AñadirComponenteInvisible(item.Key, item.Value.valorClave, item.Value.valorDisplay);
+            }
+
+            var valoresparamovimiento = new Dictionary<string, string>
+                {
+                    { "Pk_producto", "id_producto" },          // Componente en vista -> Campo en tabla
+                    { "id_bodega", "id_bodega" },              // Componente "monto_total" -> Campo "monto"
+                    { "tipoOperacion","id_tipo_movimiento" },
+                    { "cantidad", "cantidad" },
+                    { "fecha", "fecha" },  // Componente "fecha" -> Campo "fecha_registro"
+                    { "costo", "valor_producto" },
+                    { "estado", "estado" }          // Componente "estado" -> Campo "estado_registro"
+                };
+            navegador1.AsignarReglaOperacion(
+                    "tipoOperacion",                    // Componente origen
+                    "tipos_movimiento",                 // Tabla donde se encuentra el saldo actual
+                    "id_tipo_movimiento",                    // Campo de saldo a comparar
+                    "igual",                    // Condición de comparación
+                    "insertar",                 // Acción a ejecutar si la condición se cumple
+                    "movimientos_inventario",                   // Tabla para insertar el registro si la condición es verdadera
+                    "tipoOperacion",
+                    valoresparamovimiento // Componentes cuyos valores se insertarán en la tabla "Deudas"
+                );
         }
     }
 }

@@ -90,6 +90,7 @@ namespace Capa_Vista_Navegador
         // Declaración del diccionario para almacenar las tablas asociativas
         List<string> lstTablasParaComponentes = new List<string>();
         List<string> listaOperacionesCondicionales = new List<string>();
+        private Dictionary<int, List<string>> combosPorPosicion = new Dictionary<int, List<string>>();
 
         private IngresarVarios IngresarVariosControl;
         private bool activarIngresarVarios;
@@ -198,7 +199,7 @@ namespace Capa_Vista_Navegador
                                         {
                                             string[] aliasTabla = aliasPorTabla[tabla];
                                             string aliasString = string.Join(", ", aliasTabla);
-                                            MessageBox.Show("Se generó para la tabla: " + tabla + " con alias: " + aliasString);
+                                           // MessageBox.Show("Se generó para la tabla: " + tabla + " con alias: " + aliasString);
 
                                             CrearComponentesExtra(tabla);
                                         }
@@ -611,11 +612,27 @@ namespace Capa_Vista_Navegador
 
         public void AsignarComboConLista(int iPos, string sLista)
         {
-            iPosicionCombo = iPos - 1; 
-            LimpiarLista(sLista);
-            arrModoCampoCombo[iNumeroCombos] = 0; 
+            iPosicionCombo = iPos - 1;
+            List<string> listaOpciones = sLista.Split(',').ToList(); // Convierte la cadena a una lista de opciones
+            combosPorPosicion[iPosicionCombo] = listaOpciones; // Almacena la lista de opciones en el diccionario
+            arrModoCampoCombo[iNumeroCombos] = 0;
             iNumeroCombos++;
         }
+        void CrearComboBoxConOpciones(string sNom, Point location, List<string> opciones)
+        {
+            ComboBox cb = new ComboBox();
+            cb.Width = (int)(cb.Width * 1.2);
+            cb.Height = (int)(cb.Height * 1.2);
+            cb.Location = location;
+            cb.Name = sNom;
+
+            // Asigna las opciones al ComboBox
+            cb.DataSource = opciones;
+
+            // Añadir el ComboBox al formulario
+            this.Controls.Add(cb);
+        }
+
 
         void LimpiarLista(string sCadena)
         {
@@ -833,11 +850,12 @@ namespace Capa_Vista_Navegador
                         if (valoresComponentes.Count > 0)
                         {
                             string insertQuery = logic.RealizarInsercionCondicional(regla.TablaInsercion, valoresComponentes, regla.MapeoComponentesCampos);
-                            MessageBox.Show("Se asignó un registro en " + regla.TablaInsercion);
+                            
                             lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + regla.TablaInsercion, regla.TablaInsercion, sIdAplicacion);
                             if (insertQuery != null)
                             {
                                 lstQueries2.Add(insertQuery); // Añade la consulta a la lista si es válida
+                                MessageBox.Show("Se asignó un registro en " + regla.TablaInsercion);
                             }
                             else
                             {
@@ -1065,7 +1083,7 @@ namespace Capa_Vista_Navegador
                 lb.Text = arrAliasCampos[iIndex];
                 lb.Location = new Point(posX, currentPosY);
                 lb.Name = "lb_" + sCampos[iIndex];
-                lb.Font = new Font(fFuenteLabels.FontFamily, fFuenteLabels.Size * 1.3f, FontStyle.Bold | fFuenteLabels.Style);
+                lb.Font = new Font("Times New Roman", fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
                 lb.ForeColor = cColorFuente;
                 lb.AutoSize = true;
                 this.Controls.Add(lb);
@@ -1073,105 +1091,111 @@ namespace Capa_Vista_Navegador
                 // Dependiendo del tipo de campo, crea el componente adecuado
                 string nombreComponente = sCampos[iIndex];
                 Point controlPosition = new Point(posX, currentPosY + lb.Height + 5); // Posición del control debajo del Label
-
-                switch (sTipos[iIndex])
+                if (combosPorPosicion.ContainsKey(iIndex))
                 {
-                    case "int":
-                        arrTipoCampos[iIndex] = "Num";
-                        if (sLlaves[iIndex] != "MUL")
-                        {
-                            CrearTextBoxNumerico(nombreComponente, controlPosition);
-                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        }
-                        else
-                        {
-                            string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
-
-                            // Cambiar DataTable por Dictionary
-                            Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
-
-                            CrearComboBox(nombreComponente, controlPosition);
-
-                        }
-                        break;
-
-                    case "varchar":
-                    case "text":
-                        arrTipoCampos[iIndex] = "Text";
-                        if (sLlaves[iIndex] != "MUL")
-                        {
-                            CrearTextBoxVarchar(nombreComponente, controlPosition);
-                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        }
-                        else
-                        {
-                            string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
-
-                            // Cambiar DataTable por Dictionary
-                            Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
-
-                            CrearComboBox(nombreComponente, controlPosition);
-
-                        }
-                        break;
-
-                    case "date":
-                    case "datetime":
-                        arrTipoCampos[iIndex] = "Date";
-                        if (sLlaves[iIndex] != "MUL" && sLlaves[iIndex] != "PRI")
-                        {
-                            CrearDateTimePicker(nombreComponente, controlPosition);
-                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        }
-                        else
-                        {
-
-
-                            CrearComboBox(nombreComponente, controlPosition);
-                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-
-                        }
-                        break;
-
-                    case "time":
-                        arrTipoCampos[iIndex] = "Time";
-                        CrearCampoHora(nombreComponente, controlPosition);
-                        Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        break;
-
-                    case "float":
-                    case "decimal":
-                    case "double":
-                        arrTipoCampos[iIndex] = "Decimal";
-                        CrearCampoDecimales(nombreComponente, controlPosition);
-                        Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        break;
-
-                    case "tinyint":
-                        arrTipoCampos[iIndex] = "Bool";
-                        if (sLlaves[iIndex] != "MUL")
-                        {
-                            CrearBotonEstado(nombreComponente, controlPosition);
-                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
-                        }
-                        else
-                        {
-                            // Si es clave foránea, podrías manejarlo aquí si es necesario
-                        }
-                        break;
-
-                    default:
-                        if (!string.IsNullOrEmpty(sTipos[iIndex]))
-                        {
-                            MessageBox.Show($"La tabla {sTablaPrincipal} posee un campo {sTipos[iIndex]}, este tipo de dato no es reconocido por el navegador.", "Verificación de requisitos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                        break;
+                    // Crear el ComboBox con las opciones especificadas
+                    CrearComboBoxConOpciones(sCampos[iIndex], controlPosition, combosPorPosicion[iIndex]);
                 }
+                else
+                {
+                    switch (sTipos[iIndex])
+                    {
+                        case "int":
+                            arrTipoCampos[iIndex] = "Num";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearTextBoxNumerico(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
 
+                                // Cambiar DataTable por Dictionary
+                                Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
+
+                                CrearComboBox(nombreComponente, controlPosition);
+
+                            }
+                            break;
+
+                        case "varchar":
+                        case "text":
+                            arrTipoCampos[iIndex] = "Text";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearTextBoxVarchar(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
+
+                                // Cambiar DataTable por Dictionary
+                                Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
+
+                                CrearComboBox(nombreComponente, controlPosition);
+
+                            }
+                            break;
+
+                        case "date":
+                        case "datetime":
+                            arrTipoCampos[iIndex] = "Date";
+                            if (sLlaves[iIndex] != "MUL" && sLlaves[iIndex] != "PRI")
+                            {
+                                CrearDateTimePicker(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+
+
+                                CrearComboBox(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+
+                            }
+                            break;
+
+                        case "time":
+                            arrTipoCampos[iIndex] = "Time";
+                            CrearCampoHora(nombreComponente, controlPosition);
+                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            break;
+
+                        case "float":
+                        case "decimal":
+                        case "double":
+                            arrTipoCampos[iIndex] = "Decimal";
+                            CrearCampoDecimales(nombreComponente, controlPosition);
+                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            break;
+
+                        case "tinyint":
+                            arrTipoCampos[iIndex] = "Bool";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearBotonEstado(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                // Si es clave foránea, podrías manejarlo aquí si es necesario
+                            }
+                            break;
+
+                        default:
+                            if (!string.IsNullOrEmpty(sTipos[iIndex]))
+                            {
+                                MessageBox.Show($"La tabla {sTablaPrincipal} posee un campo {sTipos[iIndex]}, este tipo de dato no es reconocido por el navegador.", "Verificación de requisitos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            break;
+                    }
+                }
                 iNumeroCampos++;
                 iIndex++;
             }
@@ -1224,7 +1248,7 @@ namespace Capa_Vista_Navegador
             Label lbl = new Label();
             lbl.Text = "Campos Adicionales para: " + tabla;
             lbl.Location = new Point(globalPosX + 50, posY);
-            lbl.Font = new Font(fFuenteLabels.FontFamily, fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
+            lbl.Font = new Font("Times New Roman", fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
             lbl.ForeColor = cColorFuente;
             lbl.AutoSize = true;
             this.Controls.Add(lbl);
@@ -3362,7 +3386,7 @@ namespace Capa_Vista_Navegador
                                         "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return; // Salir del método y no continuar con el guardado
                     }
-                    MessageBox.Show("esta llena");
+                   // MessageBox.Show("esta llena");
                 }
 
                 // Verificar las operaciones de campo antes de cualquier inserción
@@ -3466,6 +3490,7 @@ namespace Capa_Vista_Navegador
 
                             // Generar la consulta de inserción para la tabla principal
                             string sQueryPrimeraTabla = CrearInsert(sTablaPrincipal);
+                            logic.NuevoQuery(sQueryPrimeraTabla);
                             if (string.IsNullOrEmpty(sQueryPrimeraTabla))
                             {
                                 Console.WriteLine("Error: La consulta generada para la tabla principal es nula o vacía.");
@@ -3475,15 +3500,15 @@ namespace Capa_Vista_Navegador
                             if (lstQueries2.Count > 0)
                             {
                                 // Añadir consulta principal a la lista de queries
-                                lstQueries2.Add(sQueryPrimeraTabla);
+                                //lstQueries2.Add(sQueryPrimeraTabla);
                                 // Limpiar lstQueries2 después de la transacción
                                 //MessageBox.Show("La transaccion se completo correctamente.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 logic.InsertarDatosEnMultiplesTablas(lstQueries2);
-                                lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional + Movimiento Inventario " , sTablaAdicional, sIdAplicacion);
+                             
                             }
                             else
                             {
-                                logic.NuevoQuery(sQueryPrimeraTabla);
+                               // logic.NuevoQuery(sQueryPrimeraTabla);
                                 //MessageBox.Show("La transaccion  se completo correctamente.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             lstQueries2.Clear();
