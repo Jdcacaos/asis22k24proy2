@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Capa_Vista_EstadosFinancieros.Properties {
+namespace Capa_Vista_CierreContable.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Capa_Vista_EstadosFinancieros.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Capa_Vista_EstadosFinancieros.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Capa_Vista_CierreContable.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,16 @@ namespace Capa_Vista_EstadosFinancieros.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ACTUALIZAR_V4 {
+            get {
+                object obj = ResourceManager.GetObject("ACTUALIZAR_V4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -83,9 +93,9 @@ namespace Capa_Vista_EstadosFinancieros.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cerrar_sesion {
+        internal static System.Drawing.Bitmap CANCELAR_V4 {
             get {
-                object obj = ResourceManager.GetObject("cerrar-sesion", resourceCulture);
+                object obj = ResourceManager.GetObject("CANCELAR_V4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +103,39 @@ namespace Capa_Vista_EstadosFinancieros.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SalirMDI {
+        internal static System.Drawing.Bitmap guardar {
             get {
-                object obj = ResourceManager.GetObject("SalirMDI", resourceCulture);
+                object obj = ResourceManager.GetObject("guardar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap impresora {
+            get {
+                object obj = ResourceManager.GetObject("impresora", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap INGRESAR_V4 {
+            get {
+                object obj = ResourceManager.GetObject("INGRESAR_V4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SALIR_V4 {
+            get {
+                object obj = ResourceManager.GetObject("SALIR_V4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

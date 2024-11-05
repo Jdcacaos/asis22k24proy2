@@ -7,23 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Capa_Vista_CierreContable;
 
-
-namespace Capa_Vista_Contabilidad
+namespace AppCContable
 {
-    public partial class FormCierre : Form
+    public partial class Form1 : Form
     {
-        public string idUsuario { get; set; }
-
-        public FormCierre()
+        public Form1()
         {
             InitializeComponent();
         }
 
-        private void cierre1_Load(object sender, EventArgs e)
-        {
-
-        }
 
     }
 }

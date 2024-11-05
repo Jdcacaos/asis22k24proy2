@@ -36,12 +36,14 @@ namespace Capa_Vista_Contabilidad
             // 
             // cierre1
             // 
-            //this.cierre1.Dock = System.Windows.Forms.DockStyle.Fill;
-            //this.cierre1.Location = new System.Drawing.Point(0, 0);
-            //this.cierre1.Name = "cierre1";
-            //this.cierre1.Size = new System.Drawing.Size(1079, 610);
-            //this.cierre1.TabIndex = 0;
-            //this.cierre1.Load += new System.EventHandler(this.cierre1_Load);
+
+            this.cierre1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cierre1.idUsuario = null;
+            this.cierre1.Location = new System.Drawing.Point(0, 0);
+            this.cierre1.Name = "cierre1";
+            this.cierre1.Size = new System.Drawing.Size(1079, 610);
+            this.cierre1.TabIndex = 0;
+            this.cierre1.Load += new System.EventHandler(this.cierre1_Load);
             // 
             // FormCierre
             // 

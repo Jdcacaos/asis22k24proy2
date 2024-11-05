@@ -51,6 +51,7 @@ namespace Capa_Vista_EstadosFinancieros
             this.Btn_Ver_FEfectivoHistorico = new System.Windows.Forms.Button();
             this.Txt_FlujoDeEfectivoActual = new System.Windows.Forms.Label();
             this.Btn_Ver_Flujo = new System.Windows.Forms.Button();
+            this.Btn_Salir = new System.Windows.Forms.Button();
             this.Btn_Ver_Ayuda = new System.Windows.Forms.Button();
             this.Gpb_Balance.SuspendLayout();
             this.Gbp_EstadoDeResultados.SuspendLayout();
@@ -355,6 +356,18 @@ namespace Capa_Vista_EstadosFinancieros
             this.Btn_Ver_Flujo.UseVisualStyleBackColor = false;
             this.Btn_Ver_Flujo.Click += new System.EventHandler(this.btn_VerFlujo_Click);
             // 
+            // Btn_Salir
+            // 
+            this.Btn_Salir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(55)))), ((int)(((byte)(62)))));
+            this.Btn_Salir.BackgroundImage = global::Capa_Vista_EstadosFinancieros.Properties.Resources.SalirMDI;
+            this.Btn_Salir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Btn_Salir.Location = new System.Drawing.Point(460, 401);
+            this.Btn_Salir.Name = "Btn_Salir";
+            this.Btn_Salir.Size = new System.Drawing.Size(49, 48);
+            this.Btn_Salir.TabIndex = 8;
+            this.Btn_Salir.UseVisualStyleBackColor = false;
+            this.Btn_Salir.Click += new System.EventHandler(this.Btn_Salir_Click);
+            // 
             // Btn_Ver_Ayuda
             // 
             this.Btn_Ver_Ayuda.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(55)))), ((int)(((byte)(62)))));
@@ -373,6 +386,7 @@ namespace Capa_Vista_EstadosFinancieros
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(152)))), ((int)(((byte)(151)))));
             this.ClientSize = new System.Drawing.Size(529, 471);
+            this.Controls.Add(this.Btn_Salir);
             this.Controls.Add(this.Btn_Ver_Ayuda);
             this.Controls.Add(this.Gbp_EstadoDeResultados);
             this.Controls.Add(this.Gbp_FlujoDeEfectivo);
@@ -414,5 +428,6 @@ namespace Capa_Vista_EstadosFinancieros
         private System.Windows.Forms.ComboBox Cbo_FEfectivoAnio;
         private System.Windows.Forms.ComboBox Cbo_FEfectivoMes;
         private System.Windows.Forms.Button Btn_Ver_Ayuda;
+        private System.Windows.Forms.Button Btn_Salir;
     }
 }
