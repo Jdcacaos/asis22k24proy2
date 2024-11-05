@@ -435,6 +435,12 @@ namespace Capa_Vista_EstadosFinancieros
             toolTip.SetToolTip(Btn_Ver_BalanceHistorico, "Ver el balance histórico");
             toolTip.SetToolTip(Btn_Ver_FEfectivoHistorico, "Ver el flujo de efectivo histórico");
             toolTip.SetToolTip(Btn_Ver_Ayuda, "Ver ayuda");
+            toolTip.SetToolTip(Btn_Salir, "Salir del formulario");
+        }
+
+        private void Btn_Salir_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     } 
 }
