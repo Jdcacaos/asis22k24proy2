@@ -420,9 +420,9 @@ namespace Capa_Vista_Contabilidad
 
         private void BtnCierreCuentas_Click(object sender, EventArgs e)
         {
-           // AbrirFormulario<FormCierre>();
-           //BtnCierreCuentas.BackColor = Color.FromArgb(255, 51, 51);
-           //ocultaSubMenu();
+           AbrirFormulario<FormCierre>();
+           BtnCierreCuentas.BackColor = Color.FromArgb(255, 51, 51);
+           ocultaSubMenu();
         }
 
         private void btnActivosFijos_Click(object sender, EventArgs e)
