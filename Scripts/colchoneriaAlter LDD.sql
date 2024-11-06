@@ -285,3 +285,7 @@ ADD COLUMN dedu_perp_emp_mes VARCHAR(25) NOT NULL AFTER dedu_perp_emp_cantidad;
 
 ALTER TABLE tbl_horas_extra
 MODIFY COLUMN horas_cantidad_horas INT;
+
+-- ALTER MODULO CONTABILIDAD 05/11/2024
+ALTER TABLE tbl_historico_cuentas
+ADD COLUMN estado TINYINT DEFAULT 1;

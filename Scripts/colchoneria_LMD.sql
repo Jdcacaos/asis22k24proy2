@@ -641,13 +641,13 @@ VALUES
 -- LMD de Nominas
 -- Ingresos obligatorios Nominas
 INSERT INTO tbl_dedu_perp (dedu_perp_clase, dedu_perp_concepto, dedu_perp_tipo, dedu_perp_aplicacion, dedu_perp_excepcion, dedu_perp_monto, estado) 
-VALUES ('Faltas', 'Porcentaje', 'Todos', 'Sin excepción', 0, 20.00, 1);
+VALUES ('Deduccion','Faltas', 'Porcentaje', 'Todos', 0, 20.00, 1);
 
 INSERT INTO tbl_dedu_perp (dedu_perp_clase, dedu_perp_concepto, dedu_perp_tipo, dedu_perp_aplicacion, dedu_perp_excepcion, dedu_perp_monto, estado) 
-VALUES ('Anticipo', 'Monto', 'Todos', 'Sin excepción', 0, 1, 1);
+VALUES ('Percepcion','Anticipo', 'Monto', 'Todos', 0, 1, 1);
 
 INSERT INTO tbl_dedu_perp (dedu_perp_clase, dedu_perp_concepto, dedu_perp_tipo, dedu_perp_aplicacion, dedu_perp_excepcion, dedu_perp_monto, estado) 
-VALUES ('Horas Extras', 'Monto', 'Todos', 'Sin excepción', 0, 1, 1);
+VALUES ('Percepcion','Horas Extras', 'Monto', 'Todos', 0, 1, 1);
 
 INSERT INTO tbl_dedu_perp (dedu_perp_clase, dedu_perp_concepto, dedu_perp_tipo, dedu_perp_aplicacion, dedu_perp_excepcion, dedu_perp_monto,estado) 
 VALUES ('Bono 14','Bono 14','Porcentaje','Todos',0,0.0833,1);
