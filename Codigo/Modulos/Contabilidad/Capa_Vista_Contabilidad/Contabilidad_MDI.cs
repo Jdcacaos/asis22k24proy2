@@ -432,9 +432,9 @@ namespace Capa_Vista_Contabilidad
 
         private void btnEstadosFin_Click_1(object sender, EventArgs e)
         {
-           //AbrirFormulario<Capa_Vista_EstadosFinancieros.EstadosFinancieros>();
-           //btnEstadosFin.BackColor = Color.FromArgb(255, 51, 51);
-           //ocultaSubMenu();
+           AbrirFormulario<Capa_Vista_EstadosFinancieros.EstadosFinancieros>();
+           btnEstadosFin.BackColor = Color.FromArgb(255, 51, 51);
+           ocultaSubMenu();
         }
 
         private void btnPolizas_Click(object sender, EventArgs e)
