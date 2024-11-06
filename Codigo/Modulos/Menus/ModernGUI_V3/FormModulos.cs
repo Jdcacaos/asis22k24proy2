@@ -9,12 +9,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Capa_Vista_Nominas;
+//using Capa_Vista_Nominas;
 
-using Capa_Vista_Banco;
-using Capa_Vista_Contabilidad;
-using Capa_Vista_Produccion;
-using Capa_Vista_Banco;
+//using Capa_Vista_Banco;
+//using Capa_Vista_Contabilidad;
+//using Capa_Vista_Produccion;
+//using Capa_Vista_Banco;
 //using Capa_Vista_CompraVenta;
 
 namespace Interfac_V3
@@ -48,15 +48,16 @@ namespace Interfac_V3
 
         private void btnSeguridad_Click(object sender, EventArgs e)
         {
+            //eliminar todo
             var usuario = new Capa_Vista_Seguridad.frm_login();
            string idUsuario= usuario.Txt_usuario.ToString();
 
-           frm_login login = new frm_login();
+          frm_login login = new frm_login();
            login.ShowDialog();
-
-           MDI_Seguridad formMDI = new MDI_Seguridad(idUsuario);
-            formMDI.Show();
-            this.Hide();
+//
+          MDI_Seguridad formMDI = new MDI_Seguridad(idUsuario);
+           formMDI.Show();
+           this.Hide();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
@@ -81,8 +82,8 @@ namespace Interfac_V3
             Aqui debe de agregarse la referencia a nominas
             */
 
-            frm_principal_nominas nominas = new frm_principal_nominas(UsuarioSesion.GetIdUsuario());
-           nominas.Show();
+          //  frm_principal_nominas nominas = new frm_principal_nominas(UsuarioSesion.GetIdUsuario());
+         //  nominas.Show();
 
 
         }

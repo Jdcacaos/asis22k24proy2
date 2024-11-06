@@ -391,20 +391,20 @@ namespace CapaVistaActivofijo
                 //MessageBox.Show("2" + basePath);
 
 
-                string ayudaFolderPath = Path.Combine(projectPath, "AyudaConta");
+                string ayudaFolderPath = Path.Combine(projectPath, "AyudaActivoFijo");
 
                 // Imprimir la ruta de ayuda para verificar
                 //MessageBox.Show("3: " + ayudaFolderPath);
 
                 // Busca el archivo .chm en la carpeta "Ayuda_Seguridad"
-                string pathAyuda = FindFileInDirectory(ayudaFolderPath, "AyudaConta.chm");
+                string pathAyuda = FindFileInDirectory(ayudaFolderPath, "AyudaActivofijo.chm");
 
                 // Verifica si el archivo existe antes de intentar abrirlo
                 if (!string.IsNullOrEmpty(pathAyuda))
                 {
                     //MessageBox.Show("El archivo sí está.");
                     // Abre el archivo de ayuda .chm en la sección especificada
-                    Help.ShowHelp(null, pathAyuda, "AyudaConta.html");
+                    Help.ShowHelp(null, pathAyuda, "AyudasAtivosfijos3.html");
                 }
                 else
                 {
