@@ -47,8 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Capa_Vista_Polizas\Capa_Vista_Polizas\bin\Debug\Capa_Vista_Polizas.dll</HintPath>
     </Reference>
-    <Reference Include="Capa_Vista_Presupuesto">
-      <HintPath>..\..\..\..\..\..\ProyectoAS2Individual\asis22k24proy2\Codigo\Modulos\Contabilidad\Presupuesto\Capa_Vista_Presupuesto\bin\Debug\Capa_Vista_Presupuesto.dll</HintPath>
+    <Reference Include="Capa_Vista_Presupuesto, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Presupuesto\Capa_Vista_Presupuesto\bin\Debug\Capa_Vista_Presupuesto.dll</HintPath>
     </Reference>
     <Reference Include="Interfac_V3">
       <HintPath>..\..\Menus\ModernGUI_V3\bin\Debug\Interfac_V3.exe</HintPath>
