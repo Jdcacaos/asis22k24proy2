@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CapaVistaActivofijo">
+      <HintPath>..\Activofijoreal\MVCactivofijos\CapaVistaActivofijo\bin\Debug\CapaVistaActivofijo.dll</HintPath>
+    </Reference>
     <Reference Include="Capa_Controlador_Contabilidad">
       <HintPath>..\Capa_Controlador_Contabilidad\bin\Debug\Capa_Controlador_Contabilidad.dll</HintPath>
     </Reference>

@@ -509,7 +509,7 @@ namespace Capa_Vista_Polizas
             lg.funinsertarabitacora(sIdUsuario, "Se creó una póliza", "tbl_polizaencabezado", "8000");
             lg.funinsertarabitacora(sIdUsuario, "Se creó un detalle de póliza", "tbl_polizadetalle", "8000");
             lg.funinsertarabitacora(sIdUsuario, "Se actualizaron cuentas", "tbl_cuentas", "8000");
-            lg.funinsertarabitacora(sIdUsuario, "Se actualizaron cuentas", "tbl_historico_cuentas", "8000");
+            //lg.funinsertarabitacora(sIdUsuario, "Se actualizaron cuentas", "tbl_historico_cuentas", "8000");
         }
 
         private void Polizas_Load(object sender, EventArgs e)

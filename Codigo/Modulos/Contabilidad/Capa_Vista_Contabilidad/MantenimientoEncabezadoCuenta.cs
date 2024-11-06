@@ -22,7 +22,7 @@ namespace Capa_Vista_Contabilidad
             string[] alias = { "codigo", "nombre", "estado" };
             navegador1.AsignarAlias(alias);
             navegador1.AsignarSalida(this);
-            navegador1.AsignarColorFondo(Color.LightBlue);
+            navegador1.AsignarColorFondo(Color.FromArgb(248, 140, 140));
             navegador1.AsignarColorFuente(Color.BlueViolet);
             navegador1.ObtenerIdAplicacion("8000");
             navegador1.AsignarAyuda("1");

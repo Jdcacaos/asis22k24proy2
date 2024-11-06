@@ -264,7 +264,7 @@ namespace Capa_Modelo_Polizas
                     ActulizarCuentas(iidCuentaEnlace.Value, stipoOperacion, devalor);
                 }
 
-                ActualizarHistorico(iidCuenta, devalor, stipoOperacion);
+                //ActualizarHistorico(iidCuenta, devalor, stipoOperacion);
 
             }
             catch (Exception ex)
@@ -389,7 +389,7 @@ namespace Capa_Modelo_Polizas
 
         }
 
-        public void ActualizarHistorico(int iidCuenta, decimal deval, string stipoOperacion)
+        /*public void ActualizarHistorico(int iidCuenta, decimal deval, string stipoOperacion)
         {
             int imesActual = DateTime.Now.Month;
             int ianioActual = DateTime.Now.Year;
@@ -491,7 +491,7 @@ namespace Capa_Modelo_Polizas
             {
                 MessageBox.Show("Error al actualizar el histórico: " + ex.Message);
             }
-        }
+        }*/
 
         public string ModRuta(string sIdAyuda)
         {
