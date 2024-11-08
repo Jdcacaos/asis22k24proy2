@@ -162,8 +162,8 @@ namespace Capa_Controlador_CierreContable
                     try
                     {
                         // Seleccionar todos los IDs de cuentas
-                        string sSelectQuery = "SELECT Pk_id_cuenta, cargo_mes, abono_mes, saldo_ant, saldo_act, cargo_acumulado, abono_acumulado FROM tbl_cuentas";
-                        OdbcCommand selectCmd = new OdbcCommand(sSelectQuery, con, transaction);
+                        string selectQuery = "SELECT Pk_id_cuenta, cargo_mes, abono_mes, saldo_ant, saldo_act, cargo_acumulado, abono_acumulado FROM tbl_cuentas";
+                        OdbcCommand selectCmd = new OdbcCommand(selectQuery, con, transaction);
 
                         using (OdbcDataReader reader = selectCmd.ExecuteReader())
                         {
@@ -178,9 +178,9 @@ namespace Capa_Controlador_CierreContable
                                 decimal abonoAcumulado = reader.GetDecimal(6);
 
                                 // Obtener el saldoanual del mes anterior, si existe
-                                decimal deSaldoAnualPrevio = 0;
-                                string sSaldoAnualQuery = "SELECT saldoanual FROM tbl_historico_cuentas WHERE Pk_id_cuenta = ? AND mes = ? AND anio = ?";
-                                using (OdbcCommand saldoAnualCmd = new OdbcCommand(sSaldoAnualQuery, con, transaction))
+                                decimal saldoAnualPrevio = 0;
+                                string saldoAnualQuery = "SELECT saldoanual FROM tbl_historico_cuentas WHERE Pk_id_cuenta = ? AND mes = ? AND anio = ?";
+                                using (OdbcCommand saldoAnualCmd = new OdbcCommand(saldoAnualQuery, con, transaction))
                                 {
                                     saldoAnualCmd.Parameters.AddWithValue("?", cuentaId);
                                     saldoAnualCmd.Parameters.AddWithValue("?", mes - 1); // Mes anterior
@@ -189,21 +189,21 @@ namespace Capa_Controlador_CierreContable
                                     object result = saldoAnualCmd.ExecuteScalar();
                                     if (result != null)
                                     {
-                                        deSaldoAnualPrevio = Convert.ToDecimal(result);
+                                        saldoAnualPrevio = Convert.ToDecimal(result);
                                     }
                                 }
 
                                 // Sumar el saldo_act actual al saldoanual del mes anterior
-                                decimal nuevoSaldoAnual = deSaldoAnualPrevio + saldoAct;
+                                decimal nuevoSaldoAnual = saldoAnualPrevio + saldoAct;
 
                                 // Guardar el historial en tbl_historico_cuentas
-                                string sInsertQuery = @"
+                                string insertQuery = @"
                         INSERT INTO tbl_historico_cuentas 
                             (Pk_id_cuenta, mes, anio, cargo_mes, abono_mes, saldo_ant, saldo_act, cargo_acumulado, abono_acumulado, saldoanual)
                         VALUES 
                             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                                using (OdbcCommand insertCmd = new OdbcCommand(sInsertQuery, con, transaction))
+                                using (OdbcCommand insertCmd = new OdbcCommand(insertQuery, con, transaction))
                                 {
                                     insertCmd.Parameters.AddWithValue("?", cuentaId);
                                     insertCmd.Parameters.AddWithValue("?", mes);
@@ -220,7 +220,7 @@ namespace Capa_Controlador_CierreContable
                                 }
 
                                 // Actualizar los valores en tbl_cuentas
-                                string sUpdateQuery = @"
+                                string updateQuery = @"
                         UPDATE tbl_cuentas
                         SET 
                             cargo_mes = 0, 
@@ -231,7 +231,7 @@ namespace Capa_Controlador_CierreContable
                             abono_acumulado = abono_acumulado + ?
                         WHERE Pk_id_cuenta = ?";
 
-                                using (OdbcCommand updateCmd = new OdbcCommand(sUpdateQuery, con, transaction))
+                                using (OdbcCommand updateCmd = new OdbcCommand(updateQuery, con, transaction))
                                 {
                                     updateCmd.Parameters.AddWithValue("?", cargoMes);
                                     updateCmd.Parameters.AddWithValue("?", abonoMes);
