@@ -35,5 +35,26 @@ namespace EjecucionNav
             Pagos pagos = new Pagos();
             pagos.Show();
         }
+
+        private void rECETASToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Recetas recetas = new Recetas();
+            // recetas.Show();
+
+            produccion produccion = new produccion();
+            produccion.Show();
+        }
+
+        private void polizasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Polizas polizas = new Polizas();
+            polizas.Show();
+        }
+
+        private void localesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            locales locales = new locales();
+            locales.Show();
+        }
     }
 }

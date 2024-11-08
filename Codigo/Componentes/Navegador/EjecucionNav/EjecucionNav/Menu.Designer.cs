@@ -33,6 +33,9 @@ namespace EjecucionNav
             this.mANTENIMIENTOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fACTURAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pAGOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rECETASToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.polizasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.localesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,7 +45,10 @@ namespace EjecucionNav
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mANTENIMIENTOToolStripMenuItem,
             this.fACTURAToolStripMenuItem,
-            this.pAGOSToolStripMenuItem});
+            this.pAGOSToolStripMenuItem,
+            this.rECETASToolStripMenuItem,
+            this.polizasToolStripMenuItem,
+            this.localesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1154, 28);
@@ -70,6 +76,27 @@ namespace EjecucionNav
             this.pAGOSToolStripMenuItem.Text = "PAGOS";
             this.pAGOSToolStripMenuItem.Click += new System.EventHandler(this.pAGOSToolStripMenuItem_Click);
             // 
+            // rECETASToolStripMenuItem
+            // 
+            this.rECETASToolStripMenuItem.Name = "rECETASToolStripMenuItem";
+            this.rECETASToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
+            this.rECETASToolStripMenuItem.Text = "PRODUCCION";
+            this.rECETASToolStripMenuItem.Click += new System.EventHandler(this.rECETASToolStripMenuItem_Click);
+            // 
+            // polizasToolStripMenuItem
+            // 
+            this.polizasToolStripMenuItem.Name = "polizasToolStripMenuItem";
+            this.polizasToolStripMenuItem.Size = new System.Drawing.Size(68, 24);
+            this.polizasToolStripMenuItem.Text = "Polizas";
+            this.polizasToolStripMenuItem.Click += new System.EventHandler(this.polizasToolStripMenuItem_Click);
+            // 
+            // localesToolStripMenuItem
+            // 
+            this.localesToolStripMenuItem.Name = "localesToolStripMenuItem";
+            this.localesToolStripMenuItem.Size = new System.Drawing.Size(69, 24);
+            this.localesToolStripMenuItem.Text = "locales";
+            this.localesToolStripMenuItem.Click += new System.EventHandler(this.localesToolStripMenuItem_Click);
+            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -93,5 +120,8 @@ namespace EjecucionNav
         private System.Windows.Forms.ToolStripMenuItem mANTENIMIENTOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fACTURAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pAGOSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rECETASToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem polizasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem localesToolStripMenuItem;
     }
 }
