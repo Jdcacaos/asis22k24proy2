@@ -201,15 +201,19 @@ CHANGE COLUMN pado_estado estado TINYINT DEFAULT 1 NOT NULL;
 
 -- TBL_Deudas_Clientes
 ALTER TABLE Tbl_Deudas_Clientes
-ADD COLUMN transaccion_tipo INT NOT NULL;
+ADD COLUMN transaccion_tipo VARCHAR(150) NOT NULL;
 
 ALTER TABLE Tbl_Deudas_Clientes
-ADD COLUMN Fk_id_tranC INT NOT NULL,
-ADD CONSTRAINT fk_id_tranC FOREIGN KEY (Fk_id_tranC) REFERENCES Tbl_transaccion_cuentas(Pk_id_tran_cue);
+ADD COLUMN Efecto_trans VARCHAR(150) NOT NULL;
 
 ALTER TABLE Tbl_Deudas_Clientes
 ADD COLUMN Fk_id_factura INT NOT NULL,
 ADD CONSTRAINT fk_id_factura FOREIGN KEY (Fk_id_factura) REFERENCES Tbl_factura(Pk_id_factura);
+
+ALTER TABLE Tbl_Deudas_Clientes 
+DROP FOREIGN KEY tbl_deudas_clientes_ibfk_3;
+ALTER TABLE Tbl_Deudas_Clientes 
+DROP COLUMN Fk_id_pago;
 
 -- TBL_Transaccion_clientes
 ALTER TABLE Tbl_Transaccion_cliente
@@ -219,10 +223,18 @@ ADD COLUMN Fk_id_transC INT NOT NULL,
 ADD CONSTRAINT fk_transC_trans_cliente FOREIGN KEY (Fk_id_transC) REFERENCES Tbl_transaccion_cuentas(Pk_id_tran_cue),
 ADD COLUMN transaccion_tipo VARCHAR(150) NOT NULL;
 
+-- Eliminar llaves foráneas 
+ALTER TABLE Tbl_Transaccion_cliente 
+DROP FOREIGN KEY tbl_transaccion_cliente_ibfk_3, 
+DROP FOREIGN KEY tbl_transaccion_cliente_ibfk_2;
+
+-- Eliminar columnas innecesarias
 ALTER TABLE Tbl_Transaccion_cliente
 DROP COLUMN transaccion_cuotas, 
-DROP COLUMN tansaccion_cuenta;
-ALTER TABLE Tbl_Transaccion_cliente DROP FOREIGN KEY tbl_transaccion_cliente_ibfk_3;
+DROP COLUMN tansaccion_cuenta,
+DROP COLUMN Fk_id_pais,
+DROP COLUMN Fk_id_pago,
+DROP COLUMN transaccionserie;
 
 -- TBL_mora_clientes
 ALTER TABLE Tbl_mora_clientes MODIFY COLUMN morafecha VARCHAR(15) NOT NULL;
@@ -239,29 +251,39 @@ DROP COLUMN caja_mora_monto,
 DROP COLUMN caja_transaccion_monto;
 
 -- TBL_Deuda_Proveedores
-ALTER TABLE Tbl_Deudas_Proveedores MODIFY COLUMN deuda_fecha_inicio VARCHAR(15) NOT NULL;
-ALTER TABLE Tbl_Deudas_Proveedores MODIFY COLUMN deuda_fecha_vencimiento VARCHAR(15) NOT NULL;
-
-ALTER TABLE Tbl_Deudas_Proveedores 
-ADD COLUMN Fk_id_tranC INT NOT NULL,  
-ADD CONSTRAINT fk_transaccion_cuentas FOREIGN KEY (Fk_id_tranC) REFERENCES Tbl_transaccion_cuentas(Pk_id_tran_cue), 
-ADD COLUMN transaccion_tipo INT NOT NULL, 
-ADD COLUMN Fk_id_factura INT NOT NULL,  
-ADD CONSTRAINT fk_factura FOREIGN KEY (Fk_id_factura) REFERENCES Tbl_factura(Pk_id_factura);
-
--- TBL_Transaccion_proveedor
-ALTER TABLE Tbl_Transaccion_proveedor 
-ADD COLUMN Fk_id_factura INT NOT NULL,  
-ADD CONSTRAINT fk_factura_trans_prov FOREIGN KEY (Fk_id_factura) REFERENCES Tbl_factura(Pk_id_factura), 
-ADD COLUMN Fk_id_transC INT NOT NULL,  
-ADD CONSTRAINT fk_transC_trans_prov FOREIGN KEY (Fk_id_transC) REFERENCES Tbl_transaccion_cuentas(Pk_id_tran_cue), 
+ALTER TABLE Tbl_Deudas_Proveedores
 ADD COLUMN transaccion_tipo VARCHAR(150) NOT NULL;
 
-ALTER TABLE Tbl_Transaccion_proveedor
-DROP COLUMN tansaccion_cuenta, 
-DROP COLUMN tansaccion_cuotas;
+ALTER TABLE Tbl_Deudas_Proveedores
+ADD COLUMN Efecto_trans VARCHAR(150) NOT NULL;
 
-ALTER TABLE Tbl_Transaccion_proveedor DROP FOREIGN KEY tbl_transaccion_proveedor_ibfk_3;
+ALTER TABLE Tbl_Deudas_Proveedores
+ADD COLUMN Fk_id_factura INT NOT NULL,
+ADD CONSTRAINT fk_id_factura2 FOREIGN KEY (Fk_id_factura) REFERENCES Tbl_factura(Pk_id_factura);
+
+ALTER TABLE Tbl_Deudas_Proveedores 
+DROP FOREIGN KEY tbl_deudas_proveedores_ibfk_2;
+ALTER TABLE Tbl_Deudas_Proveedores
+DROP COLUMN Fk_id_pago;
+
+-- TBL_Transaccion_proveedor
+ALTER TABLE Tbl_Transaccion_proveedor
+ADD COLUMN Fk_id_transC INT NOT NULL,
+ADD CONSTRAINT fk_transC_trans_proveedor FOREIGN KEY (Fk_id_transC) REFERENCES Tbl_transaccion_cuentas(Pk_id_tran_cue),
+ADD COLUMN transaccion_tipo VARCHAR(150) NOT NULL;
+
+-- Eliminar llaves foráneas 
+ALTER TABLE Tbl_Transaccion_proveedor 
+DROP FOREIGN KEY tbl_transaccion_proveedor_ibfk_3, 
+DROP FOREIGN KEY tbl_transaccion_proveedor_ibfk_2;
+
+-- Eliminar columnas innecesarias
+ALTER TABLE Tbl_Transaccion_proveedor
+DROP COLUMN tansaccion_cuotas, 
+DROP COLUMN tansaccion_cuenta,
+DROP COLUMN Fk_id_pais,
+DROP COLUMN Fk_id_pago,
+DROP COLUMN transaccion_serie;
 
 -- TBL_caja_proveedor
 
@@ -567,3 +589,11 @@ PRIMARY KEY (pk_id_explosion),
 FOREIGN KEY (fk_id_producto) REFERENCES tbl_productos(pk_id_producto),
 FOREIGN KEY (fk_id_proceso) REFERENCES tbl_proceso_produccion_encabezado(pk_id_proceso)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- CUENTAS CORRIENTES 07/11/2024
+
+DROP TABLE Tbl_paises;
+Drop table Tbl_Formadepago;
+
+
