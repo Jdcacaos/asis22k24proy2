@@ -14,7 +14,7 @@ namespace Capa_Vista_CierreContable
     public partial class Cierre : UserControl
     {
         public string idUsuario { get; set; }
-            logica LogicaSeg = new logica();
+        logica LogicaSeg = new logica();
         public Cierre()
         {
             InitializeComponent();
@@ -51,6 +51,11 @@ namespace Capa_Vista_CierreContable
 
         }
 
+        private void Btn_salir_Click(object sender, EventArgs e)
+        {
+            LogicaSeg.funinsertarabitacora(idUsuario, $"Se cerro Formulario CierreContable", "Cierre Contable", "8000");
+            this.Hide();
+        }
     }
 }
 

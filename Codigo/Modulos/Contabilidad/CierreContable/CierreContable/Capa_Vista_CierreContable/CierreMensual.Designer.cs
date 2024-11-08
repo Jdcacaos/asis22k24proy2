@@ -54,7 +54,6 @@ namespace Capa_Vista_CierreContable
             this.btn_nuevocierre = new System.Windows.Forms.Button();
             this.btn_GuardarCierre = new System.Windows.Forms.Button();
             this.btn_Reporte = new System.Windows.Forms.Button();
-            this.Btn_salir = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_cierre)).BeginInit();
             this.gpb_datosmes.SuspendLayout();
             this.SuspendLayout();
@@ -330,26 +329,12 @@ namespace Capa_Vista_CierreContable
             this.btn_Reporte.UseVisualStyleBackColor = false;
             this.btn_Reporte.Click += new System.EventHandler(this.btn_Reporte_Click_1);
             // 
-            // Btn_salir
-            // 
-            this.Btn_salir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(55)))), ((int)(((byte)(62)))));
-            this.Btn_salir.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Btn_salir.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.Btn_salir.Image = global::Capa_Vista_CierreContable.Properties.Resources.SALIR_V4;
-            this.Btn_salir.Location = new System.Drawing.Point(817, 41);
-            this.Btn_salir.Name = "Btn_salir";
-            this.Btn_salir.Size = new System.Drawing.Size(72, 66);
-            this.Btn_salir.TabIndex = 105;
-            this.Btn_salir.UseVisualStyleBackColor = false;
-            this.Btn_salir.Click += new System.EventHandler(this.Btn_salir_Click);
-            // 
             // CierreMensual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(140)))), ((int)(((byte)(140)))));
             this.ClientSize = new System.Drawing.Size(901, 532);
-            this.Controls.Add(this.Btn_salir);
             this.Controls.Add(this.btn_Reporte);
             this.Controls.Add(this.btn_Ayuda2);
             this.Controls.Add(this.btn_Actualizar);
@@ -402,6 +387,5 @@ namespace Capa_Vista_CierreContable
         private System.Windows.Forms.Button btn_Actualizar;
         private System.Windows.Forms.Button btn_Ayuda2;
         private System.Windows.Forms.Button btn_Reporte;
-        private System.Windows.Forms.Button Btn_salir;
     }
 }

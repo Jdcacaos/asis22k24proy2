@@ -258,9 +258,7 @@ namespace Capa_Vista_CierreContable
 
         private void Btn_salir_Click(object sender, EventArgs e)
         {
-            LogicaSeg.funinsertarabitacora(idUsuario, $"Se cerro Formulario CierreContable", "Cierre Contable", "8000");
 
-            this.Hide();
         }
     }
 }

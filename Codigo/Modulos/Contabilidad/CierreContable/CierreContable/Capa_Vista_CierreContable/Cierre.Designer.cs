@@ -32,7 +32,9 @@ namespace Capa_Vista_CierreContable
             this.TabCierre = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Btn_salir = new System.Windows.Forms.Button();
             this.TabCierre.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabCierre
@@ -47,6 +49,7 @@ namespace Capa_Vista_CierreContable
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.Btn_salir);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -65,6 +68,17 @@ namespace Capa_Vista_CierreContable
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // Btn_salir
+            // 
+            this.Btn_salir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(55)))), ((int)(((byte)(62)))));
+            this.Btn_salir.BackgroundImage = global::Capa_Vista_CierreContable.Properties.Resources.SALIR_V4;
+            this.Btn_salir.Location = new System.Drawing.Point(951, 30);
+            this.Btn_salir.Name = "Btn_salir";
+            this.Btn_salir.Size = new System.Drawing.Size(69, 62);
+            this.Btn_salir.TabIndex = 0;
+            this.Btn_salir.UseVisualStyleBackColor = false;
+            this.Btn_salir.Click += new System.EventHandler(this.Btn_salir_Click);
+            // 
             // Cierre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -74,6 +88,7 @@ namespace Capa_Vista_CierreContable
             this.Size = new System.Drawing.Size(1085, 674);
             this.Load += new System.EventHandler(this.Cierre_Load);
             this.TabCierre.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -83,5 +98,6 @@ namespace Capa_Vista_CierreContable
         private System.Windows.Forms.TabControl TabCierre;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button Btn_salir;
     }
 }
