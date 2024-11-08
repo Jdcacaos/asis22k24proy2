@@ -13,6 +13,7 @@ using Capa_Vista_EstadosFinancieros;
 using Capa_Vista_CierreContable;
 using Capa_Vista_Presupuesto;
 using Capa_Vista_Polizas;
+using CapaVistaActivofijo;
 using System.IO;
 
 namespace Capa_Vista_Contabilidad   
@@ -425,9 +426,9 @@ namespace Capa_Vista_Contabilidad
 
         private void btnActivosFijos_Click(object sender, EventArgs e)
         {
-            /*AbrirFormulario<Capa_Vista_activosfijos.activos>();
+            AbrirFormulario<CapaVistaActivofijo.Frm_Activofijo>();
            btnActivosFijos.BackColor = Color.FromArgb(255, 51, 51);
-           ocultaSubMenu();*/
+           ocultaSubMenu();
         }
 
         private void btnEstadosFin_Click_1(object sender, EventArgs e)

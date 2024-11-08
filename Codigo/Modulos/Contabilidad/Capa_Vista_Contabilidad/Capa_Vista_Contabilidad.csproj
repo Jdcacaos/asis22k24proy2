@@ -31,14 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CapaVistaActivofijo">
+      <HintPath>..\Activofijoreal\MVCactivofijos\CapaVistaActivofijo\bin\Debug\CapaVistaActivofijo.dll</HintPath>
+    </Reference>
     <Reference Include="Capa_Controlador_Contabilidad">
       <HintPath>..\Capa_Controlador_Contabilidad\bin\Debug\Capa_Controlador_Contabilidad.dll</HintPath>
     </Reference>
     <Reference Include="Capa_Controlador_Seguridad">
       <HintPath>..\..\..\Componentes\Seguridad\Capa_Controlador_Seguridad\bin\Debug\Capa_Controlador_Seguridad.dll</HintPath>
     </Reference>
-    <Reference Include="Capa_Vista_CierreContable">
-      <HintPath>..\CierreContable\CierreContable\Capa_Vista_CierreContable\bin\Debug\Capa_Vista_CierreContable.dll</HintPath>
+    <Reference Include="Capa_Vista_CierreContable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CierreContable\CierreContable\AppCContable\AppCContable\bin\Debug\Capa_Vista_CierreContable.dll</HintPath>
     </Reference>
     <Reference Include="Capa_Vista_EstadosFinancieros, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
