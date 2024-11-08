@@ -66,21 +66,19 @@ namespace Capa_Modelo_CierreContable
         {
             int cuentaExistente = 0;
 
-            string query = "SELECT COUNT(*) FROM tbl_historico_cuentas WHERE mes = @mes AND Pk_id_cuenta = @idCuenta";
-
-            using (OdbcConnection conn = con.Conexion())
+            using (OdbcConnection con = ObtenerConexion())
             {
-                using (OdbcCommand cmd = new OdbcCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@mes", mes);
-                    cmd.Parameters.AddWithValue("@idCuenta", idCuenta);
+                string query = "SELECT COUNT(*) FROM tbl_historico_cuentas WHERE mes = ? AND Pk_id_cuenta = ? AND estado = 1";
+                OdbcCommand cmd = new OdbcCommand(query, con);
+                cmd.Parameters.AddWithValue("?", mes);
+                cmd.Parameters.AddWithValue("?", idCuenta);
 
-                    cuentaExistente = Convert.ToInt32(cmd.ExecuteScalar());
-                }
+                cuentaExistente = Convert.ToInt32(cmd.ExecuteScalar());
             }
 
             return cuentaExistente;
         }
+
 
 
         public string modRuta(string idAyuda)

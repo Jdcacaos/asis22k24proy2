@@ -447,6 +447,7 @@ namespace Capa_Controlador_CierreContable
             return ultimoMes;
         }
 
+
         public bool VerificarCierresCompletos(int anio)
         {
             string query = @"

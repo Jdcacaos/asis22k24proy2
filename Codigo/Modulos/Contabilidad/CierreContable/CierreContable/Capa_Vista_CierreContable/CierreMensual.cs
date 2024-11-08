@@ -120,6 +120,7 @@ namespace Capa_Vista_CierreContable
 
 
 
+
         private void LlenarCierre(string cuentaSeleccionada)
         {
             DataTable datosCierre;
