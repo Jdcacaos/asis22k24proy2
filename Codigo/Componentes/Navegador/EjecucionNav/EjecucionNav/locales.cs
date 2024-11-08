@@ -10,21 +10,21 @@ using System.Windows.Forms;
 
 namespace EjecucionNav
 {
-    public partial class Form1 : Form
+    public partial class locales : Form
     {
-        public Form1()
+        public locales()
         {
             InitializeComponent();
-            string[] alias = { "ID", "Nombre", "clasi", "Genero", "Sub", "Idioma", "precio", "estado" };
+            string[] alias = { "codigo", "nombre", "ubicacion", "capacidad", "estado","fecha" };
             navegador1.AsignarAlias(alias);
             navegador1.AsignarSalida(this);
             navegador1.AsignarColorFondo(Color.LightBlue);
             navegador1.AsignarColorFuente(Color.BlueViolet);
-            navegador1.AsignarTabla("peliculas");
             navegador1.ObtenerIdAplicacion("1000");
-            navegador1.ObtenerIdUsuario("peter");
             navegador1.AsignarAyuda("1");
-            navegador1.AsignarNombreForm("PELICULAS");
+            navegador1.ObtenerIdUsuario("admin");
+            navegador1.AsignarTabla("tbl_locales");
+            navegador1.AsignarNombreForm("FACTURAS");
         }
     }
 }

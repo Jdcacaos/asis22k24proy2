@@ -35,12 +35,17 @@ namespace Capa_Vista_Navegador
         int iPosicionX = 30; // Posición X inicial para componentes
         int iPosicionY = 30; // Posición Y inicial para componentes
         int iActivar = 0; // Variable para reconocer la función del botón de guardar (1. Ingresar, 2. Modificar, 3. Eliminar)
+        int globalPosX = 600; // Posición inicial en X para la segunda columna
+        int globalPosY = 100; // Posición inicial en Y
+        int globalColumna = 0; // Contador de columnas global
+        int globalFila = 0; // Contador de filas global
         string[] arrAliasCampos = new string[40]; // Alias para los campos
         string[] arrTipoCampos = new string[30]; // Tipo de los campos
         string[] arrTablaCombo = new string[30]; // Nombre de las tablas de combo
         string[] arrCampoCombo = new string[30]; // Campos de combo
         string[] arrListaItems = new string[30]; // Lista de items
-        string[] arrCampoDisplayCombo = new string[30]; // Campos display del combo
+        string[] arrCampoDisplayCombo = new string[30];
+        string[] arrAliasExtra = new string[100];// Campos display del combo
 
         //string sTablaRelacionada = ""; // Tabla relacionada
         //string sCampoDescriptivo = ""; // Campo descriptivo
@@ -63,11 +68,35 @@ namespace Capa_Vista_Navegador
         string sRutaAyuda; // Ruta de la ayuda
         string sIndiceAyuda; // Índice de la ayuda
         string sEstadoAyuda = ""; // Estado de la ayuda
+        string sTablaAdicional = "";
+        // Variables globales
+        string tablaOrigenGlobal = "";
+        string campoOrigenGlobal = "";
+        string tablaDestinoGlobal = "";
+        string campoDestinoGlobal = "";
+        string operacionGlobal = "";
+        string CampoDescriptivoGlobal = "";
+        string valorDescriptivoGlobal = "";
+
+
         Font fFuenteLabels = new Font("Century Gothic", 13.0f, FontStyle.Regular, GraphicsUnit.Pixel); // Fuente para labels
         ToolTip tpAyuda = new ToolTip(); // ToolTip para mostrar ayudas en la interfaz
         private List<Tuple<string, string, string, string>> relacionesForaneas = new List<Tuple<string, string, string, string>>();
         List<Tuple<string, string, string>> comboData = new List<Tuple<string, string, string>>();
         Dictionary<string, string[]> aliasPorTabla = new Dictionary<string, string[]>();
+        List<OperacionCampo> listaOperaciones = new List<OperacionCampo>();
+        // Declaración del diccionario a nivel de clase
+        Dictionary<string, List<string>> diccionarioTablasAsociativas = new Dictionary<string, List<string>>();
+        // Declaración del diccionario para almacenar las tablas asociativas
+        List<string> lstTablasParaComponentes = new List<string>();
+        List<string> listaOperacionesCondicionales = new List<string>();
+        private Dictionary<int, List<string>> combosPorPosicion = new Dictionary<int, List<string>>();
+
+        private IngresarVarios IngresarVariosControl;
+        private bool activarIngresarVarios;
+        private string nombreTablaVarios;
+        private List<ReglaOperacion> listaReglas = new List<ReglaOperacion>();
+        private Dictionary<string, ComponenteInvisible> componentesInvisibles = new Dictionary<string, ComponenteInvisible>();
 
 
 
@@ -117,28 +146,40 @@ namespace Capa_Vista_Navegador
                     btn.Paint += button_Paint;
                 }
             }
-            if (sTablaPrincipal != "def") // Verifica si la sTablaPrincipal no es "def" (valor por defecto)
+            if (activarIngresarVarios)
             {
-                string sTablaOK = logic.TestTabla(sTablaPrincipal); // Verifica la existencia de la sTablaPrincipal
-                if (sTablaOK == "" && iCorrecto == 0) // Si la sTablaPrincipal existe y no hay errores previos
+                IngresarVariosControl = new IngresarVarios();
+                IngresarVariosControl.ComponentePrincipal = this; // Referencia al componente principal
+                IngresarVariosControl.Location = new System.Drawing.Point(850, 515); // Ubicación personalizada
+                this.Controls.Add(IngresarVariosControl);
+                IngresarVariosControl.Visible = true;
+                if (!string.IsNullOrEmpty(nombreTablaVarios))
                 {
-                    string sEstadoOK = logic.TestEstado(sTablaPrincipal); // Verifica el estado de la sTablaPrincipal
-                    if (sEstadoOK == "" && iCorrecto == 0) // Si el estado de la sTablaPrincipal es correcto
+                    IngresarVariosControl.ConfigurarDataGridViewParaTablaVarios(nombreTablaVarios);
+                }
+                Console.WriteLine("IngresarVariosControl fue inicializado con la tabla: " + nombreTablaVarios);
+            }
+
+            if (sTablaPrincipal != "def")
+            {
+                string sTablaOK = logic.TestTabla(sTablaPrincipal);
+                if (sTablaOK == "" && iCorrecto == 0)
+                {
+                    string sEstadoOK = logic.TestEstado(sTablaPrincipal);
+                    if (sEstadoOK == "" && iCorrecto == 0)
                     {
-                        if (sEstadoAyuda == "0") // Verifica si hay registros en la sTablaPrincipal Ayuda
+                        if (sEstadoAyuda == "0")
                         {
                             MessageBox.Show("No se encontró ningún registro en la sTablaPrincipal Ayuda");
-                            Application.Exit(); // Sale de la aplicación si no se encuentra ayuda
+                            Application.Exit();
                         }
                         else
                         {
-                            if (NumeroAlias() == logic.ContarCampos(sTablaPrincipal)) // Verifica si el número de alias coincide con el número de campos de la sTablaPrincipal
+                            if (NumeroAlias() == logic.ContarCampos(sTablaPrincipal))
                             {
-                                int iIndex = 0;
-                                DataTable dt = logic.ConsultaLogica(sTablaPrincipal, relacionesForaneas); // Realiza la consulta lógica de la sTablaPrincipal
-                                Dgv_Informacion.DataSource = dt; // Asigna el resultado de la consulta al DataGridView
+                                DataTable dt = logic.ConsultaLogica(sTablaPrincipal, relacionesForaneas);
+                                Dgv_Informacion.DataSource = dt;
 
-                                // Asigna los alias como encabezados de las columnas
                                 int iHead = 0;
                                 while (iHead < logic.ContarCampos(sTablaPrincipal))
                                 {
@@ -146,61 +187,93 @@ namespace Capa_Vista_Navegador
                                     iHead++;
                                 }
 
-                                CreaComponentes(); // Crea los componentes del formulario
-                                                   // Ocupa todo el espacio del contenedor, con margen si está configurado
+                                CreaComponentes();
+                                //MessageBox.Show("hola");
+                                
+                                // Crear componentes de las tablas adicionales
+                                if (lstTablasParaComponentes != null)
+                                {
+                                    foreach (string tabla in lstTablasParaComponentes)
+                                    {
+                                        if (aliasPorTabla.ContainsKey(tabla))
+                                        {
+                                            string[] aliasTabla = aliasPorTabla[tabla];
+                                            string aliasString = string.Join(", ", aliasTabla);
+                                           // MessageBox.Show("Se generó para la tabla: " + tabla + " con alias: " + aliasString);
 
-                                ColorTitulo(); // Cambia el color del título
-                                Txt_Tabla.ForeColor = cColorFuente; // Asigna el color de la fuente al label de la sTablaPrincipal
-                                Deshabilitarcampos_y_botones(); // Deshabilita los campos y botones inicialmente
+                                            CrearComponentesExtra(tabla);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("No se encontraron alias para la tabla: " + tabla);
+                                        }
+                                    }
+                                }
 
-                                // Verifica si hay registros en la sTablaPrincipal y habilita/deshabilita controles según corresponda
+
+
+                                ColorTitulo();
+                                Txt_Tabla.ForeColor = cColorFuente;
+                                Deshabilitarcampos_y_botones();
+
                                 if (logic.TestRegistros(sTablaPrincipal) > 0)
                                 {
                                     int iNumCombo = 0;
+                                    int iIndex = 0;
+
                                     foreach (Control componente in Controls)
                                     {
-                                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                                        if (iIndex < Dgv_Informacion.CurrentRow.Cells.Count) // Asegura que iIndex no exceda las celdas disponibles
                                         {
-                                            if (componente is ComboBox)
+                                            if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                                             {
-                                                // Asigna valores a los ComboBox según la lógica de la aplicación
-                                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                                if (componente is ComboBox)
                                                 {
-                                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                                    if (arrModoCampoCombo[iNumCombo] == 1)
+                                                    {
+                                                        componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                                    }
+                                                    else
+                                                    {
+                                                        componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                                    }
+                                                    iNumCombo++;
                                                 }
                                                 else
                                                 {
                                                     componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                                                 }
 
-                                                iNumCombo++;
+                                                iIndex++;
                                             }
-                                            else
+                                            else if (componente is Button)
                                             {
-                                                componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                                if (iIndex < Dgv_Informacion.CurrentRow.Cells.Count)
+                                                {
+                                                    string sVar1 = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                                    if (sVar1 == "0")
+                                                    {
+                                                        componente.Text = "Desactivado";
+                                                        componente.BackColor = Color.Red;
+                                                    }
+                                                    else if (sVar1 == "1")
+                                                    {
+                                                        componente.Text = "Activado";
+                                                        componente.BackColor = Color.Green;
+                                                    }
+                                                    componente.Enabled = false;
+                                                    iIndex++;
+                                                }
                                             }
-
-                                            iIndex++;
                                         }
-                                        if (componente is Button)
+                                        else
                                         {
-                                            // Configura los botones según el estado del registro
-                                            string sVar1 = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
-                                            if (sVar1 == "0")
-                                            {
-                                                componente.Text = "Desactivado";
-                                                componente.BackColor = Color.Red;
-                                            }
-                                            if (sVar1 == "1")
-                                            {
-                                                componente.Text = "Activado";
-                                                componente.BackColor = Color.Green;
-                                            }
-                                            componente.Enabled = false; // Deshabilita el botón
+                                            // Si iIndex está fuera del rango de las celdas, se sale del bucle
+                                            break;
                                         }
                                     }
                                 }
-                                else // Si no hay registros, deshabilita los botones de navegación y edición
+                                else
                                 {
                                     Btn_Anterior.Enabled = false;
                                     Btn_Siguiente.Enabled = false;
@@ -212,7 +285,6 @@ namespace Capa_Vista_Navegador
                             }
                             else
                             {
-                                // Si el número de alias no coincide con el número de campos, muestra un mensaje de error y sale de la aplicación
                                 if (NumeroAlias() < logic.ContarCampos(sTablaPrincipal))
                                 {
                                     DialogResult drValidacion = MessageBox.Show(sEstadoOK + "El número de Alias asignados es menor que el requerido \n Solucione este error para continuar...", "Verificación de requisitos", MessageBoxButtons.OK);
@@ -237,7 +309,6 @@ namespace Capa_Vista_Navegador
                     }
                     else
                     {
-                        // Muestra un mensaje de error si el estado de la sTablaPrincipal no es correcto y sale de la aplicación
                         DialogResult drValidacion = MessageBox.Show(sEstadoOK + "\n Solucione este error para continuar...", "Verificación de requisitos", MessageBoxButtons.OK);
                         if (drValidacion == DialogResult.OK)
                         {
@@ -247,7 +318,6 @@ namespace Capa_Vista_Navegador
                 }
                 else
                 {
-                    // Muestra un mensaje de error si la sTablaPrincipal no existe y sale de la aplicación
                     DialogResult drValidacion = MessageBox.Show(sTablaOK + "\n Solucione este error para continuar...", "Verificación de requisitos", MessageBoxButtons.OK);
                     if (drValidacion == DialogResult.OK)
                     {
@@ -255,13 +325,7 @@ namespace Capa_Vista_Navegador
                     }
                 }
             }
-            else
-            {
-                // Si la sTablaPrincipal es "def", no realiza ninguna acción
-            }
         }
-
-
         //-----------------------------------------------Funciones-----------------------------------------------//
 
         //******************************************** CODIGO HECHO POR DIEGO MARROQUIN ***************************** 
@@ -291,9 +355,61 @@ namespace Capa_Vista_Navegador
             // Añadir la relación foránea a la lista
             relacionesForaneas.Add(new Tuple<string, string, string, string>(sTablaRela, sCampoDescri, sColumnaFora, sColumnaPrimariaRelaciona));
         }
+        public void AsignarVarios(bool activar)
+        {
+            activarIngresarVarios = activar; // Solo cambia el estado de la variable
+        }
+
+        public void AsignarTablaVarios(string nombreTabla)
+        {
+            nombreTablaVarios = nombreTabla;
+            Console.WriteLine("Nombre de la tabla almacenado: " + nombreTabla);
+        }
 
 
-        //******************************************** CODIGO HECHO POR DIEGO MARROQUIN ***************************** 
+
+        // Método para añadir un componente invisible con un valor específico
+        public void AñadirComponenteInvisible(string nombreComponente, string valorClave, string valorDisplay)
+        {
+            // Crear un nuevo componente invisible con ambos valores
+            var componente = new ComponenteInvisible(valorClave, valorDisplay);
+
+            // Agregar al diccionario
+            componentesInvisibles[nombreComponente] = componente;
+
+            Console.WriteLine($"Componente invisible '{nombreComponente}' añadido con ValorClave '{valorClave}' y ValorDisplay '{valorDisplay}'.");
+        }
+        public void AsignarReglaOperacion(
+           string componenteOrigen,
+           string tablaComparacion,
+           string campoComparacion,
+           string condicion,
+           string accion,
+           string tablaInsercion,
+           string valorClavePrimaria,
+           Dictionary<string, string> mapeoComponentesCampos // Diccionario de mapeo
+       )
+        {
+            // Crear la nueva regla y asignar sus propiedades
+            ReglaOperacion nuevaRegla = new ReglaOperacion
+            {
+                ComponenteOrigen = componenteOrigen,
+                TablaComparacion = tablaComparacion,
+                CampoComparacion = campoComparacion,
+                Condicion = condicion,
+                Accion = accion,
+                TablaInsercion = tablaInsercion,
+                ClavePrimaria = valorClavePrimaria,
+                MapeoComponentesCampos = mapeoComponentesCampos // Asignar el diccionario de mapeo
+            };
+
+            // Agregar la regla a la lista de reglas
+            listaReglas.Add(nuevaRegla);
+
+            Console.WriteLine($"Regla condicional agregada: si '{componenteOrigen}' es '{condicion}' que '{campoComparacion}' en '{tablaComparacion}', hacer '{accion}' en '{tablaInsercion}' con los mapeos {string.Join(", ", mapeoComponentesCampos)}.");
+        }
+       
+
 
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ ***************************** 
         public void ObtenerIdAplicacion(string sIdAplicacion)
@@ -359,7 +475,18 @@ namespace Capa_Vista_Navegador
             arrAlias.CopyTo(arrAliasCampos, 0); // Cambiado aliasC a arrAliasCampos
         }
 
-        //******************************************** CODIGO HECHO POR PABLO FLORES ***************************** 
+        public void AsignarAliasExtras(string tabla, string[] listadecampos)
+        {
+            // Guarda la lista de campos (alias) en el diccionario, asociándola con la tabla correspondiente
+            if (!aliasPorTabla.ContainsKey(tabla))
+            {
+                aliasPorTabla.Add(tabla, listadecampos);
+            }
+            else
+            {
+                aliasPorTabla[tabla] = listadecampos; // Actualiza si ya existe
+            }
+        }
 
         public void AsignarAyuda(string sAyudar)
         {
@@ -432,10 +559,24 @@ namespace Capa_Vista_Navegador
             sNombreFormulario = sNom; 
             Txt_Tabla.Text = sNombreFormulario; 
         }
+        public void AsignarTablaComponentes(List<string> lstTablas)
+        {
+            lstTablasParaComponentes = lstTablas;
+        }
 
-        //******************************************** CODIGO HECHO POR JOSUE CACAO ***************************** 
+        public void AsignarAsociativas(List<Tuple<string, List<string>>> lstTablasAsociativas)
+        {
+            foreach (var tupla in lstTablasAsociativas)
+            {
+                string nombreTabla = tupla.Item1;  // Nombre de la tabla asociativa
+                List<string> columnasAsociadas = tupla.Item2;  // Lista de nombres de columnas y componentes
 
-       public void AsignarComboConTabla(string sTablaPrincipal, string sCampoClave, string sCampoDisplay, int iModo)
+                // Guardar directamente las columnas asociadas sin procesar componentes
+                diccionarioTablasAsociativas[nombreTabla] = columnasAsociadas; // Guarda ambas, campo y componente
+            }
+        }
+
+        public void AsignarComboConTabla(string sTablaPrincipal, string sCampoClave, string sCampoDisplay, int iModo)
         {
             // Verifica si la sTablaPrincipal existe
             string sTablaOK = logic.TestTabla(sTablaPrincipal);
@@ -471,11 +612,27 @@ namespace Capa_Vista_Navegador
 
         public void AsignarComboConLista(int iPos, string sLista)
         {
-            iPosicionCombo = iPos - 1; 
-            LimpiarLista(sLista);
-            arrModoCampoCombo[iNumeroCombos] = 0; 
+            iPosicionCombo = iPos - 1;
+            List<string> listaOpciones = sLista.Split(',').ToList(); // Convierte la cadena a una lista de opciones
+            combosPorPosicion[iPosicionCombo] = listaOpciones; // Almacena la lista de opciones en el diccionario
+            arrModoCampoCombo[iNumeroCombos] = 0;
             iNumeroCombos++;
         }
+        void CrearComboBoxConOpciones(string sNom, Point location, List<string> opciones)
+        {
+            ComboBox cb = new ComboBox();
+            cb.Width = (int)(cb.Width * 1.2);
+            cb.Height = (int)(cb.Height * 1.2);
+            cb.Location = location;
+            cb.Name = sNom;
+
+            // Asigna las opciones al ComboBox
+            cb.DataSource = opciones;
+
+            // Añadir el ComboBox al formulario
+            this.Controls.Add(cb);
+        }
+
 
         void LimpiarLista(string sCadena)
         {
@@ -500,7 +657,53 @@ namespace Capa_Vista_Navegador
             }
         }
 
+        public void AsignarOperacionEnTiempoReal(string componenteOrigen1, string componenteOrigen2, string operacion, string componenteDestino)
+        {
+            // Intentar obtener los valores con y sin prefijo "extra_"
+            string valorOrigen1 = ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1);
+            string valorOrigen2 = ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2);
 
+            // Buscar el componente destino
+            Control compDest = this.Controls.Find(componenteDestino, true).FirstOrDefault()
+                    ?? this.Controls.Find("extra_" + componenteDestino, true).FirstOrDefault();
+
+            Console.WriteLine($"TIEMPO REAL: valorOrigen1 = {valorOrigen1}, valorOrigen2 = {valorOrigen2}");
+
+            // Verificar si los valores se obtuvieron correctamente
+           // if (string.IsNullOrEmpty(valorOrigen1) || string.IsNullOrEmpty(valorOrigen2) || compDest == null)
+           // {
+             //   Console.WriteLine($"Error: Uno o más componentes no fueron encontrados o están vacíos. Verifique los nombres de los componentes.");
+              //  return;
+           // }
+
+            // Suscribirse a los eventos de cambio de ambos componentes origen
+            Control comp1 = this.Controls.Find(componenteOrigen1, true).FirstOrDefault() ?? this.Controls.Find("extra_" + componenteOrigen1, true).FirstOrDefault();
+            Control comp2 = this.Controls.Find(componenteOrigen2, true).FirstOrDefault() ?? this.Controls.Find("extra_" + componenteOrigen2, true).FirstOrDefault();
+
+            if (comp1 != null)
+            {
+                if (comp1 is TextBox tb1)
+                {
+                    tb1.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
+                }
+                else if (comp1 is ComboBox cb1)
+                {
+                    cb1.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
+                }
+            }
+
+            if (comp2 != null)
+            {
+                if (comp2 is TextBox tb2)
+                {
+                    tb2.TextChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
+                }
+                else if (comp2 is ComboBox cb2)
+                {
+                    cb2.SelectedIndexChanged += (sender, e) => EjecutarOperacionTiempoReal(ObtenerValorActualizar(componenteOrigen1) ?? ObtenerValorActualizar("extra_" + componenteOrigen1), ObtenerValorActualizar(componenteOrigen2) ?? ObtenerValorActualizar("extra_" + componenteOrigen2), operacion, compDest);
+                }
+            }
+        }
         void LimpiarListaItems()
         {
             for (int iIndex = 0; iIndex < arrListaItems.Length; iIndex++) 
@@ -508,9 +711,344 @@ namespace Capa_Vista_Navegador
                 arrListaItems[iIndex] = ""; 
             }
         }
-        //******************************************** CODIGO HECHO POR SEBASTIAN LETONA ***************************** 
+        private void EjecutarOperacionTiempoReal(string valor1, string valor2, string operacion, Control componenteDestino)
+        {
+            if (string.IsNullOrEmpty(valor1) || string.IsNullOrEmpty(valor2))
+            {
+                Console.WriteLine("Error: Ambos valores deben estar presentes antes de realizar la operación.");
+                return;
+            }
+            Console.WriteLine($"Valores para operación: valor1 = {valor1}, valor2 = {valor2}, operación = {operacion}");
+            try
+            {
+                decimal resultado = 0;
+                decimal num1 = decimal.Parse(valor1);
+                decimal num2 = decimal.Parse(valor2);
+                Console.WriteLine("NUMEROS: "+num1+" "+ num2);
 
-        //******************************************** CODIGO HECHO POR JORGE AVILA***************************** 
+                switch (operacion.ToLower())
+                {
+                    case "sumar":
+                        resultado = num1 + num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
+                        break;
+                    case "restar":
+                        resultado = num1 - num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
+                        break;
+                    case "multiplicar":
+                        resultado = num1 * num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
+                        break;
+                    case "dividir":
+                        if (num2 == 0)
+                        {
+                            Console.WriteLine("Error: No se puede dividir entre cero.");
+
+                            return;
+                        }
+                        resultado = num1 / num2;
+                        Console.WriteLine($"Resultado de la operación {operacion}: {resultado}");
+
+                        break;
+                    default:
+                        Console.WriteLine("Operación no reconocida.");
+                        return;
+                }
+
+                // Actualizar el valor del componente destino
+                if (componenteDestino is TextBox tb)
+                {
+                    Console.WriteLine($"Actualizando TextBox con resultado: {resultado}");
+                    tb.Text = resultado.ToString();
+                }
+                else if (componenteDestino is Label lbl)
+                {
+                    Console.WriteLine($"Actualizando Label con resultado: {resultado}");
+                    lbl.Text = resultado.ToString();
+                }
+                else
+                {
+                    Console.WriteLine("Error: El componente destino no es compatible.");
+                }
+
+                Console.WriteLine($"Operación {operacion} realizada. Resultado: {resultado}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al realizar la operación: {ex.Message}");
+            }
+        }
+
+        public bool EjecutarReglasCondicionales()
+        {
+            try
+            {
+                foreach (var regla in listaReglas)
+                {
+                    // Obtener el valor del componente origen para la condición
+                    string valorComponenteOrigen = ObtenerValorActualizar(regla.ComponenteOrigen);
+                    Console.WriteLine("VALOR PARA CONDICION COMPONENTE ORIGEN: " + valorComponenteOrigen);
+
+                    if (string.IsNullOrEmpty(valorComponenteOrigen))
+                    {
+                        Console.WriteLine($"Error: El valor en '{regla.ComponenteOrigen}' no ha sido proporcionado.");
+                        continue;
+                    }
+                    decimal valorComponente = decimal.Parse(valorComponenteOrigen);
+
+                    // Obtener el valor de la clave primaria
+                    string valorClavePrimaria = ObtenerValorActualizar(regla.ClavePrimaria);
+                    Console.WriteLine("VALOR CLAVE PRIMARIA: " + valorClavePrimaria);
+
+                    if (string.IsNullOrEmpty(valorClavePrimaria))
+                    {
+                        Console.WriteLine($"Error: No se encontró un valor para la clave primaria '{regla.ClavePrimaria}'.");
+                        continue;
+                    }
+
+                    // Obtener el valor del campo de comparación desde la tabla según la clave primaria
+                    string valorCampoComparacion = logic.ObtenerValorCampo(
+                        regla.TablaComparacion,
+                        regla.CampoComparacion,
+                        logic.ObtenerClavePrimaria(regla.TablaComparacion),
+                        valorClavePrimaria);
+
+                    Console.WriteLine("VALOR COMPARACION: " + valorCampoComparacion);
+                    if (string.IsNullOrEmpty(valorCampoComparacion))
+                    {
+                        Console.WriteLine($"Error: No se encontró el valor en '{regla.CampoComparacion}' de la tabla '{regla.TablaComparacion}'.");
+                        continue;
+                    }
+                    decimal valorComparacion = decimal.Parse(valorCampoComparacion);
+
+                    // Evaluar la condición
+                    bool condicionCumplida = EvaluarCondicion(valorComponente, regla.Condicion, valorComparacion);
+                    if (!condicionCumplida)
+                    {
+                        Console.WriteLine("La condición no se cumple. Operación omitida.");
+                        continue;
+                    }
+
+                    // Ejecutar el INSERT si se cumple la condición
+                    if (regla.Accion == "insertar")
+                    {
+                        var valoresComponentes = new Dictionary<string, string>();
+
+                        foreach (var map in regla.MapeoComponentesCampos)
+                        {
+                            string valorComponenteInsertar = ObtenerValorActualizar(map.Key);
+                            if (!string.IsNullOrEmpty(valorComponenteInsertar))
+                            {
+                                valoresComponentes[map.Key] = valorComponenteInsertar;
+                            }
+                        }
+
+                        if (valoresComponentes.Count > 0)
+                        {
+                            string insertQuery = logic.RealizarInsercionCondicional(regla.TablaInsercion, valoresComponentes, regla.MapeoComponentesCampos);
+                            
+                            lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + regla.TablaInsercion, regla.TablaInsercion, sIdAplicacion);
+                            if (insertQuery != null)
+                            {
+                                lstQueries2.Add(insertQuery); // Añade la consulta a la lista si es válida
+                                MessageBox.Show("Se asignó un registro en " + regla.TablaInsercion);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Error al generar la consulta de inserción. No se completará la operación.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al ejecutar las reglas condicionales: {ex.Message}");
+                return false;
+            }
+        }
+        private bool EvaluarCondicion(decimal valorComponente, string condicion, decimal valorComparacion)
+        {
+            switch (condicion)
+            {
+                case "menor":
+                    return valorComponente < valorComparacion;
+                case "mayor":
+                    return valorComponente > valorComparacion;
+                case "igual":
+                    return valorComponente == valorComparacion;
+                default:
+                    Console.WriteLine("Condición no reconocida.");
+                    return false;
+            }
+        }
+
+        List<OperacionCampo> listaOperacionesIndividuales = new List<OperacionCampo>();
+        public void AsignarOperacionVarios(string campoOrigen, string tablaDestino, string campoDestino, string operacion, string campoCondicional, string valorCondicional)
+        {
+            var nuevaOperacion = new OperacionCampo(campoOrigen, tablaDestino, campoDestino, operacion, campoCondicional, valorCondicional);
+            listaOperaciones.Add(nuevaOperacion);
+
+            Console.WriteLine($"Operación '{operacion}' asignada entre componente {campoOrigen} y campo {campoDestino} de {tablaDestino} con condición en '{campoCondicional}' = '{valorCondicional}'.");
+        }
+
+        public void AsignarOperacionIndividual(string campoOrigen, string tablaDestino, string campoDestino, string operacion, string campoCondicional, string valorCondicional)
+        {
+            var nuevaOperacion = new OperacionCampo(campoOrigen, tablaDestino, campoDestino, operacion, campoCondicional, valorCondicional);
+            listaOperacionesIndividuales.Add(nuevaOperacion);
+            Console.WriteLine($"Operación (Individual) '{operacion}' asignada entre componente {campoOrigen} y campo {campoDestino} de {tablaDestino} con condición en '{campoCondicional}' = '{valorCondicional}'.");
+        }
+        private string GenerarConsultaOperacion(string valorOrigen, string valorDestino, OperacionCampo operacion, string valorCondicional)
+        {
+            string tipoCampoDestino = logic.ObtenerTipoCampo(operacion.TablaDestino, operacion.CampoDestino);
+            return tipoCampoDestino.Contains("int")
+                ? GenerarQueryOperacionEnteros(valorOrigen, valorDestino, operacion, valorCondicional)
+                : GenerarQueryOperacionDecimales(valorOrigen, valorDestino, operacion, valorCondicional);
+        }
+        public bool GenerarConsultasOperacionesIndividuales()
+        {
+            try
+            {
+                foreach (var operacion in listaOperacionesIndividuales)
+                {
+                    string valorOrigen = ObtenerValorActualizar(operacion.CampoOrigen);
+                    string valorCondicional = ObtenerValorActualizar(operacion.ValorCondicional);
+                    string valorDestino = logic.ObtenerValorCampo(operacion.TablaDestino, operacion.CampoDestino, operacion.CampoCondicional, valorCondicional);
+                    string query = GenerarConsultaOperacion(valorOrigen, valorDestino, operacion, valorCondicional);
+
+                    if (string.IsNullOrEmpty(query))
+                    {
+                        Console.WriteLine("Error en operación: El resultado no puede ser negativo o es nulo.");
+                        return false;
+                    }
+
+                    lstQueries2.Add(query);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al generar consultas de operación individual: {ex.Message}");
+                return false;
+            }
+            return true;
+        }
+
+
+        private string GenerarQueryOperacionEnteros(string valorOrigen, string valorDestino, OperacionCampo operacion, string valorCondicional)
+        {
+            int valorNumOrigen = int.Parse(valorOrigen);
+            int valorNumDestino = string.IsNullOrEmpty(valorDestino) ? 0 : int.Parse(valorDestino);
+            int resultadoOperacion = 0;
+
+            switch (operacion.Operacion)
+            {
+                case "copiar":
+                    resultadoOperacion = valorNumOrigen;
+                    break;
+                case "sumar":
+                    resultadoOperacion = valorNumDestino + valorNumOrigen;
+                    break;
+                case "restar":
+                    resultadoOperacion = valorNumDestino - valorNumOrigen;
+                    if (resultadoOperacion < 0)
+                    {
+                        Console.WriteLine("Error: El resultado de la resta no puede ser negativo.");
+                        return null;
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Operación no reconocida.");
+                    return null;
+            }
+
+            return $"UPDATE {operacion.TablaDestino} SET {operacion.CampoDestino} = {resultadoOperacion} WHERE {operacion.CampoCondicional} = '{valorCondicional}' AND estado = 1;";
+        }
+
+        private string GenerarQueryOperacionDecimales(string valorOrigen, string valorDestino, OperacionCampo operacion, string valorCondicional)
+        {
+            decimal valorDecOrigen = decimal.Parse(valorOrigen);
+            decimal valorDecDestino = string.IsNullOrEmpty(valorDestino) ? 0 : decimal.Parse(valorDestino);
+            decimal resultadoOperacionDecimal = 0;
+
+            switch (operacion.Operacion)
+            {
+                case "copiar":
+                    resultadoOperacionDecimal = valorDecOrigen;
+                    break;
+                case "sumar":
+                    resultadoOperacionDecimal = valorDecDestino + valorDecOrigen;
+                    break;
+                case "restar":
+                    resultadoOperacionDecimal = valorDecDestino - valorDecOrigen;
+                    break;
+                default:
+                    Console.WriteLine("Operación no reconocida.");
+                    return null;
+            }
+
+            return $"UPDATE {operacion.TablaDestino} SET {operacion.CampoDestino} = {resultadoOperacionDecimal} WHERE {operacion.CampoCondicional} = '{valorCondicional}' AND estado = 1;";
+        }
+
+
+        private string ObtenerValorActualizar(string campoNombre)
+        {
+            // Primero intenta encontrar el valor en los componentes invisibles
+            if (componentesInvisibles.ContainsKey(campoNombre))
+            {
+                Console.WriteLine($"Componente invisible encontrado para {campoNombre}");
+                var componenteInvisible = componentesInvisibles[campoNombre];
+                return componenteInvisible.ValorClave; // Retorna el valor clave del componente invisible
+            }
+
+            // Si no está en los componentes invisibles, busca en los controles visibles del formulario
+            Console.WriteLine($"Buscando componente con prefijo 'extra_': extra_{campoNombre}");
+            Control componente = this.Controls.Find("extra_" + campoNombre, true).FirstOrDefault();
+          
+            // Si no se encuentra con 'extra_', intenta con el nombre original
+            if (componente == null)
+            {
+                componente = this.Controls.Find(campoNombre, true).FirstOrDefault();
+            }
+
+            // Si el componente aún no se encuentra, devuelve un mensaje de error y null
+            if (componente == null)
+            {
+                Console.WriteLine($"Error: No se encontró un componente con el nombre '{campoNombre}' o 'extra_{campoNombre}'.");
+                return null;
+            }
+
+            // Obtener el valor dependiendo del tipo de componente
+            if (componente is ComboBox cb)
+            {
+                return cb.SelectedValue?.ToString() ?? "";  // Retorna el valor seleccionado en el ComboBox
+            }
+            else if (componente is DateTimePicker dtp)
+            {
+                return dtp.Value.ToString("yyyy-MM-dd"); // Formato de fecha
+            }
+            else if (componente is TextBox tb)
+            {
+                return tb.Text; // Retorna el texto de un TextBox
+            }
+            else if (componente is Button btn)
+            {
+                return (btn.Text == "Activado") ? "1" : "0"; // Retorna "1" si el botón está activado, "0" si está desactivado
+            }
+
+            return "";
+        }
+
+        // Función para verificar si un valor es numérico
+        private bool EsNumero(string valor)
+        {
+            return int.TryParse(valor, out _);
+        }
+
         void CreaComponentes()
         {
             // Obtiene los campos, tipos de datos y llaves de la sTablaPrincipal
@@ -523,9 +1061,9 @@ namespace Capa_Vista_Navegador
 
             // Variables para gestionar la posición
             int columnaActual = 0; // Contador de columna
-            int maxFilasPorColumna = 3; // Número máximo de filas antes de cambiar de columna
+            int maxFilasPorColumna = 5; // Número máximo de filas antes de cambiar de columna
             int posX = 50; // Posición inicial en X
-            int posY = 150; // Posición inicial en Y
+            int posY = 100; // Posición inicial en Y
             int desplazamientoY = 60; // Espacio vertical entre controles
 
             while (iIndex < iFin)
@@ -545,7 +1083,7 @@ namespace Capa_Vista_Navegador
                 lb.Text = arrAliasCampos[iIndex];
                 lb.Location = new Point(posX, currentPosY);
                 lb.Name = "lb_" + sCampos[iIndex];
-                lb.Font = new Font(fFuenteLabels.FontFamily, fFuenteLabels.Size * 1.3f, FontStyle.Bold | fFuenteLabels.Style);
+                lb.Font = new Font("Times New Roman", fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
                 lb.ForeColor = cColorFuente;
                 lb.AutoSize = true;
                 this.Controls.Add(lb);
@@ -553,21 +1091,230 @@ namespace Capa_Vista_Navegador
                 // Dependiendo del tipo de campo, crea el componente adecuado
                 string nombreComponente = sCampos[iIndex];
                 Point controlPosition = new Point(posX, currentPosY + lb.Height + 5); // Posición del control debajo del Label
+                if (combosPorPosicion.ContainsKey(iIndex))
+                {
+                    // Crear el ComboBox con las opciones especificadas
+                    CrearComboBoxConOpciones(sCampos[iIndex], controlPosition, combosPorPosicion[iIndex]);
+                }
+                else
+                {
+                    switch (sTipos[iIndex])
+                    {
+                        case "int":
+                            arrTipoCampos[iIndex] = "Num";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearTextBoxNumerico(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
 
-                switch (sTipos[iIndex])
+                                // Cambiar DataTable por Dictionary
+                                Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
+
+                                CrearComboBox(nombreComponente, controlPosition);
+
+                            }
+                            break;
+
+                        case "varchar":
+                        case "text":
+                            arrTipoCampos[iIndex] = "Text";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearTextBoxVarchar(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
+                                string campoDisplay = logic.DetectarCampoDisplayRelacionada(sTablaPrincipal, sCampos[iIndex]);
+
+                                // Cambiar DataTable por Dictionary
+                                Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
+
+                                CrearComboBox(nombreComponente, controlPosition);
+
+                            }
+                            break;
+
+                        case "date":
+                        case "datetime":
+                            arrTipoCampos[iIndex] = "Date";
+                            if (sLlaves[iIndex] != "MUL" && sLlaves[iIndex] != "PRI")
+                            {
+                                CrearDateTimePicker(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+
+
+                                CrearComboBox(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+
+                            }
+                            break;
+
+                        case "time":
+                            arrTipoCampos[iIndex] = "Time";
+                            CrearCampoHora(nombreComponente, controlPosition);
+                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            break;
+
+                        case "float":
+                        case "decimal":
+                        case "double":
+                            arrTipoCampos[iIndex] = "Decimal";
+                            CrearCampoDecimales(nombreComponente, controlPosition);
+                            Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            break;
+
+                        case "tinyint":
+                            arrTipoCampos[iIndex] = "Bool";
+                            if (sLlaves[iIndex] != "MUL")
+                            {
+                                CrearBotonEstado(nombreComponente, controlPosition);
+                                Console.WriteLine("COMPONENTE NOMBRE: " + nombreComponente);
+                            }
+                            else
+                            {
+                                // Si es clave foránea, podrías manejarlo aquí si es necesario
+                            }
+                            break;
+
+                        default:
+                            if (!string.IsNullOrEmpty(sTipos[iIndex]))
+                            {
+                                MessageBox.Show($"La tabla {sTablaPrincipal} posee un campo {sTipos[iIndex]}, este tipo de dato no es reconocido por el navegador.", "Verificación de requisitos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            break;
+                    }
+                }
+                iNumeroCampos++;
+                iIndex++;
+            }
+        }
+        //******************************************** CODIGO HECHO POR JORGE AVILA***************************** 
+
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
+        void CrearComponentesExtra(string tabla)
+        {
+            string[] sCampos = logic.Campos(tabla);
+            string[] sTipos = logic.Tipos(tabla);
+            string[] sLlaves = logic.Llaves(tabla);
+
+            // Verificar si la tabla tiene alias definidos en el diccionario
+            if (!aliasPorTabla.ContainsKey(tabla))
+            {
+                MessageBox.Show($"No hay alias definidos para la tabla: {tabla}");
+                return;
+            }
+
+            // Obtener los alias de los campos para esta tabla
+            string[] alias = aliasPorTabla[tabla];
+
+            // Solo accede y configura la DataGridView de IngresarVarios si activarIngresarVarios es true
+            if (activarIngresarVarios)
+            {
+                // Accede a la DataGridView del UserControl IngresarVarios
+                DataGridView dgvExtras = IngresarVariosControl.DataGridViewInformacionExtra;
+
+                // Agregar columnas a la DataGridView si no existen ya
+                if (dgvExtras.Columns.Count == 0)
+                {
+                    foreach (string aliasCampo in alias)
+                    {
+                        // Añadir columnas con los nombres de los alias
+                        dgvExtras.Columns.Add(aliasCampo, aliasCampo);
+                    }
+                }
+            }
+            // El resto del código para crear los componentes y etiquetas
+            int iIndex = 0;
+            int desplazamientoY = 60;  // Espacio vertical entre controles
+            int desplazamientoX = 200; // Espacio horizontal entre columnas
+
+            // Posiciones iniciales basadas en las variables globales
+            int posX = globalPosX + (globalColumna * desplazamientoX);
+            int posY = globalPosY;
+
+            // Crear un Label para indicar los campos adicionales
+            Label lbl = new Label();
+            lbl.Text = "Campos Adicionales para: " + tabla;
+            lbl.Location = new Point(globalPosX + 50, posY);
+            lbl.Font = new Font("Times New Roman", fFuenteLabels.Size * 1.2f, FontStyle.Bold | fFuenteLabels.Style);
+            lbl.ForeColor = cColorFuente;
+            lbl.AutoSize = true;
+            this.Controls.Add(lbl);
+
+            posY += lbl.Height + 10; // Actualizar posY para colocar controles debajo del Label
+
+            int itemsEnColumna = 0; // Contador de ítems en la columna actual
+
+            // Iterar sobre todos los campos de la tabla
+            for (int i = 0; i < sCampos.Length; i++)
+            {
+                // Verificar si el campo es autoincremental o clave primaria
+
+                // Buscar si el campo actual tiene un alias asignado en la lista de alias
+                string aliasActual = alias.FirstOrDefault(a => a == sCampos[i]);
+                if (aliasActual == null)
+                {
+                    continue; // Si el campo no está en los alias, no se crea el componente
+                }
+
+                // Calcular la posición Y actual
+                int currentPosY = posY + (itemsEnColumna * desplazamientoY);
+
+                // Si la posición Y excede la altura del formulario, pasar a la siguiente columna
+                if (currentPosY + desplazamientoY > this.Height - 100) // Ajuste para margen inferior
+                {
+                    globalColumna++;
+                    posX = globalPosX + (globalColumna * desplazamientoX);
+                    posY = globalPosY + lbl.Height + 10;
+                    currentPosY = posY;
+                    itemsEnColumna = 0;
+                }
+
+                // Crear el Label para el campo actual
+                Label lb = new Label();
+                lb.Text = aliasActual;
+                lb.Location = new Point(posX, currentPosY);
+                lb.Name = "lb_extra_" + sCampos[i];
+                lb.Font = new Font(fFuenteLabels.FontFamily, fFuenteLabels.Size * 1.1f, FontStyle.Bold | fFuenteLabels.Style);
+                lb.ForeColor = cColorFuente;
+                lb.AutoSize = true;
+                this.Controls.Add(lb);
+
+                // Crear el control asociado debajo del Label
+                Point controlPosition = new Point(posX, currentPosY + lb.Height + 5); // Ajuste para que se coloque justo debajo del Label
+
+                string nombreComponente = "extra_" + sCampos[i];
+
+                switch (sTipos[i])
                 {
                     case "int":
                         arrTipoCampos[iIndex] = "Num";
-                        if (sLlaves[iIndex] != "MUL")
+                        if (sLlaves[i] != "MUL")
                         {
                             CrearTextBoxNumerico(nombreComponente, controlPosition);
                         }
                         else
                         {
-                            string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
-
-                            dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
+                            // Es una clave foránea, crear ComboBox
+                            string tablaRelacionada = logic.DetectarTablaRelacionada(tabla, sCampos[iIndex]);
+                            string campoClave = logic.DetectarClaveRelacionada(tabla, sCampos[iIndex]);
+                            string campoDisplay = logic.DetectarCampoDisplayRelacionada(tabla, sCampos[iIndex]);
+                            Console.WriteLine($"Tabla relacionada: {tablaRelacionada}, Campo Clave: {campoClave}, Campo Display: {campoDisplay}");
+                            Console.WriteLine($"Tabla relacionada: {tabla}");
+                            // Cambiar DataTable por Dictionary
+                            Dictionary<string, string> dicItems = logic.Items(tablaRelacionada, campoClave, campoDisplay);
 
                             CrearComboBox(nombreComponente, controlPosition);
                         }
@@ -576,17 +1323,12 @@ namespace Capa_Vista_Navegador
                     case "varchar":
                     case "text":
                         arrTipoCampos[iIndex] = "Text";
-                        if (sLlaves[iIndex] != "MUL")
+                        if (sLlaves[i] != "MUL")
                         {
                             CrearTextBoxVarchar(nombreComponente, controlPosition);
                         }
                         else
                         {
-                            string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
-
-                            dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
-
                             CrearComboBox(nombreComponente, controlPosition);
                         }
                         break;
@@ -594,19 +1336,7 @@ namespace Capa_Vista_Navegador
                     case "date":
                     case "datetime":
                         arrTipoCampos[iIndex] = "Date";
-                        if (sLlaves[iIndex] != "MUL")
-                        {
-                            CrearDateTimePicker(nombreComponente, controlPosition);
-                        }
-                        else
-                        {
-                            string tablaRelacionada = logic.DetectarTablaRelacionada(sTablaPrincipal, sCampos[iIndex]);
-                            string campoClave = logic.DetectarClaveRelacionada(sTablaPrincipal, sCampos[iIndex]);
-
-                            dicItems = logic.Items(tablaRelacionada, campoClave, campoClave);
-
-                            CrearComboBox(nombreComponente, controlPosition);
-                        }
+                        CrearDateTimePicker(nombreComponente, controlPosition);
                         break;
 
                     case "time":
@@ -623,67 +1353,26 @@ namespace Capa_Vista_Navegador
 
                     case "tinyint":
                         arrTipoCampos[iIndex] = "Bool";
-                        if (sLlaves[iIndex] != "MUL")
-                        {
-                            CrearBotonEstado(nombreComponente, controlPosition);
-                        }
-                        else
-                        {
-                            // Si es clave foránea, podrías manejarlo aquí si es necesario
-                        }
+                        CrearBotonEstado(nombreComponente, controlPosition);
                         break;
 
                     default:
-                        if (!string.IsNullOrEmpty(sTipos[iIndex]))
+                        if (!string.IsNullOrEmpty(sTipos[i]))
                         {
-                            MessageBox.Show($"La tabla {sTablaPrincipal} posee un campo {sTipos[iIndex]}, este tipo de dato no es reconocido por el navegador.", "Verificación de requisitos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show($"El tipo de dato '{sTipos[i]}' no es soportado para el campo '{sCampos[i]}'.", "Tipo de dato no soportado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                         break;
                 }
 
-                iNumeroCampos++;
-                iIndex++;
+                itemsEnColumna++;
             }
+
+            // Resetear la posición de columna y fila para la próxima tabla si es necesario
+            globalColumna++;
+            globalFila = 0;
         }
 
-
-        void CrearTextBoxVarchar(String sNom, Point location)
-        {
-            TextBox tb = new TextBox();
-            tb.Width = (int)(tb.Width * 1.2);
-            tb.Height = (int)(tb.Height * 1.2);
-            tb.Location = location;
-            tb.Name = sNom;
-            this.Controls.Add(tb);
-            tb.KeyPress += ParaValidarVarchar_KeyPress; // Función para validar entrada de texto
-        }
-        void CrearComboBox(String sNom, Point location)
-        {
-            // Se obtienen los elementos para el ComboBox
-            if (arrTablaCombo[iNumeroCombosAux] != null)
-            {
-                dicItems = logic.Items(arrTablaCombo[iNumeroCombosAux], arrCampoCombo[iNumeroCombosAux], arrCampoDisplayCombo[iNumeroCombosAux]);
-            }
-            if (iNumeroCombos > iNumeroCombosAux) { iNumeroCombosAux++; }
-
-            ComboBox cb = new ComboBox(); // Crea un nuevo ComboBox
-            cb.Width = (int)(cb.Width * 1.2);
-            cb.Height = (int)(cb.Height * 1.2);
-            cb.Location = location; // Establece la ubicación del ComboBox
-            cb.Name = sNom; // Establece el nombre del ComboBox
-
-            // Enlaza los datos al ComboBox
-            BindingSource bs = new BindingSource();
-            bs.DataSource = dicItems;
-            cb.DataSource = bs;
-            cb.DisplayMember = "Value"; // Muestra el valor en el ComboBox
-            cb.ValueMember = "Key";     // Almacena la clave seleccionada
-
-            this.Controls.Add(cb); // Añade el ComboBox al formulario
-                                   // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
-        }
-
-        //******************************************** CODIGO HECHO POR JORGE AVILA***************************** 
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
 
         //******************************************** CODIGO HECHO POR DIEGO MARROQUIN*****************************
 
@@ -731,37 +1420,34 @@ namespace Capa_Vista_Navegador
             this.Controls.Add(btn); // Añade el botón al formulario
                                     // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
         }
+
         // Función que crea un TextBox para números y lo añade al formulario
-        void CrearTextBoxNumerico(String sNom)
+        void CrearTextBoxNumerico(String sNom, Point location)
         {
-            TextBox tb = new TextBox();
+            TextBox tb = new TextBox(); // Crea un nuevo TextBox
             tb.Width = (int)(tb.Width * 1.2);
-            tb.Height = (int)(tb.Height * 1.2); // Crea un nuevo TextBox
-            Point p = new Point(iPosicionX + 125 + iPosicionInicial, iPosicionY * iPosicionInicial);
-            tb.Location = p;
+            tb.Height = (int)(tb.Height * 1.2);
+            tb.Location = location; // Establece la ubicación del TextBox
             tb.Name = sNom; // Establece el nombre del TextBox
             this.Controls.Add(tb); // Añade el TextBox al formulario
             tb.KeyPress += ParaValidarNumeros_KeyPress; // Asigna la función de validación de números al evento KeyPress
-            this.KeyPress += ParaValidarNumeros_KeyPress; // Asegura que el evento KeyPress valide solo números
-            iPosicionInicial++;
+                                                        // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
         }
+
         //******************************************** CODIGO HECHO POR PABLO FLORES*****************************
 
         //******************************************** CODIGO HECHO POR EMANUEL BARAHONA*****************************
 
         // Función que crea un TextBox para texto de tipo varchar y lo añade al formulario
-        void CrearTextBoxVarchar(String sNom)
+        void CrearTextBoxVarchar(String sNom, Point location)
         {
-            TextBox tb = new TextBox(); // Crea un nuevo TextBox
+            TextBox tb = new TextBox();
             tb.Width = (int)(tb.Width * 1.2);
             tb.Height = (int)(tb.Height * 1.2);
-            Point p = new Point(iPosicionX + 125 + iPosicionInicial, iPosicionY * iPosicionInicial);
-            tb.Location = p;
-            tb.Name = sNom; // Establece el nombre del TextBox
-            this.Controls.Add(tb); // Añade el TextBox al formulario
-            tb.KeyPress += ParaValidarVarchar_KeyPress; // Asigna la función de validación varchar al evento KeyPress
-            this.KeyPress += ParaValidarVarchar_KeyPress; // Asegura que el evento KeyPress valide solo varchar
-            iPosicionInicial++;
+            tb.Location = location;
+            tb.Name = sNom;
+            this.Controls.Add(tb);
+            tb.KeyPress += ParaValidarVarchar_KeyPress; // Función para validar entrada de texto
         }
 
 
@@ -786,10 +1472,12 @@ namespace Capa_Vista_Navegador
             tb.Height = (int)(tb.Height * 1.2);
             tb.Location = location; // Establece la ubicación del TextBox
             tb.Name = sNom; // Establece el nombre del TextBox
+            tb.KeyPress += ParaValidarDecimales_KeyPress;
             this.Controls.Add(tb); // Añade el TextBox al formulario
-            tb.KeyPress += ParaValidarDecimales_KeyPress; // Asigna la función de validación de decimales al evento KeyPress
+             // Asigna la función de validación de decimales al evento KeyPress
                                                           // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
         }
+
         //******************************************** CODIGO HECHO POR EMANUEL BARAHONA*****************************
 
         //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS*****************************
@@ -832,40 +1520,55 @@ namespace Capa_Vista_Navegador
             v.Combobox(e);
         }
 
-        // Este método crea y configura un ComboBox dinámicamente basado en los parámetros y la lógica del sistema.
-        void CrearComboBox(String sNom)
-        {
-            // Se obtienen los elementos para el ComboBox, que son una lista de pares clave-valor.
-            // Si hay una sTablaPrincipal y campo específicos para el ComboBox, se utilizan.
-            if (arrTablaCombo[iNumeroCombosAux] != null)
-            {
-                dicItems = logic.Items(arrTablaCombo[iNumeroCombosAux], arrCampoCombo[iNumeroCombosAux], arrCampoDisplayCombo[iNumeroCombosAux]);
-            }
-            if (iNumeroCombos > iNumeroCombosAux) { iNumeroCombosAux++; }
 
-            // Se crea un nuevo ComboBox.
+        // Este método crea y configura un ComboBox dinámicamente basado en los parámetros y la lógica del sistema.
+        void CrearComboBox(string sNom, Point location)
+        {
             ComboBox cb = new ComboBox();
             cb.Width = (int)(cb.Width * 1.2);
             cb.Height = (int)(cb.Height * 1.2);
-            // Se define la ubicación del ComboBox en el formulario.
-            Point p = new Point(iPosicionX + 125 + iPosicionInicial, iPosicionY * iPosicionInicial); 
-            cb.Location = p;
-            cb.Name = sNom;  // Se asigna el nombre al ComboBox.
+            cb.Location = location;
+            cb.Name = sNom;
 
-            // Se utiliza un BindingSource para enlazar los elementos al ComboBox.
-            BindingSource bs = new BindingSource();
-            bs.DataSource = dicItems;
+            // Obtener la tabla, campo clave y campo display usando los arreglos de combo
+            if (arrTablaCombo[iNumeroCombosAux] != null)
+            {
+                string tabla = arrTablaCombo[iNumeroCombosAux];
+                string campoClave = arrCampoCombo[iNumeroCombosAux];
+                string campoDisplay = arrCampoDisplayCombo[iNumeroCombosAux];
+                Console.WriteLine($"Tabla relacionada: {tabla}, Campo Clave: {campoClave}, Campo Display: {campoDisplay}");
+                Console.WriteLine($"Tabla relacionada: {tabla}");
+                // Obtener los datos de la lógica del sistema para la tabla y los campos
+                Dictionary<string, string> dicItems = logic.Items(tabla, campoClave, campoDisplay);
 
-            // Se asigna el DataSource al ComboBox, mostrando el nombre y guardando la clave.
-            cb.DataSource = bs;
-            cb.DisplayMember = "Value";  // Muestra el nombre en el ComboBox.
-            cb.ValueMember = "Key";      // Almacena el ID seleccionado.
+                // Si se encuentran datos, asignarlos al ComboBox
+                if (dicItems != null && dicItems.Count > 0)
+                {
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = dicItems;
 
-            // Se añade el ComboBox al formulario.
+                    cb.DataSource = bs;
+                    cb.DisplayMember = "Value";  // Mostrar el campo descriptivo
+                    cb.ValueMember = "Key";      // Usar el campo clave como valor
+                }
+                else
+                {
+                    // Manejar el caso en que no se encuentran datos
+                    Console.WriteLine($"No se encontraron datos para la tabla: {tabla}, clave: {campoClave}, display: {campoDisplay}");
+                }
+
+                // Incrementar el índice de combos
+                if (iNumeroCombos > iNumeroCombosAux) { iNumeroCombosAux++; }
+            }
+            else
+            {
+                // Manejar el caso en que no se encontró la tabla en arrTablaCombo
+                Console.WriteLine($"Error: no se encontró tabla para el combo con nombre: {sNom}");
+            }
+
+            // Añadir el ComboBox al formulario
             this.Controls.Add(cb);
-            iPosicionInicial++; 
         }
-
         //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS*****************************
 
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
@@ -882,7 +1585,6 @@ namespace Capa_Vista_Navegador
             this.Controls.Add(dtp); // Añade el DateTimePicker al formulario
                                     // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
         }
-
         public void Deshabilitarcampos_y_botones()
         {
             foreach (Control componente in Controls)
@@ -891,6 +1593,11 @@ namespace Capa_Vista_Navegador
                 {
                     componente.Enabled = false; // De esta manera bloqueamos todos los TextBox, DateTimePicker y ComboBox
                 }
+            }
+            if (IngresarVariosControl != null && IngresarVariosControl.DataGridViewInformacionExtra != null)
+            {
+                IngresarVariosControl.DataGridViewInformacionExtra.Enabled = false;
+                IngresarVariosControl.DataGridViewInformacionExtra.Rows.Clear(); // Limpiar filas solo de la DataGridView extra
             }
             Btn_Modificar.Enabled = false;
             Btn_Eliminar.Enabled = false;
@@ -1046,6 +1753,7 @@ namespace Capa_Vista_Navegador
         //******************************************** CODIGO HECHO POR JOEL LOPEZ***************************** 
         string CrearInsert(string sNombreTabla)
         {
+
             // Inicializa las cadenas para la consulta INSERT y los valores a insertar
             string sQuery = "INSERT INTO " + sNombreTabla + " (";
             string sValores = "VALUES (";
@@ -1105,6 +1813,8 @@ namespace Capa_Vista_Navegador
                     }
                 }
             }
+
+            // Elimina las últimas comas y cierra las instrucciones
             sCampos = sCampos.TrimEnd(' ', ',');
             sValoresCampos = sValoresCampos.TrimEnd(' ', ',');
 
@@ -1119,8 +1829,250 @@ namespace Capa_Vista_Navegador
 
             return sQuery;
         }
-        //******************************************** CODIGO HECHO POR JOEL LOPEZ***************************** 
+        string CrearInsertParaAsociativas(string nombreTabla, Dictionary<string, string> valoresCampos)
+        {
 
+            if (string.IsNullOrEmpty(nombreTabla))
+            {
+                throw new ArgumentException("El nombre de la tabla no puede estar vacío.");
+            }
+
+            string sQuery = $"INSERT INTO {nombreTabla} (";
+            string sValores = "VALUES (";
+
+            string sCampos = "";
+            string sValoresCampos = "";
+
+            foreach (var campo in valoresCampos)
+            {
+                string tipoCampo = logic.ObtenerTipoCampo(nombreTabla, campo.Key);
+
+                // Agregar el campo al string de campos
+                sCampos += campo.Key + ", ";
+
+                // Verificar si el campo es numérico o no
+                if (tipoCampo.Contains("int") || tipoCampo.Contains("decimal"))
+                {
+                    // Validar que el valor sea numérico
+                    if (!int.TryParse(campo.Value, out _) && !decimal.TryParse(campo.Value, out _))
+                    {
+                        Console.WriteLine($"Error: El campo {campo.Key} debe contener un valor numérico.");
+                        return null;
+                    }
+                    // No agregar comillas para campos numéricos
+                    sValoresCampos += $"{campo.Value}, ";
+                }
+                else
+                {
+                    // Agregar comillas para campos no numéricos (strings, fechas, etc.)
+                    sValoresCampos += $"'{campo.Value}', ";
+                }
+            }
+
+            // Eliminar la última coma
+            sCampos = sCampos.TrimEnd(' ', ',');
+            sValoresCampos = sValoresCampos.TrimEnd(' ', ',');
+
+            sQuery += sCampos + ") " + sValores + sValoresCampos + ");";
+
+            return sQuery;
+        }
+
+        private string RealizarOperacionPorFila(string valorOrigen, string valorCondicional, OperacionCampo operacion)
+        {
+            try
+            {
+                // Obtener el valor actual del campo destino en la base de datos
+                string valorDestino = logic.ObtenerValorCampo(
+                    operacion.TablaDestino,
+                    operacion.CampoDestino,
+                    operacion.CampoCondicional,
+                    valorCondicional
+                );
+
+                // Convertir los valores de origen y destino al tipo numérico adecuado
+                int valorNumOrigen = int.Parse(valorOrigen);
+                int valorNumDestino = string.IsNullOrEmpty(valorDestino) ? 0 : int.Parse(valorDestino); // Usar 0 si está vacío
+
+                // Realizar la operación especificada
+                int resultadoOperacion = 0;
+                switch (operacion.Operacion.ToLower())
+                {
+                    case "copiar":
+                        resultadoOperacion = valorNumOrigen;
+                        break;
+                    case "sumar":
+                        resultadoOperacion = valorNumDestino + valorNumOrigen;
+                        break;
+                    case "restar":
+                        resultadoOperacion = valorNumDestino - valorNumOrigen;
+                        if (resultadoOperacion < 0)
+                        {
+                            Console.WriteLine("Error: El resultado de la resta no puede ser negativo.");
+                            return null; // Devuelve null si la operación no es válida
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Operación no reconocida.");
+                        return null; // Devuelve null si la operación no es válida
+                }
+
+                // Generar la consulta de actualización
+                string updateQuery = $"UPDATE {operacion.TablaDestino} SET {operacion.CampoDestino} = {resultadoOperacion} WHERE {operacion.CampoCondicional} = '{valorCondicional}'";
+                Console.WriteLine("OPERACION FILA: " + updateQuery);
+                return updateQuery; // Devuelve la consulta generada
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al realizar la operación en la fila: {ex.Message}");
+                return null; // Devuelve null si hay un error
+            }
+        }
+        List<string> lstQueries2 = new List<string>();
+        List<string> CrearInsertDesdeDataGridView(string sNombreTabla, string idForaneo, DataGridView dgvProductos)
+        {
+            List<string> lstQueries = new List<string>();
+            var columnasPropiedades = logic.ObtenerColumnasYPropiedadesLogica(sNombreTabla);
+            string sClaveForanea = logic.ObtenerClaveForanea(sNombreTabla, sTablaPrincipal);
+
+            if (!columnasPropiedades.Any(c => c.nombreColumna == sClaveForanea))
+            {
+                Console.WriteLine($"Error: La clave foránea {sClaveForanea} no existe en los campos de {sNombreTabla}.");
+                return null;
+            }
+
+            foreach (DataGridViewRow fila in dgvProductos.Rows)
+            {
+                if (fila.IsNewRow) continue;
+
+                // Procesa las operaciones para la fila actual sin duplicarlas
+                foreach (var operacion in listaOperaciones)
+                {
+                    string valorOrigen = fila.Cells[operacion.CampoOrigen]?.Value?.ToString() ?? "0";
+                    string valorCondicional = fila.Cells[operacion.ValorCondicional]?.Value?.ToString();
+
+                    if (!string.IsNullOrEmpty(valorOrigen) && !string.IsNullOrEmpty(valorCondicional))
+                    {
+                        // Ejecutar la operación y obtener la consulta
+                        string updateQuery = RealizarOperacionPorFila(valorOrigen, valorCondicional, operacion);
+
+                        if (updateQuery == null)
+                        {
+                            MessageBox.Show("Error en las operaciones de campos para esta fila. No se completará la inserción.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return null; // Cancelar si hay un error en la operación
+                        }
+
+                        // Agregar la consulta de actualización a la lista sin duplicar
+                        if (!lstQueries.Contains(updateQuery))
+                        {
+                            lstQueries.Add(updateQuery);
+                        }
+                    }
+                }
+
+                // Construir la consulta de inserción para la fila en la tabla `sNombreTabla`
+                string sQuery = $"INSERT INTO {sNombreTabla} ({sClaveForanea}, ";
+                string sValores = $"VALUES ('{idForaneo}', ";
+                bool hasValues = false;
+
+                foreach (var (nombreColumna, esAutoIncremental, esClaveForanea, esTinyInt) in columnasPropiedades)
+                {
+                    if (esAutoIncremental || nombreColumna == sClaveForanea) continue;
+
+                    if (dgvProductos.Columns.Contains(nombreColumna))
+                    {
+                        DataGridViewCell celda = fila.Cells[nombreColumna];
+                        string sValorCampo = "";
+
+                        if (esTinyInt && celda is DataGridViewButtonCell)
+                        {
+                            sValorCampo = (celda.Style.BackColor == Color.Green) ? "1" : "0";
+                        }
+                        else
+                        {
+                            sValorCampo = celda?.Value?.ToString() ?? "";
+                        }
+
+                        if (!string.IsNullOrEmpty(sValorCampo))
+                        {
+                            sQuery += $"{nombreColumna}, ";
+                            sValores += $"'{sValorCampo}', ";
+                            hasValues = true;
+                        }
+                    }
+                }
+
+                if (hasValues)
+                {
+                    sQuery = sQuery.TrimEnd(' ', ',') + ") ";
+                    sValores = sValores.TrimEnd(' ', ',') + ");";
+                    string fullQuery = sQuery + sValores;
+                    Console.WriteLine("CONSULTA GENERADA PARA GRID: " + fullQuery);
+                    lstQueries.Add(fullQuery);
+                }
+            }
+
+            return lstQueries;
+        }
+
+        string CrearInsertDesdeControles(string sNombreTabla, string idForaneo)
+        {
+
+            var columnasPropiedades = logic.ObtenerColumnasYPropiedadesLogica(sNombreTabla);
+            string sClaveForanea = logic.ObtenerClaveForanea(sNombreTabla, sTablaPrincipal);
+
+            if (!columnasPropiedades.Any(c => c.nombreColumna == sClaveForanea))
+            {
+                Console.WriteLine($"Error: La clave foránea {sClaveForanea} no existe en los campos de {sNombreTabla}.");
+                return null;
+            }
+
+            string sQuery = $"INSERT INTO {sNombreTabla} ({sClaveForanea}, ";
+            string sValores = $"VALUES ('{idForaneo}', ";
+            bool hasValues = false;
+
+            foreach (var (nombreColumna, esAutoIncremental, esClaveForanea, esTinyInt) in columnasPropiedades)
+            {
+                if (esAutoIncremental || nombreColumna == sClaveForanea) continue;
+
+                Control control = Controls.Find("extra_" + nombreColumna, true).FirstOrDefault();
+
+                if (control != null)
+                {
+                    string sValorCampo = "";
+
+                    if (control is TextBox textBox)
+                        sValorCampo = textBox.Text;
+                    else if (control is ComboBox comboBox)
+                        sValorCampo = comboBox.SelectedValue?.ToString() ?? "";
+                    else if (control is DateTimePicker dateTimePicker)
+                        sValorCampo = dateTimePicker.Value.ToString("yyyy-MM-dd");
+                    else if (control is Button button && esTinyInt) // Detecta si el control es un botón y es tinyint
+                    {
+                        // Asigna "1" si el botón está verde (activado) y "0" si está rojo (desactivado)
+                        sValorCampo = (button.BackColor == Color.Green) ? "1" : "0";
+                    }
+
+                    if (!string.IsNullOrEmpty(sValorCampo))
+                    {
+                        sQuery += $"{nombreColumna}, ";
+                        sValores += $"'{sValorCampo}', ";
+                        hasValues = true;
+                    }
+                }
+            }
+
+            if (hasValues)
+            {
+                sQuery = sQuery.TrimEnd(' ', ',') + ") ";
+                sValores = sValores.TrimEnd(' ', ',') + ");";
+                string fullQuery = sQuery + sValores;
+                Console.WriteLine("CONSULTA GENERADA SIN GRID: " + fullQuery);
+                return fullQuery;
+            }
+
+            return null;
+        }
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ***************************** 
         private IEnumerable<Control> GetAllControls(Control container)
         {
@@ -1179,6 +2131,110 @@ namespace Capa_Vista_Navegador
             Console.WriteLine("Consulta generada para el UPDATE: " + sQuery);
 
             return sQuery;
+        }
+
+        string CrearUpdateParaTablasExtras(string sTablaAdicional, string sNombreClavePrimaria, string sNombreClaveForanea)
+        {
+            string[] arrColumnasTabla = logic.Campos(sTablaAdicional);
+            string sQuery = "UPDATE " + sTablaAdicional + " SET ";
+            string sWhereQuery = " WHERE ";
+            string sCampos = "";
+            int valor = 0;
+
+            // Lista para mantener un registro de los campos que ya se han procesado
+            HashSet<string> camposProcesados = new HashSet<string>();
+
+            foreach (Control componente in GetRelevantControls(this))
+            {
+                if (componente.Name.StartsWith("extra_"))
+                {
+                    string sNombreCampo = componente.Name.Replace("extra_", "");
+                    if (arrColumnasTabla.Contains(sNombreCampo) && sNombreCampo != sNombreClavePrimaria && sNombreCampo != sNombreClaveForanea)
+                    {
+                        // Verifica si el campo ya fue procesado
+                        if (!camposProcesados.Contains(sNombreCampo))
+                        {
+                            string sValorCampo = ObtenerValorDelComponente(componente, ref valor);
+                            if (!string.IsNullOrEmpty(sValorCampo))
+                            {
+                                sCampos += $"{sNombreCampo} = '{sValorCampo}', ";
+                                camposProcesados.Add(sNombreCampo); // Marca el campo como procesado
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"El campo {sNombreCampo} ya ha sido procesado, se ignora para evitar duplicados.");
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(sCampos))
+            {
+                Console.WriteLine($"No hay campos para actualizar en la tabla {sTablaAdicional}");
+                return null;
+            }
+
+            sCampos = sCampos.TrimEnd(' ', ',');
+            string sValorClave = Dgv_Informacion.CurrentRow.Cells[0].Value.ToString();
+            sWhereQuery += $"{sNombreClaveForanea} = '{sValorClave}'";
+            sQuery += sCampos + sWhereQuery + ";";
+            Console.WriteLine("Consulta generada para el UPDATE en tabla adicional: " + sQuery);
+
+            return sQuery;
+        }
+
+        List<string> CrearUpdateDesdeDataGridView(string sNombreTabla, string sClavePrimaria, DataGridView dgvProductos)
+        {
+            List<string> lstQueries = new List<string>();
+            var columnasPropiedades = logic.ObtenerColumnasYPropiedadesLogica(sNombreTabla);
+
+            foreach (DataGridViewRow fila in dgvProductos.Rows)
+            {
+                if (fila.IsNewRow) continue;
+
+                string sWhereClause = "";
+                string sSetClause = "";
+
+                foreach (var (nombreColumna, esAutoIncremental, esClaveForanea, esTinyInt) in columnasPropiedades)
+                {
+                    // Verifica si el nombre de la columna es la clave primaria
+                    if (nombreColumna == sClavePrimaria)
+                    {
+                        // Intenta obtener el valor de la clave primaria para el WHERE
+                        sWhereClause = $"{sClavePrimaria} = '{fila.Cells[nombreColumna].Value}'";
+                        continue; // Omite la clave primaria en el SET
+                    }
+
+                    // Si la columna no es autoincremental y está en el DataGridView, agrega el valor al SET
+                    if (!esAutoIncremental && dgvProductos.Columns.Contains(nombreColumna))
+                    {
+                        string sValorCampo = fila.Cells[nombreColumna].Value?.ToString() ?? "";
+                        if (esTinyInt)
+                        {
+                            sValorCampo = (sValorCampo == "1") ? "1" : "0";
+                        }
+
+                        sSetClause += $"{nombreColumna} = '{sValorCampo}', ";
+                    }
+                }
+
+                sSetClause = sSetClause.TrimEnd(' ', ',');
+
+                // Solo añade la consulta si el WHERE y el SET están correctamente configurados
+                if (!string.IsNullOrEmpty(sWhereClause) && !string.IsNullOrEmpty(sSetClause))
+                {
+                    string sQuery = $"UPDATE {sNombreTabla} SET {sSetClause} WHERE {sWhereClause};";
+                    lstQueries.Add(sQuery);
+                    Console.WriteLine("QUERY GENERADA PARA GRID: " + sQuery);
+                }
+                else
+                {
+                    Console.WriteLine($"Advertencia: No se pudo generar una consulta UPDATE válida para la fila en la tabla {sNombreTabla}.");
+                }
+            }
+
+            return lstQueries;
         }
 
         private string ObtenerValorDelComponente(Control componente, ref int valor)
@@ -1280,34 +2336,39 @@ namespace Capa_Vista_Navegador
         private void Btn_Ingresar_Click(object sender, EventArgs e)
         {
             string[] arrTipos = logic.Tipos(sTablaPrincipal);
-            string[] arrLlaves = logic.Llaves(sTablaPrincipal); // Llaves de la tabla principal
+            string[] arrLlaves = logic.Llaves(sTablaPrincipal);
             bool bTipoInt = false;
             string sAuxId = "";
             int iAuxLastId = 0;
 
-            // Verifica si el primer campo de la tabla principal es de tipo entero y autoincremental
-            if (arrTipos[0] == "int" && arrLlaves[0] == "PRI")
+            if (arrTipos[0].Contains("int") && arrLlaves[0] == "PRI")
             {
                 bTipoInt = true;
                 sAuxId = logic.UltimoID(sTablaPrincipal);
                 iAuxLastId = !string.IsNullOrEmpty(sAuxId) ? Int32.Parse(sAuxId) : 0;
             }
 
-            iActivar = 2; // Define que se realizará una inserción
+            iActivar = 2;
             HabilitarCampos_y_Botones();
 
             foreach (Control componente in Controls)
             {
-                string nombreComponente = componente.Name.Replace("extra_", ""); // Elimina el prefijo "extra_" si existe
+                string nombreComponente = componente.Name.Replace("extra_", "");
 
-                // Verifica si es el campo autoincremental en la tabla principal
                 if (componente is TextBox && bTipoInt && nombreComponente == arrLlaves[0])
                 {
                     iAuxLastId += 1;
                     componente.Text = iAuxLastId.ToString();
-                    componente.Enabled = false; // Bloquea el campo autoincremental
+                    componente.Enabled = false;
                 }
-
+                else if (componente.Name.StartsWith("extra_"))
+                {
+                    componente.Enabled = true;
+                    if (componente is TextBox || componente is ComboBox || componente is DateTimePicker)
+                    {
+                        componente.Text = "";
+                    }
+                }
                 else if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                 {
                     componente.Enabled = true;
@@ -1315,13 +2376,30 @@ namespace Capa_Vista_Navegador
                 }
             }
 
+            if (IngresarVariosControl != null)
+            {
+                IngresarVariosControl.Btn_agregar.Enabled = true;
+                IngresarVariosControl.Btn_quitar.Enabled = true;
+
+                IngresarVariosControl.DataGridViewInformacionExtra.Enabled = false;
+                IngresarVariosControl.DataGridViewInformacionExtra.Rows.Clear();
+            }
+
             Btn_Ingresar.Enabled = false;
             Btn_Modificar.Enabled = false;
             Btn_Eliminar.Enabled = false;
+            Btn_Anterior.Enabled = false;
+            Btn_FlechaFin.Enabled = false;
+            Btn_FlechaInicio.Enabled = false;
+            Btn_Refrescar.Enabled = false;
+            Btn_Salir.Enabled = false;
+            Btn_Siguiente.Enabled = false;
             Btn_Cancelar.Enabled = true;
+            Dgv_Informacion.Enabled = false;
 
-           // BotonesYPermisosSinMensaje(); // Actualiza los permisos de los botones
+            //BotonesYPermisosSinMensaje();
         }
+
 
         //******************************************** CODIGO HECHO POR DIEGO MARROQUIN***************************** 
 
@@ -1453,10 +2531,14 @@ namespace Capa_Vista_Navegador
 
                 // Habilita y deshabilita botones según el usuario
                BotonesYPermisosSinMensaje();
-
                 Btn_Ingresar.Enabled = false;
                 Btn_Eliminar.Enabled = false;
                 Btn_Cancelar.Enabled = true;
+                if (IngresarVariosControl != null)
+                {
+                    IngresarVariosControl.DataGridViewInformacionExtra.Enabled = true;
+                  
+                }
             }
             catch (Exception ex)
             {
@@ -1482,95 +2564,122 @@ namespace Capa_Vista_Navegador
         {
             try
             {
-                lg.funinsertarabitacora(sIdUsuario, "Se presionó el botón cancelar en " + sTablaPrincipal, sTablaPrincipal, sIdAplicacion); 
-                                                                                                                                        
+                lg.funinsertarabitacora(sIdUsuario, "Se presionó el botón cancelar en " + sTablaPrincipal, sTablaPrincipal, sIdAplicacion);
+
                 DialogResult drResult = MessageBox.Show(
                     "Está a punto de cancelar los cambios no guardados.\n\n" +
                     "Cualquier dato ingresado se perderá.\n\n" +
                     "¿Desea realmente cancelar la operación?",
                     "Confirmación de Cancelación",
                     MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning, // Icono de advertencia
-                    MessageBoxDefaultButton.Button2 // Opción "No" predeterminada
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2
                 );
 
-                // Si el usuario selecciona "No", se cancela la operación de cancelación
                 if (drResult == DialogResult.No)
                 {
                     return;
                 }
 
-                // Reestablecer botones y deshabilitar el que no se necesita
                 //Btn_Modificar.Enabled = true;
                 Btn_Guardar.Enabled = false;
                 Btn_Cancelar.Enabled = false;
                 Btn_Ingresar.Enabled = true;
                 Btn_Eliminar.Enabled = true;
                 Btn_Refrescar.Enabled = true;
-                Deshabilitarcampos_y_botones();
-                // Actualizar el DataGridView y los controles a su estado original
-                ActualizarDataGridView();
-                if (logic.TestRegistros(sTablaPrincipal) > 0) 
+                Btn_Anterior.Enabled = true;
+                Btn_FlechaFin.Enabled = true;
+                Btn_FlechaInicio.Enabled = true;
+                Btn_Salir.Enabled = true;
+                Btn_Siguiente.Enabled = true;
+                Dgv_Informacion.Enabled = true;
+                if (IngresarVariosControl != null)
                 {
-                    int iIndice = 0; 
-                    int iNumCombo = 0; 
+                    IngresarVariosControl.Btn_agregar.Enabled = false;
+                    IngresarVariosControl.Btn_quitar.Enabled = false;
+
+                    IngresarVariosControl.DataGridViewInformacionExtra.Enabled = false;
+                    IngresarVariosControl.DataGridViewInformacionExtra.Rows.Clear();
+                }
+                Deshabilitarcampos_y_botones();
+                ActualizarDataGridView();
+                if (logic.TestRegistros(sTablaPrincipal) > 0)
+                {
+                    int iIndice = 0;
+                    int iNumCombo = 0;
+
                     foreach (Control componente in Controls)
                     {
                         if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                         {
-                            if (componente is ComboBox)
+                            // Verificación adicional para evitar que iIndice exceda el número de columnas en Dgv_Informacion
+                            if (Dgv_Informacion.CurrentRow != null && iIndice < Dgv_Informacion.ColumnCount)
                             {
-                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                if (componente is ComboBox)
                                 {
-                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString()); 
+                                    if (arrModoCampoCombo[iNumCombo] == 1)
+                                    {
+                                        componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString());
+                                    }
+                                    else
+                                    {
+                                        componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString();
+                                    }
+                                    iNumCombo++;
                                 }
                                 else
                                 {
-                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString(); 
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString();
                                 }
-                                iNumCombo++;
+                                componente.Enabled = false;
+                                iIndice++;
                             }
                             else
                             {
-                                componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString(); 
+                                Console.WriteLine($"El índice {iIndice} está fuera del rango al configurar el componente.");
+                                break; // Termina el bucle si el índice excede el número de columnas
                             }
-                            componente.Enabled = false;
-                            iIndice++;
                         }
                         if (componente is Button)
                         {
-                            string sEstadoRegistro = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString(); 
-                            if (sEstadoRegistro == "0") 
+                            // Verificación adicional para evitar que iIndice exceda el número de columnas en Dgv_Informacion
+                            if (Dgv_Informacion.CurrentRow != null && iIndice < Dgv_Informacion.ColumnCount)
                             {
-                                componente.Text = "Desactivado";
-                                componente.BackColor = Color.Red;
+                                string sEstadoRegistro = Dgv_Informacion.CurrentRow.Cells[iIndice].Value.ToString();
+                                if (sEstadoRegistro == "0")
+                                {
+                                    componente.Text = "Desactivado";
+                                    componente.BackColor = Color.Red;
+                                }
+                                else if (sEstadoRegistro == "1")
+                                {
+                                    componente.Text = "Activado";
+                                    componente.BackColor = Color.Green;
+                                }
+                                componente.Enabled = false;
                             }
-                            if (sEstadoRegistro == "1") 
+                            else
                             {
-                                componente.Text = "Activado";
-                                componente.BackColor = Color.Green;
+                                Console.WriteLine($"El índice {iIndice} está fuera del rango al configurar el botón.");
+                                break; // Termina el bucle si el índice excede el número de columnas
                             }
-                            componente.Enabled = false;
                         }
                     }
                 }
-
-                // Habilitar/deshabilitar según los permisos del usuario
-                
             }
             catch (Exception ex)
             {
-                // Manejo de errores con un mensaje más profesional
                 MessageBox.Show(
                     "Ocurrió un error durante el proceso de cancelación.\n\n" +
                     "Detalles del error: " + ex.Message + "\n\n" +
                     "Por favor, intente nuevamente o contacte al administrador del sistema.",
                     "Error en Cancelación",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error // Icono de error
+                    MessageBoxIcon.Error
                 );
             }
         }
+
         //******************************************** CODIGO HECHO POR JORGE AVILA ***************************** 
 
         //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS***************************** 
@@ -1650,11 +2759,24 @@ namespace Capa_Vista_Navegador
                 // Refrescar la DataGridView y actualizar los controles
                 ActualizarDataGridView();
 
+                // Verificar si hay una fila seleccionada
+                if (Dgv_Informacion.CurrentRow == null)
+                {
+                    MessageBox.Show("No hay una fila seleccionada para refrescar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Iterar sobre los controles y actualizar sus valores con los datos del DataGridView
                 int iIndex = 0;
                 int iNumCombo = 0;
+
                 foreach (Control componente in Controls)
                 {
+                    if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                    {
+                        break; // Evita acceder fuera del rango de las celdas
+                    }
+
                     if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
                     {
                         if (componente is ComboBox)
@@ -1667,7 +2789,7 @@ namespace Capa_Vista_Navegador
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; 
+                            iNumCombo++;
                         }
                         else
                         {
@@ -1676,15 +2798,20 @@ namespace Capa_Vista_Navegador
 
                         iIndex++;
                     }
-                    if (componente is Button)
+                    else if (componente is Button)
                     {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); 
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                        {
+                            break; // Evita acceder fuera del rango de las celdas
+                        }
+
+                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                         if (sVarEstado == "0")
                         {
                             componente.Text = "Desactivado";
                             componente.BackColor = Color.Red;
                         }
-                        if (sVarEstado == "1")
+                        else if (sVarEstado == "1")
                         {
                             componente.Text = "Activado";
                             componente.BackColor = Color.Green;
@@ -1721,259 +2848,367 @@ namespace Capa_Vista_Navegador
         // Este método maneja el evento de clic en el botón "Anterior".
         private void Btn_Anterior_Click(object sender, EventArgs e)
         {
-            int iIndex = 0;
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-
-            if (iFila > 0)
+            try
             {
-                Dgv_Informacion.Rows[iFila - 1].Selected = true; 
-                Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila - 1].Cells[0];
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
 
-                int iNumCombo = 0;
-                foreach (Control componente in Controls)
+                // Verificar que haya una fila seleccionada
+                if (Dgv_Informacion.SelectedRows.Count == 0)
                 {
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay una fila seleccionada.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                // Verificar si es posible moverse a la fila anterior
+                if (iFila > 0)
+                {
+                    Dgv_Informacion.Rows[iFila - 1].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila - 1].Cells[0];
+
+                    int iNumCombo = 0;
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; 
+                            iIndex++;
                         }
-                        else
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); 
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al moverse a la fila anterior.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
-        // Este método maneja el evento de clic en el botón "Siguiente".
         private void Btn_Siguiente_Click(object sender, EventArgs e)
         {
-            int iIndex = 0;
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                Dgv_Informacion.Rows[iFila + 1].Selected = true; 
-                Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila + 1].Cells[0]; 
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
 
-                int iNumCombo = 0; 
-                foreach (Control componente in Controls)
+                // Verificar que haya una fila seleccionada
+                if (Dgv_Informacion.SelectedRows.Count == 0)
                 {
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay una fila seleccionada.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                // Verificar si es posible moverse a la siguiente fila
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
+                {
+                    Dgv_Informacion.Rows[iFila + 1].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[iFila + 1].Cells[0];
+
+                    int iNumCombo = 0;
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++;
+                            iIndex++;
                         }
-                        else
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al moverse a la siguiente fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
-
-
         //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ*****************************
-
-
-
-
-        //******************************************** CODIGO HECHO POR JOEL LOPEZ***************************** 
 
         // Este método maneja el evento de clic del botón "Flecha Fin" para moverse al último registro visible en el DataGridView.
         private void Btn_FlechaFin_Click(object sender, EventArgs e)
         {
-            // Selecciona la penúltima fila (contando desde cero) en el DataGridView y la establece como la fila actual.
-            Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
-            Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
-
-            int iIndex = 0;
-            // Obtiene los nombres de las columnas de la sTablaPrincipal en la base de datos.
-            string[] arrCampos = logic.Campos(sTablaPrincipal); 
-
-            // Obtiene el índice de la fila actualmente seleccionada en el DataGridView.
-            int iFila = Dgv_Informacion.SelectedRows[0].Index; 
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                // Vuelve a seleccionar la penúltima fila para asegurarse de que es la fila correcta.
+                // Verificar que haya al menos dos filas en el DataGridView
+                if (Dgv_Informacion.Rows.Count < 2)
+                {
+                    MessageBox.Show("No hay suficientes datos en la tabla para seleccionar la penúltima fila.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Selecciona la penúltima fila y la establece como la fila actual.
                 Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
                 Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
 
-                int iNumCombo = 0; 
-                 // Itera sobre todos los controles en el formulario.
-                foreach (Control componente in Controls)
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
                 {
-                    // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    // Vuelve a seleccionar la penúltima fila para asegurarse de que es la fila correcta.
+                    Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[Dgv_Informacion.Rows.Count - 2].Cells[0];
+
+                    int iNumCombo = 0;
+
+                    // Itera sobre todos los controles en el formulario.
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            // Para los ComboBox, se verifica si el campo es clave externa (arrModoCampoCombo) y se obtiene el valor adecuado.
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++; // Cambiado numCombo a iNumCombo
+                            iIndex++;
                         }
-                        else
+                        // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString(); // Cambiado var1 a sVarEstado
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al seleccionar la penúltima fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
-
-        void CrearTextBoxNumerico(String sNom, Point location)
-        {
-            TextBox tb = new TextBox(); // Crea un nuevo TextBox
-            tb.Width = (int)(tb.Width * 1.2);
-            tb.Height = (int)(tb.Height * 1.2);
-            tb.Location = location; // Establece la ubicación del TextBox
-            tb.Name = sNom; // Establece el nombre del TextBox
-            this.Controls.Add(tb); // Añade el TextBox al formulario
-            tb.KeyPress += ParaValidarNumeros_KeyPress; // Asigna la función de validación de números al evento KeyPress
-                                                        // iPosicionInicial++; // Ya no es necesario incrementar iPosicionInicial aquí
-        }
         // Este método maneja el evento de clic del botón "Flecha Inicio" para moverse al primer registro en el DataGridView.
         private void Btn_FlechaInicio_Click(object sender, EventArgs e)
         {
-            // Selecciona la primera fila en el DataGridView y la establece como la fila actual.
-            Dgv_Informacion.Rows[0].Selected = true;
-            Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
-
-            int iIndex = 0;
-            // Obtiene los nombres de las columnas de la sTablaPrincipal en la base de datos.
-            string[] arrCampos = logic.Campos(sTablaPrincipal);
-
-            int iFila = Dgv_Informacion.SelectedRows[0].Index;
-            if (iFila < Dgv_Informacion.Rows.Count - 1)
+            try
             {
-                // Vuelve a seleccionar la primera fila para asegurarse de que es la fila correcta.
+                // Selecciona la primera fila en el DataGridView y la establece como la fila actual.
                 Dgv_Informacion.Rows[0].Selected = true;
                 Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
 
-                int iNumCombo = 0;
-                                   // Itera sobre todos los controles en el formulario.
-                foreach (Control componente in Controls)
+                int iIndex = 0;
+                string[] arrCampos = logic.Campos(sTablaPrincipal);
+
+                // Verificar que haya filas en el DataGridView
+                if (Dgv_Informacion.Rows.Count == 0)
                 {
-                    // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
-                    if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                    MessageBox.Show("No hay datos disponibles en la tabla.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int iFila = Dgv_Informacion.SelectedRows[0].Index;
+
+                if (iFila < Dgv_Informacion.Rows.Count - 1)
+                {
+                    // Vuelve a seleccionar la primera fila para asegurarse de que es la fila correcta.
+                    Dgv_Informacion.Rows[0].Selected = true;
+                    Dgv_Informacion.CurrentCell = Dgv_Informacion.Rows[0].Cells[0];
+
+                    int iNumCombo = 0;
+
+                    // Itera sobre todos los controles en el formulario.
+                    foreach (Control componente in Controls)
                     {
-                        if (componente is ComboBox)
+                        // Verificar si iIndex está dentro del rango de celdas de la fila actual
+                        if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
                         {
-                            // Para los ComboBox, se verifica si el campo es clave externa (arrModoCampoCombo) y se obtiene el valor adecuado.
-                            if (arrModoCampoCombo[iNumCombo] == 1) 
+                            break;
+                        }
+
+                        // Si el control es un TextBox, DateTimePicker o ComboBox, actualiza su valor con el valor correspondiente de la celda seleccionada en el DataGridView.
+                        if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                        {
+                            if (componente is ComboBox)
                             {
-                                componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                if (arrModoCampoCombo[iNumCombo] == 1)
+                                {
+                                    componente.Text = logic.LlaveCampoRev(arrTablaCombo[iNumCombo], arrCampoCombo[iNumCombo], Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString());
+                                }
+                                else
+                                {
+                                    componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                                }
+                                iNumCombo++;
                             }
                             else
                             {
                                 componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
                             }
-                            iNumCombo++;
+                            iIndex++;
                         }
-                        else
+                        // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
+                        else if (componente is Button)
                         {
-                            componente.Text = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (iIndex >= Dgv_Informacion.CurrentRow.Cells.Count)
+                            {
+                                break;
+                            }
+
+                            string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
+                            if (sVarEstado == "0")
+                            {
+                                componente.Text = "Desactivado";
+                                componente.BackColor = Color.Red;
+                            }
+                            else if (sVarEstado == "1")
+                            {
+                                componente.Text = "Activado";
+                                componente.BackColor = Color.Green;
+                            }
+                            componente.Enabled = false;
                         }
-                        iIndex++;
-                    }
-                    // Si el control es un botón, se actualiza su estado dependiendo del valor de la celda en la fila seleccionada.
-                    if (componente is Button)
-                    {
-                        string sVarEstado = Dgv_Informacion.CurrentRow.Cells[iIndex].Value.ToString();
-                        if (sVarEstado == "0")
-                        {
-                            componente.Text = "Desactivado";
-                            componente.BackColor = Color.Red;
-                        }
-                        if (sVarEstado == "1")
-                        {
-                            componente.Text = "Activado";
-                            componente.BackColor = Color.Green;
-                        }
-                        componente.Enabled = false;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al seleccionar la primera fila.\n\n" +
+                    "Detalles del error: " + ex.Message + "\n\n" +
+                    "Por favor, intente nuevamente o contacte al administrador del sistema.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
 
@@ -2096,6 +3331,7 @@ namespace Capa_Vista_Navegador
         // Este método maneja el evento de clic del botón "Guardar", asegurando que los datos sean válidos y guardándolos en la base de datos.
         private void Btn_Guardar_Click(object sender, EventArgs e)
         {
+
             try
             {
                 // Muestra un mensaje de confirmación antes de proceder con el guardado.
@@ -2139,6 +3375,23 @@ namespace Capa_Vista_Navegador
                     return;
                 }
 
+                EjecutarReglasCondicionales();
+                if (IngresarVariosControl != null && IngresarVariosControl.DataGridViewInformacionExtra != null)
+                {
+                    // Verifica si la grid extra está vacía
+                    if (IngresarVariosControl.DataGridViewInformacionExtra.Rows.Count == 0 ||
+     (IngresarVariosControl.DataGridViewInformacionExtra.Rows.Count == 1 && IngresarVariosControl.DataGridViewInformacionExtra.Rows[0].IsNewRow))
+                    {
+                        MessageBox.Show("Debe agregar al menos un registro en la tabla de detalles antes de guardar.",
+                                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return; // Salir del método y no continuar con el guardado
+                    }
+                   // MessageBox.Show("esta llena");
+                }
+
+                // Verificar las operaciones de campo antes de cualquier inserción
+                // Ejecutamos todas las operaciones de la lista de una sola vez
+
 
 
 
@@ -2162,14 +3415,61 @@ namespace Capa_Vista_Navegador
                             }
 
                             // Itera sobre las tablas adicionales para actualizar registros relacionados.
+                            foreach (string sTablaAdicional in lstTablasAdicionales)
+                            {
+                                // Obtiene la DataGridView correspondiente a la tabla adicional
+                                DataGridView dgvProductos = (IngresarVariosControl != null && IngresarVariosControl.TablaVarios == sTablaAdicional)
+                                                            ? IngresarVariosControl.DataGridViewInformacionExtra
+                                                            : null;
 
+                                if (dgvProductos != null)
+                                {
+                                    // Usa CrearUpdateDesdeDataGridView para actualizar las filas en la tabla adicional
+                                    var queriesGrid = CrearUpdateDesdeDataGridView(sTablaAdicional, sClavePrimariaPrincipal, dgvProductos);
 
-                            // Ejecuta las consultas para actualizar datos en múltiples tablas.
+                                    // Si alguna consulta falla, cancelar todo el proceso
+                                    if (queriesGrid == null)
+                                    {
+                                        MessageBox.Show("Error en la generación de consultas para los datos adicionales en DataGridView. Transacción cancelada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        lstQueries.Clear(); // Limpiar todas las consultas para evitar actualizaciones parciales
+                                        Deshabilitarcampos_y_botones(); // Restablecer el estado de los botones si es necesario
+                                        return; // Cancelar la operación
+                                    }
+
+                                    // Agregar las consultas generadas a la lista principal de consultas
+                                    lstQueries.AddRange(queriesGrid);
+                                    lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla adicional desde DataGridView " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
+                                }
+                                else
+                                {
+                                    // Si no existe DataGridView para la tabla adicional, usa los controles para actualizar
+                                    string sClavePrimariaAdicional = logic.ObtenerClavePrimaria(sTablaAdicional);
+                                    string sClaveForaneaAdicional = logic.ObtenerClaveForanea(sTablaAdicional, sTablaPrincipal);
+
+                                    // Genera la consulta de actualización usando los controles de la UI
+                                    string queryControles = CrearUpdateParaTablasExtras(sTablaAdicional, sClavePrimariaAdicional, sClaveForaneaAdicional);
+
+                                    if (!string.IsNullOrEmpty(queryControles))
+                                    {
+                                        lstQueries.Add(queryControles);
+                                        lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla adicional usando controles " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
+                                    }
+                                }
+                            }
+
+                            // Ejecuta todas las consultas para actualizar datos en múltiples tablas
                             logic.InsertarDatosEnMultiplesTablas(lstQueries);
                             MessageBox.Show("El registro ha sido actualizado correctamente.", "Actualización Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             // Inserta en la bitácora
                             lg.funinsertarabitacora(sIdUsuario, "Actualizó registro", sTablaPrincipal, sIdAplicacion);
+                            Btn_Anterior.Enabled = true;
+                            Btn_FlechaFin.Enabled = true;
+                            Btn_FlechaInicio.Enabled = true;
+                            Btn_Salir.Enabled = true;
+                            Btn_Siguiente.Enabled = true;
+                            Dgv_Informacion.Enabled = true;
+                            Btn_Refrescar.Enabled = true;
                         }
                         catch (Exception ex)
                         {
@@ -2180,23 +3480,39 @@ namespace Capa_Vista_Navegador
                     case 2: // Insertar
                         try
                         {
-                            // Inserta el registro en la tabla principal
-                            string sQueryPrimeraTabla = CrearInsert(sTablaPrincipal);
-                            Console.WriteLine("Consulta generada para la tabla principal: " + sQueryPrimeraTabla);
-
-                            if (string.IsNullOrEmpty(sQueryPrimeraTabla))
+                            if (!GenerarConsultasOperacionesIndividuales())
                             {
-                                Console.WriteLine("Error: La consulta generada para la tabla principal es nula o vacía.");
+                                MessageBox.Show("Error en alguna de las operaciones de campos. No se completarán las inserciones.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                lstQueries2.Clear();
+                                Deshabilitarcampos_y_botones();
                                 return;
                             }
 
-                            // Insertar en la tabla principal
+                            // Generar la consulta de inserción para la tabla principal
+                            string sQueryPrimeraTabla = CrearInsert(sTablaPrincipal);
                             logic.NuevoQuery(sQueryPrimeraTabla);
-                            Console.WriteLine("Registro insertado en la tabla principal exitosamente.");
-
-                            lg.funinsertarabitacora(sIdUsuario, "Se insertó en " + sTablaPrincipal, sTablaPrincipal, sIdAplicacion);
-
-                            // Obtiene el último ID insertado en la tabla principal
+                            if (string.IsNullOrEmpty(sQueryPrimeraTabla))
+                            {
+                                Console.WriteLine("Error: La consulta generada para la tabla principal es nula o vacía.");
+                                MessageBox.Show("Error al generar la consulta principal. La inserción ha sido cancelada.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            if (lstQueries2.Count > 0)
+                            {
+                                // Añadir consulta principal a la lista de queries
+                                //lstQueries2.Add(sQueryPrimeraTabla);
+                                // Limpiar lstQueries2 después de la transacción
+                                //MessageBox.Show("La transaccion se completo correctamente.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                logic.InsertarDatosEnMultiplesTablas(lstQueries2);
+                             
+                            }
+                            else
+                            {
+                               // logic.NuevoQuery(sQueryPrimeraTabla);
+                                //MessageBox.Show("La transaccion  se completo correctamente.", "Error de Operación", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            lstQueries2.Clear();
+                            // Obtén el último ID insertado para utilizarlo en las tablas adicionales
                             string sUltimoIdPrimeraTabla = logic.UltimoID(sTablaPrincipal);
                             if (string.IsNullOrEmpty(sUltimoIdPrimeraTabla))
                             {
@@ -2204,13 +3520,94 @@ namespace Capa_Vista_Navegador
                                 return;
                             }
 
+                            // Registrar en la bitácora
+                            lg.funinsertarabitacora(sIdUsuario, "Se insertó en " + sTablaPrincipal, sTablaPrincipal, sIdAplicacion);
+
+                            // Lista para almacenar las consultas generadas
+
+
+                            // Inserta en las tablas adicionales
+                            foreach (string sTablaAdicional in lstTablasAdicionales)
+                            {
+                                DataGridView dgvProductos = (IngresarVariosControl != null && IngresarVariosControl.TablaVarios == sTablaAdicional)
+                                                            ? IngresarVariosControl.DataGridViewInformacionExtra
+                                                            : null;
+
+                                if (dgvProductos != null)
+                                {
+                                    var queriesGrid = CrearInsertDesdeDataGridView(sTablaAdicional, sUltimoIdPrimeraTabla, dgvProductos);
+
+                                    // Si alguna consulta falla, cancelar todo el proceso
+                                    if (queriesGrid == null)
+                                    {
+                                        MessageBox.Show("Error en la generación de consultas para los datos adicionales. Transacción cancelada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        lstQueries.Clear(); // Limpiar todas las consultas para evitar inserciones parciales
+                                        Deshabilitarcampos_y_botones(); // Restablecer el estado de los botones si es necesario
+                                        return; // Cancelar la operación
+                                    }
+
+                                    // Agregar las consultas generadas a la lista principal de consultas
+                                    lstQueries.AddRange(queriesGrid);
+                                    lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
+                                }
+                                else
+                                {
+                                    string queryControles = CrearInsertDesdeControles(sTablaAdicional, sUltimoIdPrimeraTabla);
+                                    lg.funinsertarabitacora(sIdUsuario, "Se insertó en tabla adicional " + sTablaAdicional, sTablaAdicional, sIdAplicacion);
+                                    if (!string.IsNullOrEmpty(queryControles)) lstQueries.Add(queryControles);
+                                }
+                            }
 
                             // Insertar en las tablas asociativas
-                            // **Insertar en las tablas asociativas**
-                            // **Insertar en las tablas asociativas**
+                            foreach (var asociativa in diccionarioTablasAsociativas)
+                            {
+                                string nombreTablaAsociativa = asociativa.Key;
+                                List<string> columnas = asociativa.Value;
 
-                            // Ejecutar todas las consultas
+                                Dictionary<string, string> valoresCampos = new Dictionary<string, string>();
+
+                                for (int i = 0; i < columnas.Count; i += 2)
+                                {
+                                    string nombreCampo = columnas[i];
+                                    string nombreComponente = columnas[i + 1];
+                                    string valorCampo = ObtenerValorActualizar(nombreComponente);
+                                    Console.WriteLine("VALOR COMPONENTE: " + nombreComponente + " VALOR: " + valorCampo);
+
+                                    if (!string.IsNullOrEmpty(valorCampo))
+                                    {
+                                        valoresCampos[nombreCampo] = valorCampo;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Advertencia: No se pudo obtener un valor válido para el componente {nombreComponente}.");
+                                    }
+                                }
+
+                                if (valoresCampos.Count == columnas.Count / 2)
+                                {
+                                    string sQueryAsociativa = CrearInsertParaAsociativas(nombreTablaAsociativa, valoresCampos);
+                                    if (!string.IsNullOrEmpty(sQueryAsociativa))
+                                    {
+                                        lstQueries.Add(sQueryAsociativa);
+                                        Console.WriteLine("QUERY GENERADO: " + sQueryAsociativa);
+                                        lg.funinsertarabitacora(sIdUsuario, "Actualizó registro en tabla asociativa", nombreTablaAsociativa, sIdAplicacion);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Error: No se pudieron obtener todos los valores para la tabla {nombreTablaAsociativa}.");
+                                }
+                            }
+
+                            // Ejecutar todas las consultas en una sola transacción
                             logic.InsertarDatosEnMultiplesTablas(lstQueries);
+                            Btn_Anterior.Enabled = true;
+                            Btn_FlechaFin.Enabled = true;
+                            Btn_FlechaInicio.Enabled = true;
+                            Btn_Salir.Enabled = true;
+                            Btn_Siguiente.Enabled = true;
+                            Dgv_Informacion.Enabled = true;
+                            Btn_Refrescar.Enabled = true;
                             MessageBox.Show("El registro ha sido guardado correctamente.", "Guardado Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)
@@ -2307,9 +3704,106 @@ namespace Capa_Vista_Navegador
 
             }
 
-
+            // Si se obtiene el valor de la clave primaria, consultar las tablas relacionadas
+            if (!string.IsNullOrEmpty(primaryKeyValue))
+            {
+                Console.WriteLine("Llamando a LlenarComponentesExtraDinamico...");
+                LlenarComponentesExtraDinamico(primaryKeyValue);
+            }
+            else
+            {
+                Console.WriteLine("No se detectó clave primaria.");
+            }
 
             BotonesYPermisosSinMensaje();
+        }
+
+        private void LlenarComponentesExtraDinamico(string primaryKeyValue)
+        {
+            Console.WriteLine($"Procesando tablas adicionales para la clave primaria: {primaryKeyValue}");
+
+            foreach (string tabla in lstTablasAdicionales)
+            {
+                Console.WriteLine($"Procesando tabla: {tabla}");
+
+                if (!aliasPorTabla.ContainsKey(tabla))
+                {
+                    MessageBox.Show($"No hay alias definidos para la tabla: {tabla}");
+                    continue;
+                }
+
+                string[] alias = aliasPorTabla[tabla];
+                Console.WriteLine($"Alias encontrados para la tabla {tabla}: {string.Join(", ", alias)}");
+
+                // Realizar la consulta a la tabla relacionada utilizando la clave primaria y obtener todos los registros
+                List<Dictionary<string, string>> listaDatosExtra = logic.ObtenerDatosExtra(tabla, primaryKeyValue, sTablaPrincipal);
+                Console.WriteLine($"Datos obtenidos de {tabla}: {listaDatosExtra?.Count} registros.");
+
+                // Limpiar la DataGridView antes de asignar nuevos datos
+                if (IngresarVariosControl != null && IngresarVariosControl.DataGridViewInformacionExtra != null)
+                {
+                    var dataGridView = IngresarVariosControl.DataGridViewInformacionExtra;
+                    dataGridView.Rows.Clear(); // Limpia las filas existentes
+
+                    // Si no se obtuvieron datos, asegurarse de que la DataGridView quede vacía y continuar con la siguiente tabla
+                    if (listaDatosExtra == null || listaDatosExtra.Count == 0)
+                    {
+                        Console.WriteLine($"No se obtuvieron datos para la tabla {tabla}. La DataGridView quedará vacía.");
+                        continue;
+                    }
+
+                    // Añadir filas solo si hay datos en listaDatosExtra
+                    foreach (var datosExtra in listaDatosExtra)
+                    {
+                        int rowIndex = dataGridView.Rows.Add();
+                        DataGridViewRow row = dataGridView.Rows[rowIndex];
+
+                        foreach (string columna in alias)
+                        {
+                            if (datosExtra.ContainsKey(columna))
+                            {
+                                row.Cells[columna].Value = datosExtra[columna];
+                            }
+                        }
+                    }
+                }
+
+                // Asignación a controles individuales (usando el primer registro solo como ejemplo)
+                if (listaDatosExtra != null && listaDatosExtra.Count > 0)
+                {
+                    var datosPrimerRegistro = listaDatosExtra[0];
+                    foreach (Control componente in Controls)
+                    {
+                        if (componente.Name.StartsWith("extra_"))
+                        {
+                            string nombreCampo = componente.Name.Replace("extra_", "");
+                            Console.WriteLine($"Verificando componente {componente.Name} para el campo {nombreCampo}");
+
+                            if (alias.Contains(nombreCampo) && datosPrimerRegistro.ContainsKey(nombreCampo))
+                            {
+                                if (componente is TextBox || componente is DateTimePicker || componente is ComboBox)
+                                {
+                                    componente.Text = datosPrimerRegistro[nombreCampo];
+                                }
+                                else if (componente is Button)
+                                {
+                                    string valor = datosPrimerRegistro[nombreCampo];
+                                    if (valor == "1")
+                                    {
+                                        componente.Text = "Activado";
+                                        componente.BackColor = Color.Green;
+                                    }
+                                    else if (valor == "0")
+                                    {
+                                        componente.Text = "Desactivado";
+                                        componente.BackColor = Color.Red;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Método de placeholder, sin implementación.
@@ -2594,7 +4088,7 @@ namespace Capa_Vista_Navegador
                 }
             }
         }
-
+        //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS *****************************
         private void Btn_Ayuda_Click(object sender, EventArgs e)
         {
             try
@@ -2627,8 +4121,6 @@ namespace Capa_Vista_Navegador
                 MessageBox.Show("Ocurrió un error al abrir la ayuda: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("Error al abrir la ayuda: " + ex.ToString());
             }
-
-            BotonesYPermisosSinMensaje();
         }
         private void button_Paint(object sender, PaintEventArgs e)
         {
@@ -2666,6 +4158,6 @@ namespace Capa_Vista_Navegador
                                     SystemColors.ControlDark, 3, ButtonBorderStyle.Inset);
         }
 
-        //******************************************** CODIGO HECHO POR VICTOR CASTELLANOS *****************************
+        //******************************************** CODIGO HECHO POR BRAYAN HERNANDEZ *****************************
     }
 }

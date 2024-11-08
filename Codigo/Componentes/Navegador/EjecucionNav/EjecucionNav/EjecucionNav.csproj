@@ -36,9 +36,6 @@
     <Reference Include="Capa_Vista_Navegador">
       <HintPath>..\..\Capa_Vista_Navegador\bin\Debug\Capa_Vista_Navegador.dll</HintPath>
     </Reference>
-    <Reference Include="Capa_Vista_Seguridad">
-      <HintPath>..\..\..\Seguridad\Capa_Vista_Seguridad\bin\Debug\Capa_Vista_Seguridad.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,14 +49,70 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs" />
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Facturas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Facturas.Designer.cs">
+      <DependentUpon>Facturas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="locales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="locales.Designer.cs">
+      <DependentUpon>locales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="mantenimiento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mantenimiento.Designer.cs">
+      <DependentUpon>mantenimiento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pagos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pagos.Designer.cs">
+      <DependentUpon>Pagos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Polizas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Polizas.Designer.cs">
+      <DependentUpon>Polizas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="produccion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="produccion.Designer.cs">
+      <DependentUpon>produccion.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Facturas.resx">
+      <DependentUpon>Facturas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="locales.resx">
+      <DependentUpon>locales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mantenimiento.resx">
+      <DependentUpon>mantenimiento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pagos.resx">
+      <DependentUpon>Pagos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Polizas.resx">
+      <DependentUpon>Polizas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="produccion.resx">
+      <DependentUpon>produccion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

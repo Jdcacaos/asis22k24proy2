@@ -1,17 +1,17 @@
 ﻿
 namespace EjecucionNav
 {
-    partial class Form1
+    partial class Facturas
     {
         /// <summary>
-        /// Variable del diseñador necesaria.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Limpiar los recursos que se estén usando.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true si los recursos administrados se deben desechar; false en caso contrario.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +21,11 @@ namespace EjecucionNav
             base.Dispose(disposing);
         }
 
-        #region Código generado por el Diseñador de Windows Forms
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// Método necesario para admitir el Diseñador. No se puede modificar
-        /// el contenido de este método con el editor de código.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -37,18 +37,21 @@ namespace EjecucionNav
             this.navegador1.BackColor = System.Drawing.Color.White;
             this.navegador1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.navegador1.Location = new System.Drawing.Point(0, 0);
+            this.navegador1.Margin = new System.Windows.Forms.Padding(4);
             this.navegador1.Name = "navegador1";
-            this.navegador1.Size = new System.Drawing.Size(842, 532);
+            this.navegador1.Size = new System.Drawing.Size(1134, 952);
             this.navegador1.TabIndex = 0;
             // 
-            // Form1
+            // Facturas
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 532);
+            this.ClientSize = new System.Drawing.Size(1134, 952);
             this.Controls.Add(this.navegador1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Facturas";
+            this.Text = "Facturas";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Facturas_Load);
             this.ResumeLayout(false);
 
         }
@@ -58,4 +61,3 @@ namespace EjecucionNav
         private Capa_Vista_Navegador.Navegador navegador1;
     }
 }
-

@@ -252,7 +252,7 @@ namespace Capa_Controlador_Navegador
                     if (iContador >= 2) // Si ya hay un punto decimal, no permite otro
                     {
                         e.Handled = true;
-                        iContador = 2; // Se asegura de que el contador no supere 2
+                        iContador =2; // Se asegura de que el contador no supere 2
                     }
                 }
                 else if (e.KeyChar == cBs) // Maneja el backspace para ajustar el contador
